@@ -129,6 +129,7 @@ const ResumePreview = ({ resumeData, onClose }) => {
                     <span className="institution">{edu.institution}</span>
                     <span className="year">{edu.year}</span>
                     {edu.gpa && <span className="gpa">GPA: {edu.gpa}</span>}
+                    }
                   </div>
                 ))}
               </div>
