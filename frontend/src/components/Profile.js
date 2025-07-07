@@ -216,6 +216,7 @@ const Profile = () => {
                   disabled={loading}
                 >
                   {loading ? <LoadingSpinner size="small" message="" /> : <><FaSave /> Save</>}
+                  }
                 </button>
                 <button className="btn btn-secondary" onClick={handleCancel}>
                   <FaTimes /> Cancel
