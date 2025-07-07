@@ -1,0 +1,319 @@
+.face-to-face-interview {
+  padding: 2rem 1rem;
+  min-height: calc(100vh - 64px);
+  transition: background-color 0.3s ease, color 0.3s ease;
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+.light.face-to-face-interview {
+  background-color: #f5f5f5;
+  color: #333;
+}
+
+.dark.face-to-face-interview {
+  background-color: #1a1a1a;
+  color: #f5f5f5;
+}
+
+.interview-container {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  margin: 0 auto;
+  max-width: 1400px;
+  width: 100%;
+  padding: 0 1rem;
+}
+
+@media (min-width: 1200px) {
+  .interview-container {
+    flex-direction: row;
+    padding: 0 2rem;
+  }
+  
+  .questions-container {
+    flex: 1.5;
+    max-height: calc(100vh - 200px);
+    overflow-y: auto;
+    padding-right: 1rem;
+  }
+  
+  .video-container {
+    flex: 1;
+    max-height: calc(100vh - 200px);
+    position: sticky;
+    top: 1rem;
+  }
+}
+
+.questions-container {
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+}
+
+.dark .questions-container {
+  background: rgba(30, 30, 30, 0.95);
+  color: #f0f0f0;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+.video-container {
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+  height: fit-content;
+  position: relative;
+  overflow: hidden;
+}
+
+.dark .video-container {
+  background: rgba(30, 30, 30, 0.95);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+.recording-indicator {
+  display: inline-flex;
+  align-items: center;
+  color: #ff4444;
+  font-size: 0.9rem;
+  font-weight: bold;
+  animation: pulse 1.5s infinite;
+  margin-left: 8px;
+}
+
+@keyframes pulse {
+  0% { opacity: 1; }
+  50% { opacity: 0.5; }
+  100% { opacity: 1; }
+}
+
+/* Custom scrollbar for questions container */
+.questions-container::-webkit-scrollbar {
+  width: 8px;
+}
+
+.questions-container::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.05);
+  border-radius: 10px;
+}
+
+.questions-container::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 10px;
+}
+
+.questions-container::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+/* Responsive adjustments */
+@media (max-width: 1199px) {
+  .questions-container {
+    margin-bottom: 1.5rem;
+    max-height: none;
+  }
+  
+  .video-container {
+    max-width: 100%;
+    margin: 0 auto 2rem;
+  }
+}
+
+/* Animation for question transitions */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.question-transition-enter {
+  animation: fadeIn 0.3s ease-out forwards;
+}
+
+/* Loading overlay */
+.loading-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  color: white;
+  flex-direction: column;
+}
+
+/* Feedback section styling */
+.feedback-section {
+  margin-bottom: 2rem;
+}
+
+.feedback-section h4 {
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid #e0e0e0;
+}
+
+.dark .feedback-section h4 {
+  border-color: #444;
+}
+
+/* Make sure all text is visible in dark mode */
+.dark .MuiTypography-root {
+  color: #f0f0f0;
+}
+
+.dark .MuiPaper-root {
+  color: #f0f0f0;
+  background-color: #2a2a2a;
+}
+
+/* Ensure buttons are properly spaced and visible */
+.action-buttons {
+  display: flex;
+  gap: 1rem;
+  margin-top: 2rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+/* Fix for video aspect ratio */
+.interview-video {
+  width: 100%;
+  aspect-ratio: 16/9;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+.questions-container p {
+  font-size: 1.2rem;
+  line-height: 1.6;
+  margin: 1.5rem 0;
+}
+
+.video-container {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #000;
+  border-radius: 8px;
+  overflow: hidden;
+  max-width: 600px;
+  aspect-ratio: 16/9;
+}
+
+.interview-video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.feedback-container {
+  max-width: 800px;
+  margin: 0 auto;
+  text-align: left;
+  background: rgba(255, 255, 255, 0.9);
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.dark .feedback-container {
+  background: rgba(40, 40, 40, 0.9);
+  color: #e0e0e0;
+}
+
+.feedback-container h2 {
+  color: #673ab7;
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.dark .feedback-container h2 {
+  color: #9c27b0;
+}
+
+.feedback-section {
+  margin-bottom: 2rem;
+}
+
+.feedback-section h3, .feedback-section h4 {
+  color: #673ab7;
+  margin: 1.5rem 0 1rem;
+}
+
+.dark .feedback-section h3,
+.dark .feedback-section h4 {
+  color: #9c27b0;
+}
+
+.feedback-section ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.feedback-section li {
+  padding: 0.5rem 0 0.5rem 1.5rem;
+  position: relative;
+  line-height: 1.6;
+}
+
+.feedback-section li:before {
+  content: '•';
+  color: #673ab7;
+  font-weight: bold;
+  position: absolute;
+  left: 0;
+}
+
+.dark .feedback-section li:before {
+  color: #9c27b0;
+}
+
+.interview-start {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 2rem;
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.dark .interview-start {
+  background: rgba(40, 40, 40, 0.9);
+  color: #e0e0e0;
+}
+
+.interview-start p {
+  margin-bottom: 2rem;
+  line-height: 1.6;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .interview-container {
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .questions-container,
+  .video-container {
+    width: 100%;
+    max-width: 100%;
+  }
+  
+  .video-container {
+    order: -1;
+    margin-bottom: 2rem;
+  }
+}
