@@ -3,17 +3,12 @@ import { Link } from 'react-router-dom';
 import { FaCode, FaQuestionCircle, FaFileAlt, FaRoad, FaStar, FaFire, FaTrophy, FaCalendarAlt, FaChartLine, FaUsers } from 'react-icons/fa';
 import confetti from 'canvas-confetti';
 import { useToast } from './Toast/Toast';
+import { useApp } from '../context/AppContext';
 import './Dashboard.css';
 
-const Dashboard = ({ user }) => {
+const Dashboard = () => {
   const { showToast } = useToast();
-  const [stats, setStats] = useState({
-    problemsSolved: 0,
-    mcqsCompleted: 0,
-    currentStreak: 0,
-    totalPoints: 0
-  });
-
+  const { state, actions } = useApp();
   const [dailyChallenge, setDailyChallenge] = useState({
     title: "Two Sum",
     difficulty: "Easy",
@@ -28,12 +23,6 @@ const Dashboard = ({ user }) => {
   ]);
 
   useEffect(() => {
-    // Load user stats from localStorage
-    const savedStats = localStorage.getItem('userStats');
-    if (savedStats) {
-      setStats(JSON.parse(savedStats));
-    }
-
     // Check if it's a new day for daily challenge
     const lastChallengeDate = localStorage.getItem('lastChallengeDate');
     const today = new Date().toDateString();
@@ -46,13 +35,14 @@ const Dashboard = ({ user }) => {
   const handleDailyChallengeComplete = () => {
     if (!dailyChallenge.completed) {
       setDailyChallenge(prev => ({ ...prev, completed: true }));
-      setStats(prev => ({
-        ...prev,
-        currentStreak: prev.currentStreak + 1,
-        totalPoints: prev.totalPoints + 50,
-        problemsSolved: prev.problemsSolved + 1
-      }));
       
+      const newStats = {
+        currentStreak: state.stats.currentStreak + 1,
+        totalPoints: state.stats.totalPoints + 50,
+        problemsSolved: state.stats.problemsSolved + 1
+      };
+      
+      actions.updateStats(newStats);
       localStorage.setItem('lastChallengeDate', new Date().toDateString());
       
       // Celebration effect
@@ -67,10 +57,10 @@ const Dashboard = ({ user }) => {
   };
 
   const quickStats = [
-    { label: 'Problems Solved', value: stats.problemsSolved, icon: FaCode, color: '#3b82f6' },
-    { label: 'MCQs Completed', value: stats.mcqsCompleted, icon: FaQuestionCircle, color: '#10b981' },
-    { label: 'Current Streak', value: stats.currentStreak, icon: FaFire, color: '#f59e0b' },
-    { label: 'Total Points', value: stats.totalPoints, icon: FaTrophy, color: '#ef4444' }
+    { label: 'Problems Solved', value: state.stats.problemsSolved, icon: FaCode, color: '#3b82f6' },
+    { label: 'MCQs Completed', value: state.stats.mcqsCompleted, icon: FaQuestionCircle, color: '#10b981' },
+    { label: 'Current Streak', value: state.stats.currentStreak, icon: FaFire, color: '#f59e0b' },
+    { label: 'Total Points', value: state.stats.totalPoints, icon: FaTrophy, color: '#ef4444' }
   ];
 
   const quickActions = [
@@ -85,7 +75,7 @@ const Dashboard = ({ user }) => {
       <div className="container">
         {/* Welcome Section */}
         <div className="welcome-section">
-          <h1>Welcome back{user?.name ? `, ${user.name}` : ''}! 👋</h1>
+          <h1>Welcome back{state.user?.name ? `, ${state.user.name}` : ''}! 👋</h1>
           <p>Ready to ace your next interview? Let's continue your preparation journey.</p>
         </div>
 
@@ -187,14 +177,14 @@ const Dashboard = ({ user }) => {
               <FaFire />
             </div>
             <div className="streak-info">
-              <h3>{stats.currentStreak} Day Streak!</h3>
+              <h3>{state.stats.currentStreak} Day Streak!</h3>
               <p>Keep it up! Consistency is key to success.</p>
             </div>
             <div className="streak-visual">
               {[...Array(7)].map((_, i) => (
                 <div 
                   key={i} 
-                  className={`streak-day ${i < stats.currentStreak ? 'active' : ''}`}
+                  className={`streak-day ${i < state.stats.currentStreak ? 'active' : ''}`}
                 />
               ))}
             </div>

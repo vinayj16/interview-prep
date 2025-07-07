@@ -1,16 +1,23 @@
 import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { FaSun, FaMoon, FaUser, FaBars, FaTimes } from 'react-icons/fa';
+import { useApp } from '../context/AppContext';
 import './Header.css';
 
-const Header = ({ theme, toggleTheme, user, setUser }) => {
+const Header = () => {
   const location = useLocation();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const { state, actions } = useApp();
 
   const handleLogout = () => {
-    setUser(null);
+    actions.setUser(null);
     localStorage.removeItem('user');
     setIsMobileMenuOpen(false);
+  };
+
+  const toggleTheme = () => {
+    const newTheme = state.theme === 'light' ? 'dark' : 'light';
+    actions.setTheme(newTheme);
   };
 
   const toggleMobileMenu = () => {
@@ -94,14 +101,14 @@ const Header = ({ theme, toggleTheme, user, setUser }) => {
             className="theme-toggle"
             aria-label="Toggle theme"
           >
-            {theme === 'light' ? <FaMoon /> : <FaSun />}
+            {state.theme === 'light' ? <FaMoon /> : <FaSun />}
           </button>
 
-          {user ? (
+          {state.user ? (
             <div className="user-menu">
               <Link to="/profile" className="user-profile" onClick={closeMobileMenu}>
                 <FaUser />
-                <span className="user-name">{user.name || 'User'}</span>
+                <span className="user-name">{state.user.name || 'User'}</span>
               </Link>
               <button onClick={handleLogout} className="logout-btn">
                 Logout

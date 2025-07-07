@@ -1,0 +1,44 @@
+.offline-indicator {
+  position: fixed;
+  top: 70px;
+  left: 0;
+  right: 0;
+  background: linear-gradient(135deg, #f59e0b, #d97706);
+  color: white;
+  padding: 8px 0;
+  text-align: center;
+  font-size: 0.9rem;
+  font-weight: 500;
+  z-index: 999;
+  animation: slideDown 0.3s ease-out;
+}
+
+.offline-content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.offline-icon {
+  font-size: 1.1rem;
+}
+
+@keyframes slideDown {
+  from {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@media (max-width: 768px) {
+  .offline-indicator {
+    top: 60px;
+    font-size: 0.85rem;
+    padding: 6px 0;
+  }
+}

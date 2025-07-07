@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { FaCheck, FaTimes, FaLightbulb, FaFilter, FaSearch, FaClock, FaTrophy } from 'react-icons/fa';
 import { useToast } from './Toast/Toast';
+import { useApp } from '../context/AppContext';
 import confetti from 'canvas-confetti';
 import './MCQs.css';
 
-const MCQs = ({ user }) => {
+const MCQs = () => {
   const { showToast } = useToast();
+  const { state, actions } = useApp();
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [selectedAnswer, setSelectedAnswer] = useState(null);
   const [showResult, setShowResult] = useState(false);
@@ -215,6 +217,12 @@ const MCQs = ({ user }) => {
   const handleQuizComplete = () => {
     setQuizStarted(false);
     const percentage = (score / questions.length) * 100;
+    
+    // Update stats
+    actions.updateStats({
+      mcqsCompleted: state.stats.mcqsCompleted + questions.length,
+      totalPoints: state.stats.totalPoints + (score * 5)
+    });
     
     if (percentage >= 80) {
       confetti({

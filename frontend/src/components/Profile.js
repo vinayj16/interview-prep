@@ -1,10 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { FaUser, FaEnvelope, FaPhone, FaMapMarkerAlt, FaLinkedin, FaGithub, FaEdit, FaSave, FaTimes, FaChartLine, FaTrophy, FaFire, FaCalendarAlt } from 'react-icons/fa';
 import { useToast } from './Toast/Toast';
+import { useApp } from '../context/AppContext';
+import { useApi } from '../hooks/useApi';
+import apiService from '../services/apiService';
+import LoadingSpinner from './LoadingSpinner/LoadingSpinner';
 import './Profile.css';
 
-const Profile = ({ user, setUser }) => {
+const Profile = () => {
   const { showToast } = useToast();
+  const { state, actions } = useApp();
+  const { loading, execute } = useApi();
   const [isEditing, setIsEditing] = useState(false);
   const [formData, setFormData] = useState({
     name: '',
@@ -19,38 +25,23 @@ const Profile = ({ user, setUser }) => {
     education: ''
   });
 
-  const [stats, setStats] = useState({
-    problemsSolved: 0,
-    mcqsCompleted: 0,
-    currentStreak: 0,
-    totalPoints: 0,
-    joinDate: new Date().toISOString().split('T')[0],
-    lastActive: new Date().toISOString().split('T')[0]
-  });
-
   useEffect(() => {
     // Load user data
-    if (user) {
+    if (state.user) {
       setFormData({
-        name: user.name || '',
-        email: user.email || '',
-        phone: user.phone || '',
-        location: user.location || '',
-        linkedin: user.linkedin || '',
-        github: user.github || '',
-        bio: user.bio || '',
-        skills: user.skills || [],
-        experience: user.experience || '',
-        education: user.education || ''
+        name: state.user.name || '',
+        email: state.user.email || '',
+        phone: state.user.phone || '',
+        location: state.user.location || '',
+        linkedin: state.user.linkedin || '',
+        github: state.user.github || '',
+        bio: state.user.bio || '',
+        skills: state.user.skills || [],
+        experience: state.user.experience || '',
+        education: state.user.education || ''
       });
     }
-
-    // Load stats from localStorage
-    const savedStats = localStorage.getItem('userStats');
-    if (savedStats) {
-      setStats(JSON.parse(savedStats));
-    }
-  }, [user]);
+  }, [state.user]);
 
   const handleInputChange = (field, value) => {
     setFormData(prev => ({
@@ -67,36 +58,54 @@ const Profile = ({ user, setUser }) => {
     }));
   };
 
-  const handleSave = () => {
-    const updatedUser = { ...formData };
-    setUser(updatedUser);
-    localStorage.setItem('user', JSON.stringify(updatedUser));
-    setIsEditing(false);
-    showToast('Profile updated successfully!', 'success');
+  const handleSave = async () => {
+    try {
+      const updatedUser = { ...formData };
+      
+      if (state.backendConnected && state.user?.id) {
+        await execute(
+          () => apiService.updateUser(state.user.id, updatedUser),
+          {
+            showSuccessToast: true,
+            successMessage: 'Profile updated successfully!'
+          }
+        );
+      }
+      
+      actions.setUser(updatedUser);
+      setIsEditing(false);
+      
+      if (!state.backendConnected) {
+        showToast('Profile updated locally!', 'success');
+      }
+    } catch (error) {
+      console.error('Error updating profile:', error);
+    }
   };
 
   const handleCancel = () => {
     // Reset form data to original user data
-    if (user) {
+    if (state.user) {
       setFormData({
-        name: user.name || '',
-        email: user.email || '',
-        phone: user.phone || '',
-        location: user.location || '',
-        linkedin: user.linkedin || '',
-        github: user.github || '',
-        bio: user.bio || '',
-        skills: user.skills || [],
-        experience: user.experience || '',
-        education: user.education || ''
+        name: state.user.name || '',
+        email: state.user.email || '',
+        phone: state.user.phone || '',
+        location: state.user.location || '',
+        linkedin: state.user.linkedin || '',
+        github: state.user.github || '',
+        bio: state.user.bio || '',
+        skills: state.user.skills || [],
+        experience: state.user.experience || '',
+        education: state.user.education || ''
       });
     }
     setIsEditing(false);
   };
 
-  const handleLogin = () => {
+  const handleLogin = async () => {
     // Simple login simulation
     const userData = {
+      id: 'demo-user-1',
       name: 'John Doe',
       email: 'john@example.com',
       phone: '+1 (555) 123-4567',
@@ -109,12 +118,32 @@ const Profile = ({ user, setUser }) => {
       education: 'BS Computer Science, Stanford University'
     };
     
-    setUser(userData);
-    setFormData(userData);
-    showToast('Welcome back!', 'success');
+    try {
+      if (state.backendConnected) {
+        await execute(
+          () => apiService.createUser(userData),
+          {
+            showSuccessToast: true,
+            successMessage: 'Welcome back!'
+          }
+        );
+      }
+      
+      actions.setUser(userData);
+      setFormData(userData);
+      
+      if (!state.backendConnected) {
+        showToast('Welcome back! (Demo mode)', 'success');
+      }
+    } catch (error) {
+      // If user already exists, just log them in
+      actions.setUser(userData);
+      setFormData(userData);
+      showToast('Welcome back!', 'success');
+    }
   };
 
-  if (!user) {
+  if (!state.user) {
     return (
       <div className="profile-page">
         <div className="container">
@@ -141,8 +170,12 @@ const Profile = ({ user, setUser }) => {
                 </div>
               </div>
               
-              <button className="btn btn-primary btn-lg" onClick={handleLogin}>
-                Sign In
+              <button 
+                className="btn btn-primary btn-lg" 
+                onClick={handleLogin}
+                disabled={loading}
+              >
+                {loading ? <LoadingSpinner size="small" message="" /> : 'Sign In'}
               </button>
               
               <p className="login-note">
@@ -163,10 +196,10 @@ const Profile = ({ user, setUser }) => {
             <FaUser />
           </div>
           <div className="profile-info">
-            <h1>{user.name || 'User'}</h1>
+            <h1>{state.user.name || 'User'}</h1>
             <p className="profile-title">{formData.experience || 'Software Developer'}</p>
             <div className="profile-meta">
-              <span><FaCalendarAlt /> Joined {new Date(stats.joinDate).toLocaleDateString()}</span>
+              <span><FaCalendarAlt /> Joined {new Date().toLocaleDateString()}</span>
               <span><FaMapMarkerAlt /> {formData.location || 'Location not set'}</span>
             </div>
           </div>
@@ -177,8 +210,12 @@ const Profile = ({ user, setUser }) => {
               </button>
             ) : (
               <div className="edit-actions">
-                <button className="btn btn-success" onClick={handleSave}>
-                  <FaSave /> Save
+                <button 
+                  className="btn btn-success" 
+                  onClick={handleSave}
+                  disabled={loading}
+                >
+                  {loading ? <LoadingSpinner size="small" message="" /> : <><FaSave /> Save</>}
                 </button>
                 <button className="btn btn-secondary" onClick={handleCancel}>
                   <FaTimes /> Cancel
@@ -198,7 +235,7 @@ const Profile = ({ user, setUser }) => {
                   <FaChartLine />
                 </div>
                 <div className="stat-info">
-                  <h3>{stats.problemsSolved}</h3>
+                  <h3>{state.stats.problemsSolved}</h3>
                   <p>Problems Solved</p>
                 </div>
               </div>
@@ -208,7 +245,7 @@ const Profile = ({ user, setUser }) => {
                   <FaTrophy />
                 </div>
                 <div className="stat-info">
-                  <h3>{stats.mcqsCompleted}</h3>
+                  <h3>{state.stats.mcqsCompleted}</h3>
                   <p>MCQs Completed</p>
                 </div>
               </div>
@@ -218,7 +255,7 @@ const Profile = ({ user, setUser }) => {
                   <FaFire />
                 </div>
                 <div className="stat-info">
-                  <h3>{stats.currentStreak}</h3>
+                  <h3>{state.stats.currentStreak}</h3>
                   <p>Day Streak</p>
                 </div>
               </div>
@@ -228,7 +265,7 @@ const Profile = ({ user, setUser }) => {
                   <FaTrophy />
                 </div>
                 <div className="stat-info">
-                  <h3>{stats.totalPoints}</h3>
+                  <h3>{state.stats.totalPoints}</h3>
                   <p>Total Points</p>
                 </div>
               </div>

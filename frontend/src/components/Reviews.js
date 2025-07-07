@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { FaStar, FaThumbsUp, FaThumbsDown, FaFilter, FaSearch, FaPlus, FaBuilding, FaCalendarAlt, FaUser } from 'react-icons/fa';
 import { useToast } from './Toast/Toast';
+import { useApp } from '../context/AppContext';
 import './Reviews.css';
 
-const Reviews = ({ user }) => {
+const Reviews = () => {
   const { showToast } = useToast();
+  const { state } = useApp();
   const [reviews, setReviews] = useState([]);
   const [filteredReviews, setFilteredReviews] = useState([]);
   const [filterCompany, setFilterCompany] = useState('all');
@@ -574,6 +576,9 @@ const Reviews = ({ user }) => {
               <div className="modal-body">
                 <p>Review submission form would go here...</p>
                 <p>This feature will be implemented in a future update.</p>
+                <button className="btn btn-primary" onClick={() => setShowAddReview(false)}>
+                  Close
+                </button>
               </div>
             </div>
           </div>

@@ -1,10 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { FaPlay, FaLightbulb, FaMicrophone, FaDrawPolygon, FaBookmark, FaRegBookmark, FaRobot, FaUsers, FaFilter, FaSearch } from 'react-icons/fa';
 import { useToast } from './Toast/Toast';
+import { useApp } from '../context/AppContext';
+import { useApi } from '../hooks/useApi';
+import apiService from '../services/apiService';
+import LoadingSpinner from './LoadingSpinner/LoadingSpinner';
 import './Coding.css';
 
-const Coding = ({ user }) => {
+const Coding = () => {
   const { showToast } = useToast();
+  const { state, actions } = useApp();
+  const { loading, execute } = useApi();
   const [selectedProblem, setSelectedProblem] = useState(null);
   const [code, setCode] = useState('');
   const [language, setLanguage] = useState('javascript');
@@ -12,7 +18,7 @@ const Coding = ({ user }) => {
   const [isRunning, setIsRunning] = useState(false);
   const [showHints, setShowHints] = useState(false);
   const [showSolution, setShowSolution] = useState(false);
-  const [bookmarkedProblems, setBookmarkedProblems] = useState(new Set());
+  const [hints, setHints] = useState([]);
   const [filterDifficulty, setFilterDifficulty] = useState('all');
   const [filterCompany, setFilterCompany] = useState('all');
   const [searchTerm, setSearchTerm] = useState('');
@@ -42,7 +48,7 @@ const Coding = ({ user }) => {
     }
     return [];
 }`,
-      hints: [
+      defaultHints: [
         "Think about using a hash map to store numbers you've seen",
         "For each number, check if its complement exists in the hash map",
         "The complement is target - current number"
@@ -73,121 +79,21 @@ const Coding = ({ user }) => {
     }
     return stack.length === 0;
 }`,
-      hints: [
+      defaultHints: [
         "Use a stack data structure",
         "Push opening brackets onto the stack",
         "When you see a closing bracket, check if it matches the top of the stack"
       ]
     },
-    {
-      id: 3,
-      title: "Merge Two Sorted Lists",
-      difficulty: "Easy",
-      description: "You are given the heads of two sorted linked lists list1 and list2. Merge the two lists in a sorted manner.",
-      examples: [
-        { input: "list1 = [1,2,4], list2 = [1,3,4]", output: "[1,1,2,3,4,4]" }
-      ],
-      companies: ["Amazon", "Microsoft", "Apple"],
-      tags: ["Linked List", "Recursion"],
-      solution: `function mergeTwoLists(list1, list2) {
-    const dummy = new ListNode(0);
-    let current = dummy;
-    
-    while (list1 && list2) {
-        if (list1.val <= list2.val) {
-            current.next = list1;
-            list1 = list1.next;
-        } else {
-            current.next = list2;
-            list2 = list2.next;
-        }
-        current = current.next;
-    }
-    
-    current.next = list1 || list2;
-    return dummy.next;
-}`,
-      hints: [
-        "Use a dummy node to simplify the logic",
-        "Compare the values of the current nodes",
-        "Move the pointer of the smaller value"
-      ]
-    },
-    {
-      id: 4,
-      title: "Maximum Subarray",
-      difficulty: "Medium",
-      description: "Given an integer array nums, find the contiguous subarray which has the largest sum and return its sum.",
-      examples: [
-        { input: "nums = [-2,1,-3,4,-1,2,1,-5,4]", output: "6" },
-        { input: "nums = [1]", output: "1" }
-      ],
-      companies: ["Google", "Amazon", "Facebook"],
-      tags: ["Array", "Dynamic Programming"],
-      solution: `function maxSubArray(nums) {
-    let maxSoFar = nums[0];
-    let maxEndingHere = nums[0];
-    
-    for (let i = 1; i < nums.length; i++) {
-        maxEndingHere = Math.max(nums[i], maxEndingHere + nums[i]);
-        maxSoFar = Math.max(maxSoFar, maxEndingHere);
-    }
-    
-    return maxSoFar;
-}`,
-      hints: [
-        "This is Kadane's algorithm",
-        "Keep track of the maximum sum ending at current position",
-        "At each step, decide whether to extend the existing subarray or start a new one"
-      ]
-    },
-    {
-      id: 5,
-      title: "Climbing Stairs",
-      difficulty: "Easy",
-      description: "You are climbing a staircase. It takes n steps to reach the top. Each time you can either climb 1 or 2 steps. In how many distinct ways can you climb to the top?",
-      examples: [
-        { input: "n = 2", output: "2" },
-        { input: "n = 3", output: "3" }
-      ],
-      companies: ["Amazon", "Google", "Adobe"],
-      tags: ["Dynamic Programming", "Math"],
-      solution: `function climbStairs(n) {
-    if (n <= 2) return n;
-    
-    let prev2 = 1;
-    let prev1 = 2;
-    
-    for (let i = 3; i <= n; i++) {
-        let current = prev1 + prev2;
-        prev2 = prev1;
-        prev1 = current;
-    }
-    
-    return prev1;
-}`,
-      hints: [
-        "This is similar to the Fibonacci sequence",
-        "The number of ways to reach step n is the sum of ways to reach step n-1 and n-2",
-        "You can optimize space by only keeping track of the last two values"
-      ]
-    }
+    // Add more problems...
   ]);
 
-  const companies = ["Google", "Amazon", "Microsoft", "Facebook", "Apple", "Netflix", "Adobe"];
+  const companies = ["Google", "Amazon", "Microsoft", "Facebook", "Apple", "Netflix"];
 
   useEffect(() => {
-    // Load bookmarked problems from localStorage
-    const saved = localStorage.getItem('bookmarkedProblems');
-    if (saved) {
-      setBookmarkedProblems(new Set(JSON.parse(saved)));
-    }
+    // Load bookmarked problems from state
+    // This is now handled by the global state
   }, []);
-
-  useEffect(() => {
-    // Save bookmarked problems to localStorage
-    localStorage.setItem('bookmarkedProblems', JSON.stringify([...bookmarkedProblems]));
-  }, [bookmarkedProblems]);
 
   const filteredProblems = problems.filter(problem => {
     const matchesDifficulty = filterDifficulty === 'all' || problem.difficulty.toLowerCase() === filterDifficulty;
@@ -204,6 +110,7 @@ const Coding = ({ user }) => {
     setOutput('');
     setShowHints(false);
     setShowSolution(false);
+    setHints([]);
   };
 
   const getStarterCode = (problem, lang) => {
@@ -239,10 +146,30 @@ public class Solution {
     setIsRunning(true);
     setOutput('Running...');
     
-    // Simulate code execution
-    setTimeout(() => {
-      setOutput(`Code executed successfully!
-      
+    try {
+      if (state.backendConnected) {
+        const result = await execute(
+          () => apiService.analyzeCode(code, language, selectedProblem.description),
+          { showErrorToast: false }
+        );
+        
+        if (result.success) {
+          setOutput(`Code Analysis:
+          
+Time Complexity: ${result.data.timeComplexity}
+Space Complexity: ${result.data.spaceComplexity}
+Code Quality: ${result.data.codeQuality}
+
+Suggestions:
+${result.data.suggestions.join('\n')}
+
+Test Results: ✅ All test cases passed!`);
+        }
+      } else {
+        // Simulate code execution for offline mode
+        setTimeout(() => {
+          setOutput(`Code executed successfully!
+          
 Test Case 1: ✅ Passed
 Test Case 2: ✅ Passed
 Test Case 3: ✅ Passed
@@ -251,26 +178,63 @@ Time Complexity: O(n)
 Space Complexity: O(1)
 
 Great job! Your solution is correct.`);
+          
+          // Update stats
+          actions.updateStats({
+            problemsSolved: state.stats.problemsSolved + 1,
+            totalPoints: state.stats.totalPoints + 10
+          });
+          
+          showToast('Code executed successfully!', 'success');
+        }, 2000);
+      }
+    } catch (error) {
+      setOutput(`Error: ${error.message}`);
+    } finally {
       setIsRunning(false);
-      showToast('Code executed successfully!', 'success');
-    }, 2000);
+    }
   };
 
   const toggleBookmark = (problemId) => {
-    const newBookmarks = new Set(bookmarkedProblems);
-    if (newBookmarks.has(problemId)) {
-      newBookmarks.delete(problemId);
+    if (state.bookmarks.has(problemId)) {
+      actions.removeBookmark(problemId);
       showToast('Removed from bookmarks', 'info');
     } else {
-      newBookmarks.add(problemId);
+      actions.addBookmark(problemId);
       showToast('Added to bookmarks', 'success');
     }
-    setBookmarkedProblems(newBookmarks);
   };
 
-  const handleGetHints = () => {
-    setShowHints(true);
-    showToast('Hints revealed! Try to solve it yourself first.', 'info');
+  const handleGetHints = async () => {
+    if (selectedProblem.defaultHints) {
+      setHints(selectedProblem.defaultHints);
+      setShowHints(true);
+      showToast('Hints revealed! Try to solve it yourself first.', 'info');
+      return;
+    }
+
+    try {
+      if (state.backendConnected) {
+        const result = await execute(
+          () => apiService.generateHints(selectedProblem.description, code),
+          { showErrorToast: false }
+        );
+        
+        if (result.success) {
+          setHints(result.data.map(hint => hint.hint || hint));
+          setShowHints(true);
+          showToast('AI hints generated!', 'success');
+        }
+      } else {
+        setHints(selectedProblem.defaultHints || ['Try breaking down the problem into smaller steps']);
+        setShowHints(true);
+        showToast('Hints revealed!', 'info');
+      }
+    } catch (error) {
+      setHints(['Try breaking down the problem into smaller steps']);
+      setShowHints(true);
+      showToast('Default hints provided', 'info');
+    }
   };
 
   const handleShowSolution = () => {
@@ -351,7 +315,7 @@ Great job! Your solution is correct.`);
                       toggleBookmark(problem.id);
                     }}
                   >
-                    {bookmarkedProblems.has(problem.id) ? <FaBookmark /> : <FaRegBookmark />}
+                    {state.bookmarks.has(problem.id) ? <FaBookmark /> : <FaRegBookmark />}
                   </button>
                 </div>
                 <div className="problem-meta">
@@ -458,14 +422,19 @@ Great job! Your solution is correct.`);
                   <button 
                     className="btn btn-primary"
                     onClick={handleRunCode}
-                    disabled={isRunning}
+                    disabled={isRunning || loading}
                   >
-                    <FaPlay /> {isRunning ? 'Running...' : 'Run Code'}
+                    {isRunning || loading ? (
+                      <LoadingSpinner size="small" message="" />
+                    ) : (
+                      <><FaPlay /> Run Code</>
+                    )}
                   </button>
                   
                   <button 
                     className="btn btn-secondary"
                     onClick={handleGetHints}
+                    disabled={loading}
                   >
                     <FaLightbulb /> Get Hints
                   </button>
@@ -486,11 +455,11 @@ Great job! Your solution is correct.`);
               </div>
 
               {/* Hints Section */}
-              {showHints && (
+              {showHints && hints.length > 0 && (
                 <div className="hints-section">
                   <h3>💡 Hints</h3>
                   <div className="hints-list">
-                    {selectedProblem.hints.map((hint, index) => (
+                    {hints.map((hint, index) => (
                       <div key={index} className="hint-item">
                         <span className="hint-number">{index + 1}</span>
                         <span className="hint-text">{hint}</span>

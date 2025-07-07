@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { FaCheck, FaLock, FaPlay, FaBook, FaCode, FaGraduationCap, FaChartLine, FaFilter } from 'react-icons/fa';
 import { useToast } from './Toast/Toast';
+import { useApp } from '../context/AppContext';
 import confetti from 'canvas-confetti';
 import './Roadmap.css';
 
-const Roadmap = ({ user }) => {
+const Roadmap = () => {
   const { showToast } = useToast();
+  const { state, actions } = useApp();
   const [selectedTrack, setSelectedTrack] = useState('dsa');
-  const [completedTopics, setCompletedTopics] = useState(new Set());
   const [expandedTopic, setExpandedTopic] = useState(null);
 
   // Mock roadmap data
@@ -314,31 +315,21 @@ const Roadmap = ({ user }) => {
     }
   };
 
-  useEffect(() => {
-    // Load completed topics from localStorage
-    const saved = localStorage.getItem('completedTopics');
-    if (saved) {
-      setCompletedTopics(new Set(JSON.parse(saved)));
-    }
-  }, []);
-
-  useEffect(() => {
-    // Save completed topics to localStorage
-    localStorage.setItem('completedTopics', JSON.stringify([...completedTopics]));
-  }, [completedTopics]);
-
   const currentTrack = roadmapTracks[selectedTrack];
 
   const isTopicUnlocked = (topic) => {
     if (topic.prerequisites.length === 0) return true;
-    return topic.prerequisites.every(prereq => completedTopics.has(prereq));
+    return topic.prerequisites.every(prereq => state.completedTopics.has(prereq));
   };
 
   const markTopicComplete = (topicId) => {
-    if (!completedTopics.has(topicId)) {
-      const newCompleted = new Set(completedTopics);
-      newCompleted.add(topicId);
-      setCompletedTopics(newCompleted);
+    if (!state.completedTopics.has(topicId)) {
+      actions.completeTopic(topicId);
+      
+      // Update stats
+      actions.updateStats({
+        totalPoints: state.stats.totalPoints + 25
+      });
       
       // Celebration effect
       confetti({
@@ -352,7 +343,7 @@ const Roadmap = ({ user }) => {
   };
 
   const getTopicStatus = (topic) => {
-    if (completedTopics.has(topic.id)) return 'completed';
+    if (state.completedTopics.has(topic.id)) return 'completed';
     if (isTopicUnlocked(topic)) return 'available';
     return 'locked';
   };
@@ -360,7 +351,7 @@ const Roadmap = ({ user }) => {
   const getProgressPercentage = () => {
     const totalTopics = currentTrack.topics.length;
     const completedCount = currentTrack.topics.filter(topic => 
-      completedTopics.has(topic.id)
+      state.completedTopics.has(topic.id)
     ).length;
     return (completedCount / totalTopics) * 100;
   };
@@ -425,7 +416,7 @@ const Roadmap = ({ user }) => {
             </div>
             <div className="progress-stats">
               <span className="progress-text">
-                {currentTrack.topics.filter(t => completedTopics.has(t.id)).length} / {currentTrack.topics.length} completed
+                {currentTrack.topics.filter(t => state.completedTopics.has(t.id)).length} / {currentTrack.topics.length} completed
               </span>
               <div className="progress-bar">
                 <div 
@@ -481,7 +472,7 @@ const Roadmap = ({ user }) => {
                   </div>
                   
                   <div className="topic-actions">
-                    {status === 'available' && !completedTopics.has(topic.id) && (
+                    {status === 'available' && !state.completedTopics.has(topic.id) && (
                       <button 
                         className="btn btn-primary btn-sm"
                         onClick={(e) => {
