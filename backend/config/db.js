@@ -1,12 +1,14 @@
 import mongoose from 'mongoose';
-import config from './config.js';
 
 const connectDB = async () => {
   try {
-    await mongoose.connect(config.mongoDB.uri, config.mongoDB.options);
+    await mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/interview_prep', {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    });
     console.log('MongoDB connected');
-  } catch (error) {
-    console.error('MongoDB connection error:', error);
+  } catch (err) {
+    console.error('MongoDB connection error:', err);
     process.exit(1);
   }
 };

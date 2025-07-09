@@ -14,7 +14,7 @@ export const protect = async (req, res, next) => {
       token = req.headers.authorization.split(' ')[1];
 
       // Verify token
-      const decoded = jwt.verify(token, config.jwtSecret);
+      const decoded = jwt.verify(token, config.jwt.secret);
 
       // Get user from the token
       req.user = await User.findById(decoded.id).select('-password');

@@ -46,6 +46,9 @@ const config = {
     expiresIn: process.env.JWT_EXPIRES_IN || '30d'
   },
   
+  // JWT Secret for direct access (backward compatibility)
+  jwtSecret: process.env.JWT_SECRET || 'your_jwt_secret_key',
+  
   // Logging
   logging: {
     level: process.env.LOG_LEVEL || 'info',

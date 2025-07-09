@@ -1,11 +1,11 @@
 /**
  * Success response handler
  * @param {Object} res - Express response object
+ * @param {number} statusCode - HTTP status code (default: 200)
  * @param {*} data - Data to send in the response
  * @param {string} message - Success message
- * @param {number} statusCode - HTTP status code (default: 200)
  */
-const successResponse = (res, data = null, message = 'Success', statusCode = 200) => {
+const successResponse = (res, statusCode = 200, data = null, message = 'Success') => {
   const response = {
     success: true,
     message,
@@ -18,11 +18,16 @@ const successResponse = (res, data = null, message = 'Success', statusCode = 200
 /**
  * Error response handler
  * @param {Object} res - Express response object
- * @param {string} message - Error message
  * @param {number} statusCode - HTTP status code (default: 500)
- * @param {*} errors - Additional error details
+ * @param {*} errors - Additional error details or message
+ * @param {string} message - Error message
  */
-const errorResponse = (res, message = 'An error occurred', statusCode = 500, errors = null) => {
+const errorResponse = (res, statusCode = 500, errors = null, message = 'An error occurred') => {
+  // Handle case where errors is actually the message
+  if (typeof errors === 'string' && !message) {
+    message = errors;
+    errors = null;
+  }
   const response = {
     success: false,
     message,
