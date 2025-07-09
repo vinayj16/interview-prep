@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import { GoogleGenerativeAI } from '@google/generative-ai';
 import config from '../config/config.js';
 
@@ -8,6 +9,18 @@ class GeminiService {
     }
     this.genAI = new GoogleGenerativeAI(config.googleAI.apiKey);
     this.model = this.genAI.getGenerativeModel({ model: config.googleAI.model });
+=======
+const { GoogleGenerativeAI } = require('@google/generative-ai');
+
+class GeminiService {
+  constructor() {
+    if (!process.env.GOOGLE_AI_API_KEY) {
+      throw new Error('GOOGLE_AI_API_KEY is required');
+    }
+    
+    this.genAI = new GoogleGenerativeAI(process.env.GOOGLE_AI_API_KEY);
+    this.model = this.genAI.getGenerativeModel({ model: 'gemini-pro' });
+>>>>>>> aaf69eb1a911dc5306e41e26d4cfcc3f780a0434
   }
 
   async generateResume(userData) {
@@ -251,5 +264,9 @@ class GeminiService {
   }
 }
 
+<<<<<<< HEAD
 const geminiService = new GeminiService();
 export default geminiService;
+=======
+module.exports = new GeminiService();
+>>>>>>> aaf69eb1a911dc5306e41e26d4cfcc3f780a0434

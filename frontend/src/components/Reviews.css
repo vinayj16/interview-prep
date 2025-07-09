@@ -478,6 +478,7 @@
     margin: 0 -4px;
     max-height: 90vh;
   }
+<<<<<<< HEAD
 }
 
 .reviews-input-group {
@@ -500,4 +501,6 @@
   display: flex;
   gap: 1rem;
   justify-content: flex-end;
+=======
+>>>>>>> aaf69eb1a911dc5306e41e26d4cfcc3f780a0434
 }

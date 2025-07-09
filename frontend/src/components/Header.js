@@ -56,7 +56,11 @@ const Header = () => {
             className={`nav-link ${isActive('/') ? 'active' : ''}`}
             onClick={closeMobileMenu}
           >
+<<<<<<< HEAD
             Home
+=======
+            Dashboard
+>>>>>>> aaf69eb1a911dc5306e41e26d4cfcc3f780a0434
           </Link>
           <Link 
             to="/coding" 
@@ -93,6 +97,7 @@ const Header = () => {
           >
             Reviews
           </Link>
+<<<<<<< HEAD
           <Link 
             to="/face-to-face-interview" 
             className={`nav-link ${isActive('/face-to-face-interview') ? 'active' : ''}`}
@@ -121,6 +126,8 @@ const Header = () => {
           >
             Contact
           </Link>
+=======
+>>>>>>> aaf69eb1a911dc5306e41e26d4cfcc3f780a0434
         </nav>
 
         <div className="header-actions">

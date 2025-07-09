@@ -1,5 +1,9 @@
 import React, { useState, useCallback } from 'react';
+<<<<<<< HEAD
 import { FaUser, FaGraduationCap, FaBriefcase, FaCog, FaDownload, FaRobot, FaSpinner, FaTrophy, FaUsers, FaFileAlt, FaDollarSign, FaBook } from 'react-icons/fa';
+=======
+import { FaUser, FaGraduationCap, FaBriefcase, FaCog, FaDownload, FaRobot, FaSpinner } from 'react-icons/fa';
+>>>>>>> aaf69eb1a911dc5306e41e26d4cfcc3f780a0434
 import { useToast } from './Toast/Toast';
 import { useApp } from '../context/AppContext';
 import { useApi } from '../hooks/useApi';
@@ -25,9 +29,13 @@ const Resume = () => {
       location: '',
       linkedin: '',
       github: '',
+<<<<<<< HEAD
       website: '',
       dob: '',
       address: '',
+=======
+      website: ''
+>>>>>>> aaf69eb1a911dc5306e41e26d4cfcc3f780a0434
     },
     experience: [
       {
@@ -46,15 +54,22 @@ const Resume = () => {
         institution: '',
         location: '',
         graduationDate: '',
+<<<<<<< HEAD
         gpa: '',
         coursework: '',
         thesis: ''
+=======
+        gpa: ''
+>>>>>>> aaf69eb1a911dc5306e41e26d4cfcc3f780a0434
       }
     ],
     skills: {
       technical: [],
+<<<<<<< HEAD
       soft: [],
       domain: [],
+=======
+>>>>>>> aaf69eb1a911dc5306e41e26d4cfcc3f780a0434
       languages: [],
       frameworks: [],
       tools: []
@@ -70,6 +85,7 @@ const Resume = () => {
     ],
     targetRole: '',
     targetCompany: '',
+<<<<<<< HEAD
     summary: '',
     certifications: [
       {
@@ -178,21 +194,33 @@ const Resume = () => {
         url: ''
       }
     ],
+=======
+    summary: ''
+>>>>>>> aaf69eb1a911dc5306e41e26d4cfcc3f780a0434
   });
 
   const handleInputChange = useCallback((section, field, value, index = null) => {
     setFormData(prev => {
       const newData = { ...prev };
+<<<<<<< HEAD
       if (section === '') {
         // Update root-level fields
         newData[field] = value;
       } else if (index !== null) {
+=======
+      
+      if (index !== null) {
+>>>>>>> aaf69eb1a911dc5306e41e26d4cfcc3f780a0434
         newData[section][index] = { ...newData[section][index], [field]: value };
       } else if (section === 'skills') {
         newData[section][field] = Array.isArray(value) ? value : value.split(',').map(s => s.trim()).filter(s => s);
       } else {
         newData[section][field] = value;
       }
+<<<<<<< HEAD
+=======
+      
+>>>>>>> aaf69eb1a911dc5306e41e26d4cfcc3f780a0434
       return newData;
     });
   }, []);
@@ -291,6 +319,7 @@ const Resume = () => {
     { id: 'experience', label: 'Experience', icon: FaBriefcase },
     { id: 'education', label: 'Education', icon: FaGraduationCap },
     { id: 'skills', label: 'Skills', icon: FaCog },
+<<<<<<< HEAD
     { id: 'projects', label: 'Projects', icon: FaCog },
     { id: 'certifications', label: 'Certifications', icon: FaGraduationCap },
     { id: 'awards', label: 'Awards', icon: FaTrophy },
@@ -309,6 +338,9 @@ const Resume = () => {
     { id: 'onlineCourses', label: 'Online Courses', icon: FaBook },
     { id: 'freelance', label: 'Freelance/Consulting', icon: FaUser },
     { id: 'patents', label: 'Patents', icon: FaFileAlt },
+=======
+    { id: 'projects', label: 'Projects', icon: FaCog }
+>>>>>>> aaf69eb1a911dc5306e41e26d4cfcc3f780a0434
   ];
 
   const renderPersonalInfo = () => (
@@ -544,9 +576,13 @@ const Resume = () => {
             institution: '',
             location: '',
             graduationDate: '',
+<<<<<<< HEAD
             gpa: '',
             coursework: '',
             thesis: ''
+=======
+            gpa: ''
+>>>>>>> aaf69eb1a911dc5306e41e26d4cfcc3f780a0434
           })}
         >
           Add Education
@@ -758,6 +794,7 @@ const Resume = () => {
     </div>
   );
 
+<<<<<<< HEAD
   const renderCertifications = () => (
     <div className="form-section">
       <div className="section-header">
@@ -1291,6 +1328,8 @@ const Resume = () => {
     </div>
   );
 
+=======
+>>>>>>> aaf69eb1a911dc5306e41e26d4cfcc3f780a0434
   const renderCurrentSection = () => {
     switch (activeSection) {
       case 'personal': return renderPersonalInfo();
@@ -1298,6 +1337,7 @@ const Resume = () => {
       case 'education': return renderEducation();
       case 'skills': return renderSkills();
       case 'projects': return renderProjects();
+<<<<<<< HEAD
       case 'certifications': return renderCertifications();
       case 'awards': return renderAwards();
       case 'languages': return renderLanguages();
@@ -1315,6 +1355,8 @@ const Resume = () => {
       case 'onlineCourses': return renderOnlineCourses();
       case 'freelance': return renderFreelance();
       case 'patents': return renderPatents();
+=======
+>>>>>>> aaf69eb1a911dc5306e41e26d4cfcc3f780a0434
       default: return renderPersonalInfo();
     }
   };

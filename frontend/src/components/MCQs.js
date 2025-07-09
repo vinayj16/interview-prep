@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { FaCheck, FaTimes, FaLightbulb, FaFilter, FaSearch, FaClock, FaTrophy, FaBookmark, FaRegBookmark, FaBuilding, FaTrash } from 'react-icons/fa';
 import { useToast } from './Toast/Toast';
@@ -407,6 +408,15 @@ const getBookmarkedMCQs = () => {
   return JSON.parse(localStorage.getItem(key) || '[]');
 };
 
+=======
+import React, { useState, useEffect } from 'react';
+import { FaCheck, FaTimes, FaLightbulb, FaFilter, FaSearch, FaClock, FaTrophy } from 'react-icons/fa';
+import { useToast } from './Toast/Toast';
+import { useApp } from '../context/AppContext';
+import confetti from 'canvas-confetti';
+import './MCQs.css';
+
+>>>>>>> aaf69eb1a911dc5306e41e26d4cfcc3f780a0434
 const MCQs = () => {
   const { showToast } = useToast();
   const { state, actions } = useApp();
@@ -418,6 +428,7 @@ const MCQs = () => {
   const [isActive, setIsActive] = useState(false);
   const [filterCompany, setFilterCompany] = useState('all');
   const [filterTopic, setFilterTopic] = useState('all');
+<<<<<<< HEAD
   const [filterDifficulty, setFilterDifficulty] = useState('all');
   const [showFilters, setShowFilters] = useState(false);
   const [quizStarted, setQuizStarted] = useState(false);
@@ -467,16 +478,113 @@ const MCQs = () => {
   }, [allQuestions]);
 
   const difficulties = ['all', 'Easy', 'Medium', 'Hard'];
+=======
+  const [showFilters, setShowFilters] = useState(false);
+  const [quizStarted, setQuizStarted] = useState(false);
+  const [userAnswers, setUserAnswers] = useState([]);
+
+  // Mock MCQ data
+  const [allQuestions] = useState([
+    {
+      id: 1,
+      question: "What is the time complexity of binary search?",
+      options: ["O(n)", "O(log n)", "O(n²)", "O(1)"],
+      correct: 1,
+      explanation: "Binary search divides the search space in half with each comparison, resulting in O(log n) time complexity.",
+      company: "Google",
+      topic: "Algorithms",
+      difficulty: "Medium"
+    },
+    {
+      id: 2,
+      question: "Which data structure uses LIFO (Last In, First Out) principle?",
+      options: ["Queue", "Stack", "Array", "Linked List"],
+      correct: 1,
+      explanation: "Stack follows LIFO principle where the last element added is the first one to be removed.",
+      company: "Amazon",
+      topic: "Data Structures",
+      difficulty: "Easy"
+    },
+    {
+      id: 3,
+      question: "What is the space complexity of merge sort?",
+      options: ["O(1)", "O(log n)", "O(n)", "O(n²)"],
+      correct: 2,
+      explanation: "Merge sort requires O(n) additional space for the temporary arrays used during merging.",
+      company: "Microsoft",
+      topic: "Algorithms",
+      difficulty: "Medium"
+    },
+    {
+      id: 4,
+      question: "In JavaScript, what does 'this' keyword refer to?",
+      options: ["The global object", "The current function", "The calling object", "Undefined"],
+      correct: 2,
+      explanation: "In JavaScript, 'this' refers to the object that is calling the function.",
+      company: "Facebook",
+      topic: "JavaScript",
+      difficulty: "Medium"
+    },
+    {
+      id: 5,
+      question: "What is the worst-case time complexity of quicksort?",
+      options: ["O(n log n)", "O(n²)", "O(log n)", "O(n)"],
+      correct: 1,
+      explanation: "Quicksort has O(n²) worst-case time complexity when the pivot is always the smallest or largest element.",
+      company: "Apple",
+      topic: "Algorithms",
+      difficulty: "Hard"
+    },
+    {
+      id: 6,
+      question: "Which HTTP method is idempotent?",
+      options: ["POST", "PUT", "PATCH", "All of the above"],
+      correct: 1,
+      explanation: "PUT is idempotent, meaning multiple identical requests should have the same effect as a single request.",
+      company: "Netflix",
+      topic: "Web Development",
+      difficulty: "Medium"
+    },
+    {
+      id: 7,
+      question: "What is the purpose of a hash table?",
+      options: ["Sorting data", "Fast data retrieval", "Memory management", "Error handling"],
+      correct: 1,
+      explanation: "Hash tables provide fast data retrieval with average O(1) time complexity for search, insert, and delete operations.",
+      company: "Google",
+      topic: "Data Structures",
+      difficulty: "Easy"
+    },
+    {
+      id: 8,
+      question: "In React, what is the purpose of useEffect hook?",
+      options: ["State management", "Side effects", "Event handling", "Rendering"],
+      correct: 1,
+      explanation: "useEffect hook is used to perform side effects in functional components, such as data fetching, subscriptions, or DOM manipulation.",
+      company: "Facebook",
+      topic: "React",
+      difficulty: "Medium"
+    }
+  ]);
+
+  const companies = ["Google", "Amazon", "Microsoft", "Facebook", "Apple", "Netflix"];
+  const topics = ["Algorithms", "Data Structures", "JavaScript", "Web Development", "React", "System Design"];
+>>>>>>> aaf69eb1a911dc5306e41e26d4cfcc3f780a0434
 
   const [questions, setQuestions] = useState([]);
 
   useEffect(() => {
+<<<<<<< HEAD
     localStorage.setItem('mcqProgress', JSON.stringify(progress));
   }, [progress]);
 
   useEffect(() => {
     filterQuestions();
   }, [filterCompany, filterTopic, filterDifficulty, allQuestions]);
+=======
+    filterQuestions();
+  }, [filterCompany, filterTopic, allQuestions]);
+>>>>>>> aaf69eb1a911dc5306e41e26d4cfcc3f780a0434
 
   useEffect(() => {
     let interval = null;
@@ -492,6 +600,7 @@ const MCQs = () => {
 
   const filterQuestions = () => {
     let filtered = allQuestions;
+<<<<<<< HEAD
 
     if (filterCompany !== 'all') {
       filtered = filtered.filter(q => q.company === filterCompany);
@@ -571,12 +680,30 @@ const MCQs = () => {
     fetchMCQs();
   };
 
+=======
+    
+    if (filterCompany !== 'all') {
+      filtered = filtered.filter(q => q.company === filterCompany);
+    }
+    
+    if (filterTopic !== 'all') {
+      filtered = filtered.filter(q => q.topic === filterTopic);
+    }
+    
+    setQuestions(filtered);
+  };
+
+>>>>>>> aaf69eb1a911dc5306e41e26d4cfcc3f780a0434
   const startQuiz = () => {
     if (questions.length === 0) {
       showToast('No questions available with current filters', 'warning');
       return;
     }
+<<<<<<< HEAD
 
+=======
+    
+>>>>>>> aaf69eb1a911dc5306e41e26d4cfcc3f780a0434
     setQuizStarted(true);
     setCurrentQuestion(0);
     setScore(0);
@@ -606,13 +733,18 @@ const MCQs = () => {
       correct: questions[currentQuestion].correct,
       isCorrect
     }];
+<<<<<<< HEAD
 
+=======
+    
+>>>>>>> aaf69eb1a911dc5306e41e26d4cfcc3f780a0434
     setUserAnswers(newUserAnswers);
     setShowResult(true);
     setIsActive(false);
 
     if (isCorrect) {
       setScore(score + 1);
+<<<<<<< HEAD
       setProgress(prev => ({
         ...prev,
         completed: prev.completed + 1,
@@ -624,6 +756,10 @@ const MCQs = () => {
         ...prev,
         completed: prev.completed + 1
       }));
+=======
+      showToast('Correct! 🎉', 'success');
+    } else {
+>>>>>>> aaf69eb1a911dc5306e41e26d4cfcc3f780a0434
       showToast('Incorrect. Check the explanation.', 'error');
     }
   };
@@ -658,13 +794,21 @@ const MCQs = () => {
   const handleQuizComplete = () => {
     setQuizStarted(false);
     const percentage = (score / questions.length) * 100;
+<<<<<<< HEAD
 
+=======
+    
+>>>>>>> aaf69eb1a911dc5306e41e26d4cfcc3f780a0434
     // Update stats
     actions.updateStats({
       mcqsCompleted: state.stats.mcqsCompleted + questions.length,
       totalPoints: state.stats.totalPoints + (score * 5)
     });
+<<<<<<< HEAD
 
+=======
+    
+>>>>>>> aaf69eb1a911dc5306e41e26d4cfcc3f780a0434
     if (percentage >= 80) {
       confetti({
         particleCount: 100,
@@ -690,6 +834,7 @@ const MCQs = () => {
     setIsActive(false);
   };
 
+<<<<<<< HEAD
   const toggleBookmark = useCallback((questionId) => {
     setBookmarkedQuestions(prev => {
       let updated;
@@ -714,6 +859,8 @@ const MCQs = () => {
     return bookmarkedQuestions.includes(questionId);
   };
 
+=======
+>>>>>>> aaf69eb1a911dc5306e41e26d4cfcc3f780a0434
   if (!quizStarted) {
     return (
       <div className="mcqs-page">
@@ -723,6 +870,7 @@ const MCQs = () => {
             <p>Test your knowledge with company-specific MCQs</p>
           </div>
 
+<<<<<<< HEAD
           {/* Fetch MCQs Section */}
           <div className="mcq-fetch-section">
             <form onSubmit={handleSubmit} className="mcq-fetch-form">
@@ -783,11 +931,35 @@ const MCQs = () => {
                         <option key={company} value={company}>
                           {company === 'all' ? 'All Companies' : company}
                         </option>
+=======
+          {/* Filters */}
+          <div className="quiz-setup">
+            <div className="filters-section">
+              <button 
+                className="filter-toggle btn btn-secondary"
+                onClick={() => setShowFilters(!showFilters)}
+              >
+                <FaFilter /> Filters
+              </button>
+              
+              {showFilters && (
+                <div className="filters">
+                  <div className="filter-group">
+                    <label>Company:</label>
+                    <select 
+                      value={filterCompany} 
+                      onChange={(e) => setFilterCompany(e.target.value)}
+                    >
+                      <option value="all">All Companies</option>
+                      {companies.map(company => (
+                        <option key={company} value={company}>{company}</option>
+>>>>>>> aaf69eb1a911dc5306e41e26d4cfcc3f780a0434
                       ))}
                     </select>
                   </div>
 
                   <div className="filter-group">
+<<<<<<< HEAD
                     <label htmlFor="topic-filter">Topic:</label>
                     <select
                       id="topic-filter"
@@ -813,6 +985,16 @@ const MCQs = () => {
                         <option key={difficulty} value={difficulty}>
                           {difficulty === 'all' ? 'All Difficulties' : difficulty}
                         </option>
+=======
+                    <label>Topic:</label>
+                    <select 
+                      value={filterTopic} 
+                      onChange={(e) => setFilterTopic(e.target.value)}
+                    >
+                      <option value="all">All Topics</option>
+                      {topics.map(topic => (
+                        <option key={topic} value={topic}>{topic}</option>
+>>>>>>> aaf69eb1a911dc5306e41e26d4cfcc3f780a0434
                       ))}
                     </select>
                   </div>
@@ -832,7 +1014,11 @@ const MCQs = () => {
               </div>
             </div>
 
+<<<<<<< HEAD
             <button
+=======
+            <button 
+>>>>>>> aaf69eb1a911dc5306e41e26d4cfcc3f780a0434
               className="btn btn-primary btn-lg start-quiz-btn"
               onClick={startQuiz}
               disabled={questions.length === 0}
@@ -846,6 +1032,7 @@ const MCQs = () => {
             <div className="question-preview">
               <h3>Sample Questions:</h3>
               <div className="preview-list">
+<<<<<<< HEAD
                 {questions.slice(0, 3).map((question) => (
                   <div key={question.id} className="preview-item">
                     <div className="preview-header">
@@ -878,6 +1065,21 @@ const MCQs = () => {
                         {showHints[question.id] ? 'Hide Hint' : 'Show Hint'}
                       </button>
                     )}
+=======
+                {questions.slice(0, 3).map((question, index) => (
+                  <div key={question.id} className="preview-item">
+                    <div className="preview-header">
+                      <span className="question-number">Q{index + 1}</span>
+                      <div className="question-meta">
+                        <span className="company">{question.company}</span>
+                        <span className="topic">{question.topic}</span>
+                        <span className={`difficulty ${question.difficulty.toLowerCase()}`}>
+                          {question.difficulty}
+                        </span>
+                      </div>
+                    </div>
+                    <p className="preview-question">{question.question}</p>
+>>>>>>> aaf69eb1a911dc5306e41e26d4cfcc3f780a0434
                   </div>
                 ))}
               </div>
@@ -898,13 +1100,21 @@ const MCQs = () => {
           <div className="quiz-progress">
             <span>Question {currentQuestion + 1} of {questions.length}</span>
             <div className="progress-bar">
+<<<<<<< HEAD
               <div
+=======
+              <div 
+>>>>>>> aaf69eb1a911dc5306e41e26d4cfcc3f780a0434
                 className="progress-fill"
                 style={{ width: `${((currentQuestion + 1) / questions.length) * 100}%` }}
               />
             </div>
           </div>
+<<<<<<< HEAD
 
+=======
+          
+>>>>>>> aaf69eb1a911dc5306e41e26d4cfcc3f780a0434
           <div className="quiz-stats">
             <div className="stat">
               <FaClock />
@@ -914,6 +1124,7 @@ const MCQs = () => {
               <FaTrophy />
               <span>{score}/{questions.length}</span>
             </div>
+<<<<<<< HEAD
             <button
               className="bookmark-btn"
               onClick={() => toggleBookmark(currentQ.id)}
@@ -921,6 +1132,8 @@ const MCQs = () => {
             >
               {isBookmarked(currentQ.id) ? <FaBookmark /> : <FaRegBookmark />}
             </button>
+=======
+>>>>>>> aaf69eb1a911dc5306e41e26d4cfcc3f780a0434
           </div>
         </div>
 
@@ -929,9 +1142,15 @@ const MCQs = () => {
           <div className="question-header">
             <div className="question-meta">
               <span className="company">{currentQ.company}</span>
+<<<<<<< HEAD
               <span className="topic">{currentQ.topic || currentQ.category}</span>
               <span className={`difficulty ${currentQ.difficulty?.toLowerCase() || 'medium'}`}>
                 {currentQ.difficulty || 'Medium'}
+=======
+              <span className="topic">{currentQ.topic}</span>
+              <span className={`difficulty ${currentQ.difficulty.toLowerCase()}`}>
+                {currentQ.difficulty}
+>>>>>>> aaf69eb1a911dc5306e41e26d4cfcc3f780a0434
               </span>
             </div>
           </div>
@@ -946,7 +1165,11 @@ const MCQs = () => {
                 key={index}
                 className={`option ${selectedAnswer === index ? 'selected' : ''} ${
                   showResult ? (
+<<<<<<< HEAD
                     index === currentQ.correct ? 'correct' :
+=======
+                    index === currentQ.correct ? 'correct' : 
+>>>>>>> aaf69eb1a911dc5306e41e26d4cfcc3f780a0434
                     selectedAnswer === index ? 'incorrect' : ''
                   ) : ''
                 }`}
@@ -956,13 +1179,21 @@ const MCQs = () => {
                 <span className="option-letter">{String.fromCharCode(65 + index)}</span>
                 <span className="option-text">{option}</span>
                 {showResult && index === currentQ.correct && <FaCheck className="result-icon" />}
+<<<<<<< HEAD
                 {showResult && selectedAnswer === index && index !== currentQ.correct &&
+=======
+                {showResult && selectedAnswer === index && index !== currentQ.correct && 
+>>>>>>> aaf69eb1a911dc5306e41e26d4cfcc3f780a0434
                   <FaTimes className="result-icon" />}
               </button>
             ))}
           </div>
 
+<<<<<<< HEAD
           {showResult && currentQ.explanation && (
+=======
+          {showResult && (
+>>>>>>> aaf69eb1a911dc5306e41e26d4cfcc3f780a0434
             <div className="explanation">
               <div className="explanation-header">
                 <FaLightbulb />
@@ -972,6 +1203,7 @@ const MCQs = () => {
             </div>
           )}
 
+<<<<<<< HEAD
           {showHints[currentQ.id] && currentQ.hint && (
             <div className="hint">
               <FaLightbulb /> {currentQ.hint}
@@ -990,6 +1222,11 @@ const MCQs = () => {
           <div className="question-actions">
             {!showResult ? (
               <button
+=======
+          <div className="question-actions">
+            {!showResult ? (
+              <button 
+>>>>>>> aaf69eb1a911dc5306e41e26d4cfcc3f780a0434
                 className="btn btn-primary"
                 onClick={handleSubmitAnswer}
                 disabled={selectedAnswer === null}
@@ -1019,4 +1256,8 @@ const MCQs = () => {
   );
 };
 
+<<<<<<< HEAD
 export default MCQs;
+=======
+export default MCQs;
+>>>>>>> aaf69eb1a911dc5306e41e26d4cfcc3f780a0434

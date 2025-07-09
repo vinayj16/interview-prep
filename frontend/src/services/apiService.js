@@ -49,6 +49,7 @@ class ApiService {
 
   // Resume generation
   async generateResume(userData) {
+<<<<<<< HEAD
     try {
       const response = await fetch('/api/generate-resume', {
         method: 'POST',
@@ -65,10 +66,17 @@ class ApiService {
       console.error('Resume generation error:', error);
       throw error;
     }
+=======
+    return this.request('/api/generate-resume', {
+      method: 'POST',
+      body: JSON.stringify(userData),
+    });
+>>>>>>> aaf69eb1a911dc5306e41e26d4cfcc3f780a0434
   }
 
   // Interview questions
   async generateInterviewQuestions(company, role) {
+<<<<<<< HEAD
     try {
       const response = await fetch('/api/generate-interview-questions', {
         method: 'POST',
@@ -85,10 +93,17 @@ class ApiService {
       console.error('Interview questions generation error:', error);
       throw error;
     }
+=======
+    return this.request('/api/generate-interview-questions', {
+      method: 'POST',
+      body: JSON.stringify({ company, role }),
+    });
+>>>>>>> aaf69eb1a911dc5306e41e26d4cfcc3f780a0434
   }
 
   // Code analysis
   async analyzeCode(code, language, problemDescription) {
+<<<<<<< HEAD
     try {
       const response = await fetch('/api/analyze-code', {
         method: 'POST',
@@ -105,10 +120,17 @@ class ApiService {
       console.error('Code analysis error:', error);
       throw error;
     }
+=======
+    return this.request('/api/analyze-code', {
+      method: 'POST',
+      body: JSON.stringify({ code, language, problemDescription }),
+    });
+>>>>>>> aaf69eb1a911dc5306e41e26d4cfcc3f780a0434
   }
 
   // Generate hints
   async generateHints(problemDescription, currentCode) {
+<<<<<<< HEAD
     try {
       const response = await fetch('/api/generate-hints', {
         method: 'POST',
@@ -125,36 +147,59 @@ class ApiService {
       console.error('Hints generation error:', error);
       throw error;
     }
+=======
+    return this.request('/api/generate-hints', {
+      method: 'POST',
+      body: JSON.stringify({ problemDescription, currentCode }),
+    });
+>>>>>>> aaf69eb1a911dc5306e41e26d4cfcc3f780a0434
   }
 
   // User management (for future backend integration)
   async createUser(userData) {
+<<<<<<< HEAD
     return this.request('/api/userss', {
+=======
+    return this.request('/api/users', {
+>>>>>>> aaf69eb1a911dc5306e41e26d4cfcc3f780a0434
       method: 'POST',
       body: JSON.stringify(userData),
     });
   }
 
   async updateUser(userId, userData) {
+<<<<<<< HEAD
     return this.request(`/api/userss/${userId}`, {
+=======
+    return this.request(`/api/users/${userId}`, {
+>>>>>>> aaf69eb1a911dc5306e41e26d4cfcc3f780a0434
       method: 'PUT',
       body: JSON.stringify(userData),
     });
   }
 
   async getUser(userId) {
+<<<<<<< HEAD
     return this.request(`/api/userss/${userId}`);
+=======
+    return this.request(`/api/users/${userId}`);
+>>>>>>> aaf69eb1a911dc5306e41e26d4cfcc3f780a0434
   }
 
   // Progress tracking
   async saveProgress(userId, progressData) {
+<<<<<<< HEAD
     return this.request(`/api/userss/${userId}/progress`, {
+=======
+    return this.request(`/api/users/${userId}/progress`, {
+>>>>>>> aaf69eb1a911dc5306e41e26d4cfcc3f780a0434
       method: 'POST',
       body: JSON.stringify(progressData),
     });
   }
 
   async getProgress(userId) {
+<<<<<<< HEAD
     return this.request(`/api/userss/${userId}/progress`);
   }
 
@@ -194,3 +239,10 @@ class ApiService {
 
 const apiService = new ApiService();
 export default apiService;
+=======
+    return this.request(`/api/users/${userId}/progress`);
+  }
+}
+
+export default new ApiService();
+>>>>>>> aaf69eb1a911dc5306e41e26d4cfcc3f780a0434

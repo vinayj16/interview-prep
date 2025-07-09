@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import express from 'express';
 import cors from 'cors';
 import path from 'path';
@@ -26,6 +27,17 @@ const PORT = process.env.PORT || 5000;
 
 // Connect to MongoDB
 connectDB();
+=======
+const express = require('express');
+const cors = require('cors');
+const path = require('path');
+require('dotenv').config();
+
+const geminiService = require('./services/geminiService');
+
+const app = express();
+const PORT = process.env.PORT || 3001;
+>>>>>>> aaf69eb1a911dc5306e41e26d4cfcc3f780a0434
 
 // Middleware
 app.use(cors({
@@ -35,14 +47,22 @@ app.use(cors({
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
+<<<<<<< HEAD
 // Routes
 app.use('/api/auth', authRoutes);
+=======
+// Serve static files from React build
+if (process.env.NODE_ENV === 'production') {
+  app.use(express.static(path.join(__dirname, '../frontend/build')));
+}
+>>>>>>> aaf69eb1a911dc5306e41e26d4cfcc3f780a0434
 
 // Health check endpoint
 app.get('/api/health', (req, res) => {
   res.json({ 
     status: 'OK', 
     timestamp: new Date().toISOString(),
+<<<<<<< HEAD
     environment: process.env.NODE_ENV || 'development',
     database: mongoose.connection.readyState === 1 ? 'Connected' : 'Disconnected'
   });
@@ -57,6 +77,12 @@ if (process.env.NODE_ENV === 'production') {
   });
 }
 
+=======
+    environment: process.env.NODE_ENV || 'development'
+  });
+});
+
+>>>>>>> aaf69eb1a911dc5306e41e26d4cfcc3f780a0434
 // API Documentation
 app.get('/api', (req, res) => {
   res.json({
@@ -67,10 +93,14 @@ app.get('/api', (req, res) => {
       'POST /api/generate-resume': 'Generate AI-powered resume',
       'POST /api/generate-interview-questions': 'Generate interview questions',
       'POST /api/analyze-code': 'Analyze code with AI',
+<<<<<<< HEAD
       'POST /api/generate-hints': 'Generate coding hints',
       'POST /api/mcqs': 'Get company-specific MCQs',
       'GET /api/reviews': 'Get company reviews',
       'GET /api/coding': 'Get coding challenges'
+=======
+      'POST /api/generate-hints': 'Generate coding hints'
+>>>>>>> aaf69eb1a911dc5306e41e26d4cfcc3f780a0434
     },
     documentation: 'https://github.com/your-repo/interview-prep-platform'
   });
@@ -82,6 +112,7 @@ app.post('/api/generate-resume', async (req, res) => {
     const userData = req.body;
     
     if (!userData || Object.keys(userData).length === 0) {
+<<<<<<< HEAD
       return errorResponse(res, 400, { error: 'User data is required' });
     }
 
@@ -90,6 +121,23 @@ app.post('/api/generate-resume', async (req, res) => {
   } catch (error) {
     console.error('Resume generation error:', error);
     return errorResponse(res, 500, { error: 'Failed to generate resume' });
+=======
+      return res.status(400).json({
+        success: false,
+        error: 'User data is required'
+      });
+    }
+
+    const result = await geminiService.generateResume(userData);
+    res.json(result);
+  } catch (error) {
+    console.error('Resume generation error:', error);
+    res.status(500).json({
+      success: false,
+      error: 'Failed to generate resume',
+      details: error.message
+    });
+>>>>>>> aaf69eb1a911dc5306e41e26d4cfcc3f780a0434
   }
 });
 
@@ -98,6 +146,7 @@ app.post('/api/generate-interview-questions', async (req, res) => {
     const { company, role } = req.body;
     
     if (!company || !role) {
+<<<<<<< HEAD
       return errorResponse(res, 400, { error: 'Company and role are required' });
     }
 
@@ -106,6 +155,23 @@ app.post('/api/generate-interview-questions', async (req, res) => {
   } catch (error) {
     console.error('Interview questions generation error:', error);
     return errorResponse(res, 500, { error: 'Failed to generate interview questions' });
+=======
+      return res.status(400).json({
+        success: false,
+        error: 'Company and role are required'
+      });
+    }
+
+    const result = await geminiService.generateInterviewQuestions(company, role);
+    res.json(result);
+  } catch (error) {
+    console.error('Interview questions generation error:', error);
+    res.status(500).json({
+      success: false,
+      error: 'Failed to generate interview questions',
+      details: error.message
+    });
+>>>>>>> aaf69eb1a911dc5306e41e26d4cfcc3f780a0434
   }
 });
 
@@ -114,6 +180,7 @@ app.post('/api/analyze-code', async (req, res) => {
     const { code, language, problemDescription } = req.body;
     
     if (!code || !language) {
+<<<<<<< HEAD
       return errorResponse(res, 400, { error: 'Code and language are required' });
     }
 
@@ -122,6 +189,23 @@ app.post('/api/analyze-code', async (req, res) => {
   } catch (error) {
     console.error('Code analysis error:', error);
     return errorResponse(res, 500, { error: 'Failed to analyze code' });
+=======
+      return res.status(400).json({
+        success: false,
+        error: 'Code and language are required'
+      });
+    }
+
+    const result = await geminiService.analyzeCode(code, language, problemDescription);
+    res.json(result);
+  } catch (error) {
+    console.error('Code analysis error:', error);
+    res.status(500).json({
+      success: false,
+      error: 'Failed to analyze code',
+      details: error.message
+    });
+>>>>>>> aaf69eb1a911dc5306e41e26d4cfcc3f780a0434
   }
 });
 
@@ -130,6 +214,7 @@ app.post('/api/generate-hints', async (req, res) => {
     const { problemDescription, currentCode } = req.body;
     
     if (!problemDescription) {
+<<<<<<< HEAD
       return errorResponse(res, 400, { error: 'Problem description is required' });
     }
 
@@ -379,6 +464,23 @@ app.post('/login', async (req, res) => {
     res.json({ success: true, message: 'Login successful', token });
   } catch (err) {
     res.status(500).json({ success: false, message: 'Server error' });
+=======
+      return res.status(400).json({
+        success: false,
+        error: 'Problem description is required'
+      });
+    }
+
+    const result = await geminiService.generateHints(problemDescription, currentCode);
+    res.json(result);
+  } catch (error) {
+    console.error('Hints generation error:', error);
+    res.status(500).json({
+      success: false,
+      error: 'Failed to generate hints',
+      details: error.message
+    });
+>>>>>>> aaf69eb1a911dc5306e41e26d4cfcc3f780a0434
   }
 });
 
@@ -390,7 +492,18 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 // Error handling middleware
+<<<<<<< HEAD
 app.use(errorHandler);
+=======
+app.use((error, req, res, next) => {
+  console.error('Server error:', error);
+  res.status(500).json({
+    success: false,
+    error: 'Internal server error',
+    details: process.env.NODE_ENV === 'development' ? error.message : undefined
+  });
+});
+>>>>>>> aaf69eb1a911dc5306e41e26d4cfcc3f780a0434
 
 // 404 handler
 app.use((req, res) => {
@@ -407,4 +520,10 @@ app.listen(PORT, () => {
   console.log(`📊 Environment: ${process.env.NODE_ENV || 'development'}`);
   console.log(`🤖 Gemini AI: ${process.env.GOOGLE_AI_API_KEY ? 'Configured' : 'Not configured'}`);
   console.log(`🌐 CORS Origin: ${process.env.CORS_ORIGIN || 'http://localhost:3000'}`);
+<<<<<<< HEAD
 });
+=======
+});
+
+module.exports = app;
+>>>>>>> aaf69eb1a911dc5306e41e26d4cfcc3f780a0434

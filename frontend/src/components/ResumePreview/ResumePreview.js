@@ -129,6 +129,10 @@ const ResumePreview = ({ resumeData, onClose }) => {
                     <span className="institution">{edu.institution}</span>
                     <span className="year">{edu.year}</span>
                     {edu.gpa && <span className="gpa">GPA: {edu.gpa}</span>}
+<<<<<<< HEAD
+=======
+                    }
+>>>>>>> aaf69eb1a911dc5306e41e26d4cfcc3f780a0434
                   </div>
                 ))}
               </div>
@@ -161,6 +165,7 @@ const ResumePreview = ({ resumeData, onClose }) => {
                 ))}
               </div>
             )}
+<<<<<<< HEAD
 
             {resumeData.certifications && resumeData.certifications.length > 0 && (
               <div className="resume-section">
@@ -229,6 +234,8 @@ const ResumePreview = ({ resumeData, onClose }) => {
                 ))}
               </div>
             )}
+=======
+>>>>>>> aaf69eb1a911dc5306e41e26d4cfcc3f780a0434
           </div>
         </div>
       </div>

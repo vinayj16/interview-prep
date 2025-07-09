@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+<<<<<<< HEAD
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.1",
     "@mui/material": "^5.0.0",
@@ -18,6 +19,21 @@
     "react-icons": "^4.12.0",
     "react-router-dom": "^6.8.1",
     "react-scripts": "^5.0.1",
+=======
+    "@emotion/react": "^11.11.1",
+    "@emotion/styled": "^11.11.0",
+    "@testing-library/jest-dom": "^5.16.4",
+    "@testing-library/react": "^13.3.0",
+    "@testing-library/user-event": "^13.5.0",
+    "canvas-confetti": "^1.6.0",
+    "html2canvas": "^1.4.1",
+    "jspdf": "^2.5.1",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-icons": "^4.12.0",
+    "react-router-dom": "^6.8.1",
+    "react-scripts": "5.0.1",
+>>>>>>> aaf69eb1a911dc5306e41e26d4cfcc3f780a0434
     "web-vitals": "^2.1.4"
   },
   "scripts": {
@@ -44,8 +60,13 @@
       "last 1 safari version"
     ]
   },
+<<<<<<< HEAD
   "proxy": "http://localhost:5000",
   "devDependencies": {
     "html-webpack-plugin": "^5.5.0"
   }
 }
+=======
+  "proxy": "http://localhost:3001"
+}
+>>>>>>> aaf69eb1a911dc5306e41e26d4cfcc3f780a0434
