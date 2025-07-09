@@ -1,27 +1,23 @@
 import React, { useState } from 'react';
-import { useNavigate, Link, useLocation } from 'react-router-dom';
-import { useAuth } from '../contexts/AuthContext';
+import { useNavigate, Link } from 'react-router-dom';
+import ApiService from '../services/api';
 import './Auth.css';
 
-const Login = () => {
+const Login = ({ setIsAuthenticated }) => {
   const [formData, setFormData] = useState({
     email: '',
     password: ''
   });
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
-  const { login } = useAuth();
   const navigate = useNavigate();
-  const location = useLocation();
-
-  // Check for success message from registration
-  const successMessage = location.state?.message;
 
   const handleChange = (e) => {
     setFormData({
       ...formData,
       [e.target.name]: e.target.value
     });
+    // Clear error when user starts typing
     if (error) setError('');
   };
 
@@ -30,26 +26,31 @@ const Login = () => {
     setLoading(true);
     setError('');
 
-    const result = await login(formData.email, formData.password);
-    
-    if (result.success) {
-      navigate('/dashboard');
-    } else {
-      setError(result.error || 'Login failed. Please try again.');
+    try {
+      const response = await ApiService.login(formData.email, formData.password);
+      
+      if (response.access_token) {
+        // Store token in localStorage
+        localStorage.setItem('token', response.access_token);
+        localStorage.setItem('user', JSON.stringify(response.user));
+        
+        // Update authentication state
+        setIsAuthenticated(true);
+        
+        // Navigate to dashboard
+        navigate('/dashboard');
+      }
+    } catch (error) {
+      setError(error.message || 'Login failed. Please try again.');
+    } finally {
+      setLoading(false);
     }
-    
-    setLoading(false);
   };
 
   return (
     <div className="auth-container">
       <div className="auth-form">
         <h2>Login</h2>
-        
-        {successMessage && (
-          <div className="success-message">{successMessage}</div>
-        )}
-        
         {error && <div className="error-message">{error}</div>}
         
         <form onSubmit={handleSubmit}>

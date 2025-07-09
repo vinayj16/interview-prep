@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { useAuth } from '../contexts/AuthContext';
+import ApiService from '../services/api';
 import './Auth.css';
 
 const Register = () => {
@@ -12,7 +12,6 @@ const Register = () => {
   });
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
-  const { register } = useAuth();
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -20,6 +19,7 @@ const Register = () => {
       ...formData,
       [e.target.name]: e.target.value
     });
+    // Clear error when user starts typing
     if (error) setError('');
   };
 
@@ -28,27 +28,31 @@ const Register = () => {
     setLoading(true);
     setError('');
 
+    // Validate passwords match
     if (formData.password !== formData.confirmPassword) {
       setError('Passwords do not match');
       setLoading(false);
       return;
     }
 
-    const result = await register(
-      formData.username,
-      formData.email,
-      formData.password
-    );
-    
-    if (result.success) {
-      navigate('/login', { 
-        state: { message: 'Registration successful! Please log in.' }
-      });
-    } else {
-      setError(result.error || 'Registration failed. Please try again.');
+    try {
+      const response = await ApiService.register(
+        formData.username,
+        formData.email,
+        formData.password
+      );
+      
+      if (response.message) {
+        // Registration successful, redirect to login
+        navigate('/login', { 
+          state: { message: 'Registration successful! Please log in.' }
+        });
+      }
+    } catch (error) {
+      setError(error.message || 'Registration failed. Please try again.');
+    } finally {
+      setLoading(false);
     }
-    
-    setLoading(false);
   };
 
   return (

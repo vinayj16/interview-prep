@@ -1,0 +1,19 @@
+.contact-us {
+  padding: 2rem;
+  text-align: center;
+  background-color: var(--light-background-color);
+  color: var(--light-text-color);
+}
+
+.contact-us h1 {
+  margin-bottom: 2rem;
+}
+
+.contact-us ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.contact-us ul li {
+  margin: 1rem 0;
+}
