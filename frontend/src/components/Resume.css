@@ -1,6 +1,11 @@
 .resume-page {
-  padding: 20px 0;
+  padding: 40px 0;
   min-height: calc(100vh - 160px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: var(--bg-color, #f8fafc);
+  color: var(--text-primary, #222);
 }
 
 .resume-header {
@@ -11,9 +16,9 @@
 .resume-header h1 {
   font-size: 2.5rem;
   font-weight: 700;
-  color: var(--text-primary);
+  color: var(--text-primary, #222);
   margin-bottom: 12px;
-  background: linear-gradient(135deg, var(--primary-color), var(--primary-hover));
+  background: linear-gradient(135deg, var(--primary-color, #2563eb), var(--primary-hover, #10b981));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -21,24 +26,24 @@
 
 .resume-header p {
   font-size: 1.1rem;
-  color: var(--text-secondary);
+  color: var(--text-secondary, #555);
 }
 
 .resume-builder {
   max-width: 1000px;
   margin: 0 auto;
-  background: var(--surface-color);
+  background: var(--surface-color, #fff);
   border-radius: 16px;
-  border: 1px solid var(--border-color);
+  border: 1px solid var(--border-color, #e5e7eb);
   overflow: hidden;
-  box-shadow: 0 4px 12px var(--shadow-light);
+  box-shadow: 0 4px 12px var(--shadow-light, rgba(0,0,0,0.08));
 }
 
 /* Navigation */
 .resume-nav {
   display: flex;
-  background: var(--background-color);
-  border-bottom: 1px solid var(--border-color);
+  background: var(--background-color, #f8fafc);
+  border-bottom: 1px solid var(--border-color, #e5e7eb);
   overflow-x: auto;
 }
 
@@ -49,7 +54,7 @@
   padding: 16px 20px;
   border: none;
   background: none;
-  color: var(--text-secondary);
+  color: var(--text-secondary, #555);
   cursor: pointer;
   transition: all 0.2s ease;
   white-space: nowrap;
@@ -58,13 +63,13 @@
 
 .nav-item:hover {
   background: rgba(59, 130, 246, 0.05);
-  color: var(--primary-color);
+  color: var(--primary-color, #2563eb);
 }
 
 .nav-item.active {
-  color: var(--primary-color);
+  color: var(--primary-color, #2563eb);
   background: rgba(59, 130, 246, 0.05);
-  border-bottom-color: var(--primary-color);
+  border-bottom-color: var(--primary-color, #2563eb);
 }
 
 .nav-item svg {
@@ -80,7 +85,7 @@
 
 .form-section h3 {
   margin: 0 0 24px 0;
-  color: var(--text-primary);
+  color: var(--text-primary, #222);
   font-size: 1.5rem;
   font-weight: 600;
 }
@@ -111,17 +116,17 @@
 .form-group label {
   margin-bottom: 6px;
   font-weight: 500;
-  color: var(--text-primary);
+  color: var(--text-primary, #222);
 }
 
 .form-group input,
 .form-group textarea,
 .form-group select {
   padding: 10px 12px;
-  border: 1px solid var(--border-color);
+  border: 1px solid var(--border-color, #e5e7eb);
   border-radius: 6px;
-  background: var(--background-color);
-  color: var(--text-primary);
+  background: var(--background-color, #f8fafc);
+  color: var(--text-primary, #222);
   font-size: 14px;
   transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
@@ -130,7 +135,7 @@
 .form-group textarea:focus,
 .form-group select:focus {
   outline: none;
-  border-color: var(--primary-color);
+  border-color: var(--primary-color, #2563eb);
   box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
 }
 
@@ -141,7 +146,7 @@
 
 .form-group small {
   margin-top: 4px;
-  color: var(--text-muted);
+  color: var(--text-muted, #888);
   font-size: 0.85rem;
 }
 
@@ -160,8 +165,8 @@
 .experience-item,
 .education-item,
 .project-item {
-  background: var(--background-color);
-  border: 1px solid var(--border-color);
+  background: var(--background-color, #f8fafc);
+  border: 1px solid var(--border-color, #e5e7eb);
   border-radius: 12px;
   padding: 24px;
   margin-bottom: 20px;
@@ -176,7 +181,7 @@
 
 .item-header h4 {
   margin: 0;
-  color: var(--text-primary);
+  color: var(--text-primary, #222);
   font-size: 1.1rem;
 }
 
@@ -191,7 +196,7 @@
 
 .responsibilities-section label {
   font-weight: 500;
-  color: var(--text-primary);
+  color: var(--text-primary, #222);
   margin: 0;
 }
 
@@ -212,8 +217,8 @@
   justify-content: center;
   gap: 16px;
   padding: 24px 30px;
-  border-top: 1px solid var(--border-color);
-  background: var(--background-color);
+  border-top: 1px solid var(--border-color, #e5e7eb);
+  background: var(--background-color, #f8fafc);
 }
 
 .resume-actions .btn {

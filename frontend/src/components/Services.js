@@ -1,6 +1,7 @@
 import React, { memo } from 'react';
+import { Link } from 'react-router-dom';
 import { FaCode, FaUserTie, FaFileAlt, FaLaptopCode, FaUsers, FaChartLine, FaLeaf, FaLinkedin, FaTwitter, FaBook, FaTrophy, FaUniversity, FaGlobe, FaCheckCircle } from 'react-icons/fa';
-import { useTheme } from '@mui/material/styles';
+import { useTheme } from '../context/ThemeContext';
 import './Services.css';
 
 const services = [
@@ -130,7 +131,7 @@ const ServiceCard = memo(({ service }) => (
       </a>
     )}
     {service.title === 'Mock Interviews' && (
-      <a href="/face-to-face-interview" tabIndex={0} aria-label="Start Mock Interview">
+      <a href="/face-to-face" tabIndex={0} aria-label="Start Mock Interview">
         <button className="service-button">Start</button>
       </a>
     )}
@@ -145,7 +146,7 @@ const ServiceCard = memo(({ service }) => (
       </a>
     )}
     {service.title === 'Behavioral Interviews' && (
-      <a href="/face-to-face-interview" tabIndex={0} aria-label="Practice Behavioral Interviews">
+      <a href="/face-to-face" tabIndex={0} aria-label="Practice Behavioral Interviews">
         <button className="service-button">Practice</button>
       </a>
     )}
@@ -163,34 +164,35 @@ const ServiceCard = memo(({ service }) => (
 ));
 
 const Services = memo(() => {
-  const theme = useTheme();
-  const isDark = theme.palette.mode === 'dark';
+  const { theme } = useTheme();
+  const isDark = theme === 'dark';
   
   return (
-    <div className={`services-container ${isDark ? 'dark' : 'light'}`} role="main" aria-label="Services main content">
-      <section className="services-hero" aria-label="Platform Overview">
-        <div className="container">
-          <h1 className="hero-title">All-in-One Interview & Career Prep</h1>
+    <div className="container services-page">
+        <section className="hero-section">
+          <h1>Master Your Next Interview</h1>
           <p className="hero-subtitle">
-            Inspired by the best: GFG, LeetCode, HackerRank, Codeforces, CodeChef, LinkedIn, Twitter, Placement Preparation, and Testbook.<br/>
             Practice, learn, and grow—all in one place.
           </p>
-        </div>
-      </section>
-      <div className="services section">
-        <div className="container">
+        </section>
+        
+        <section className="services-section">
           <h2 className="section-title">Our Services</h2>
-          <p className="section-description">
-            Comprehensive interview preparation services to help you land your dream job.<br/>
-            Our platform brings together the best features from top platforms, tailored for your success.
-          </p>
           <div className="services-grid">
             {services.map((service, index) => (
               <ServiceCard key={index} service={service} />
             ))}
           </div>
-        </div>
-      </div>
+        </section>
+        
+        <section className="cta-section">
+          <h2>Ready to ace your next interview?</h2>
+          <p>Join thousands of successful candidates who landed their dream jobs with our help</p>
+          <div className="cta-buttons">
+            <Link to="/register" className="btn btn-primary">Get Started</Link>
+            <Link to="/contact" className="btn btn-outline">Contact Us</Link>
+          </div>
+        </section>
     </div>
   );
 });

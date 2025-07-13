@@ -1,0 +1,245 @@
+/* Base Card Styles */
+.card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  word-wrap: break-word;
+  background-color: var(--bg-primary);
+  background-clip: border-box;
+  transition: all var(--transition-speed) ease;
+  border-radius: var(--border-radius);
+  overflow: hidden;
+}
+
+/* Card Variants */
+.card-default {
+  border: 1px solid var(--border-color);
+  box-shadow: var(--shadow-sm);
+}
+
+.card-outlined {
+  border: 1px solid var(--border-color);
+  background-color: transparent;
+}
+
+.card-elevated {
+  border: 1px solid var(--border-color);
+  box-shadow: var(--shadow-md);
+}
+
+.card-filled {
+  background-color: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+}
+
+/* Hover Effects */
+.card-hoverable:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.card-hoverable.card-elevated:hover {
+  box-shadow: var(--shadow-lg);
+}
+
+/* Card Header */
+.card-header {
+  padding: 1.25rem 1.5rem;
+  margin-bottom: 0;
+  background-color: var(--bg-secondary);
+  border-bottom: 1px solid var(--border-color);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.card-header:first-child {
+  border-radius: calc(var(--border-radius) - 1px) calc(var(--border-radius) - 1px) 0 0;
+}
+
+/* Card Body */
+.card-body {
+  flex: 1 1 auto;
+  padding: 1.5rem;
+}
+
+/* Card Footer */
+.card-footer {
+  padding: 1.25rem 1.5rem;
+  background-color: var(--bg-secondary);
+  border-top: 1px solid var(--border-color);
+  border-bottom-left-radius: calc(var(--border-radius) - 1px);
+  border-bottom-right-radius: calc(var(--border-radius) - 1px);
+}
+
+/* Card Title */
+.card-title {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  line-height: 1.5;
+}
+
+/* Card Subtitle */
+.card-subtitle {
+  margin: 0.5rem 0 0;
+  font-size: 0.875rem;
+  color: var(--text-muted);
+  line-height: 1.5;
+}
+
+/* Card Padding Variants */
+.card-padding-none .card-body {
+  padding: 0;
+}
+
+.card-padding-sm .card-body {
+  padding: 1rem;
+}
+
+.card-padding-md .card-body {
+  padding: 1.5rem;
+}
+
+.card-padding-lg .card-body {
+  padding: 2rem;
+}
+
+/* Card Media */
+.card-media {
+  width: 100%;
+  overflow: hidden;
+}
+
+.card-media img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* Card Actions */
+.card-actions {
+  display: flex;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  background-color: var(--bg-secondary);
+  border-top: 1px solid var(--border-color);
+}
+
+/* Dark Mode Adjustments */
+[data-theme='dark'] .card-default {
+  background-color: var(--bg-secondary);
+  border-color: var(--border-color);
+}
+
+[data-theme='dark'] .card-filled {
+  background-color: var(--bg-tertiary);
+}
+
+[data-theme='dark'] .card-header,
+[data-theme='dark'] .card-footer {
+  background-color: var(--bg-tertiary);
+  border-color: var(--border-color);
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+  .card-body {
+    padding: 1.25rem;
+  }
+  
+  .card-header,
+  .card-footer {
+    padding: 1rem 1.25rem;
+  }
+  
+  .card-title {
+    font-size: 1.125rem;
+  }
+}
+
+/* Card Grid Layout */
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.5rem;
+}
+
+/* Card with Image */
+.card-with-image .card-media {
+  margin: -1px -1px 0;
+  border-radius: var(--border-radius) var(--border-radius) 0 0;
+  overflow: hidden;
+}
+
+.card-with-image .card-media + .card-body {
+  padding-top: 1.5rem;
+}
+
+/* Card Hover Effects */
+.card-hover-zoom {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card-hover-zoom:hover {
+  transform: translateY(-4px) scale(1.01);
+  box-shadow: var(--shadow-lg);
+}
+
+/* Card with Shadow on Hover */
+.card-hover-shadow {
+  transition: box-shadow 0.3s ease;
+}
+
+.card-hover-shadow:hover {
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+
+/* Card with Border Animation */
+.card-border-animation {
+  position: relative;
+  overflow: hidden;
+}
+
+.card-border-animation::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--primary-color), var(--accent-color));
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.3s ease;
+}
+
+.card-border-animation:hover::before {
+  transform: scaleX(1);
+}
+
+/* Card with Hover Overlay */
+.card-hover-overlay {
+  position: relative;
+  overflow: hidden;
+}
+
+.card-hover-overlay .card-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.card-hover-overlay:hover .card-overlay {
+  opacity: 1;
+}

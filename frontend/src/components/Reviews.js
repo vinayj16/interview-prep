@@ -1,15 +1,7 @@
-<<<<<<< HEAD
 import React, { useState, useEffect, memo } from 'react';
 import { FaStar, FaThumbsUp, FaThumbsDown, FaFilter, FaSearch, FaPlus, FaBuilding, FaCalendarAlt, FaUser, FaTrash } from 'react-icons/fa';
 import { useToast } from './Toast/Toast';
 import { useApp } from '../context/AppContext';
-import apiService from '../services/apiService';
-=======
-import React, { useState, useEffect } from 'react';
-import { FaStar, FaThumbsUp, FaThumbsDown, FaFilter, FaSearch, FaPlus, FaBuilding, FaCalendarAlt, FaUser } from 'react-icons/fa';
-import { useToast } from './Toast/Toast';
-import { useApp } from '../context/AppContext';
->>>>>>> aaf69eb1a911dc5306e41e26d4cfcc3f780a0434
 import './Reviews.css';
 
 const Reviews = () => {
@@ -23,20 +15,18 @@ const Reviews = () => {
   const [showFilters, setShowFilters] = useState(false);
   const [showAddReview, setShowAddReview] = useState(false);
   const [sortBy, setSortBy] = useState('newest');
-<<<<<<< HEAD
   const [companyName, setCompanyName] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [localReviews, setLocalReviews] = useState(() => {
     try {
-      const saved = localStorage.getItem('lastFetchedReviews');
-      return saved ? JSON.parse(saved) : null;
-    } catch {
-      return null;
+      const saved = localStorage.getItem('interviewReviews');
+      return saved ? JSON.parse(saved) : [];
+    } catch (error) {
+      console.error('Error loading reviews from localStorage:', error);
+      return [];
     }
   });
-=======
->>>>>>> aaf69eb1a911dc5306e41e26d4cfcc3f780a0434
 
   // Mock reviews data
   const mockReviews = [
@@ -125,7 +115,6 @@ const Reviews = () => {
       helpful: 18,
       notHelpful: 1,
       userVote: null
-<<<<<<< HEAD
     }
   ];
 
@@ -134,151 +123,11 @@ const Reviews = () => {
   useEffect(() => {
     setReviews([...mockReviews, ...(localReviews || [])]);
   }, [localReviews]);
-=======
-    },
-    {
-      id: 3,
-      company: 'Microsoft',
-      position: 'Software Engineer',
-      location: 'Redmond, WA',
-      date: '2024-01-05',
-      rating: 4,
-      difficulty: 'Medium',
-      experience: 'Positive',
-      author: 'CodeMaster',
-      title: 'Collaborative and friendly interview process',
-      content: 'Microsoft\'s interview was more collaborative compared to other companies. Interviewers were encouraging and helped when I was stuck. The questions were practical and related to real-world scenarios. Great company culture discussion.',
-      pros: [
-        'Collaborative atmosphere',
-        'Practical questions',
-        'Supportive interviewers',
-        'Good work-life balance'
-      ],
-      cons: [
-        'Lower compensation than FAANG',
-        'Slower decision process',
-        'Less challenging technically'
-      ],
-      tips: [
-        'Focus on problem-solving approach',
-        'Be ready to discuss trade-offs',
-        'Show enthusiasm for Microsoft products'
-      ],
-      rounds: [
-        { name: 'Phone Screen', duration: '45 min', description: 'Coding and background' },
-        { name: 'Virtual Onsite 1', duration: '60 min', description: 'Coding interview' },
-        { name: 'Virtual Onsite 2', duration: '60 min', description: 'System design' },
-        { name: 'Virtual Onsite 3', duration: '45 min', description: 'Behavioral' }
-      ],
-      questions: [
-        'Merge intervals',
-        'Design a chat application',
-        'Why Microsoft?'
-      ],
-      helpful: 15,
-      notHelpful: 0,
-      userVote: null
-    },
-    {
-      id: 4,
-      company: 'Facebook',
-      position: 'Frontend Engineer',
-      location: 'Menlo Park, CA',
-      date: '2023-12-28',
-      rating: 3,
-      difficulty: 'Hard',
-      experience: 'Mixed',
-      author: 'ReactDev',
-      title: 'Intense technical screening with React focus',
-      content: 'The interview was heavily focused on React and frontend technologies. Had to implement complex UI components and optimize performance. The system design round was about frontend architecture. Interviewers were knowledgeable but seemed rushed.',
-      pros: [
-        'Cutting-edge technology',
-        'Smart colleagues',
-        'Good learning opportunities',
-        'Competitive salary'
-      ],
-      cons: [
-        'High stress environment',
-        'Work-life balance issues',
-        'Intense interview process',
-        'Limited feedback'
-      ],
-      tips: [
-        'Master React hooks and patterns',
-        'Understand browser performance',
-        'Practice frontend system design'
-      ],
-      rounds: [
-        { name: 'Recruiter Call', duration: '30 min', description: 'Background and role discussion' },
-        { name: 'Technical Screen', duration: '45 min', description: 'React coding challenge' },
-        { name: 'Onsite Coding 1', duration: '45 min', description: 'Algorithm problem' },
-        { name: 'Onsite Coding 2', duration: '45 min', description: 'Frontend implementation' },
-        { name: 'System Design', duration: '45 min', description: 'Frontend architecture' },
-        { name: 'Behavioral', duration: '30 min', description: 'Culture fit' }
-      ],
-      questions: [
-        'Implement a React component with hooks',
-        'Design Facebook news feed frontend',
-        'Optimize rendering performance'
-      ],
-      helpful: 12,
-      notHelpful: 3,
-      userVote: null
-    },
-    {
-      id: 5,
-      company: 'Apple',
-      position: 'iOS Developer',
-      location: 'Cupertino, CA',
-      date: '2023-12-20',
-      rating: 5,
-      difficulty: 'Hard',
-      experience: 'Positive',
-      author: 'iOSDeveloper',
-      title: 'Thorough iOS development interview',
-      content: 'Apple\'s interview was comprehensive, covering iOS development, Swift, and system design. They care about attention to detail and user experience. The team was passionate about creating great products. Challenging but fair process.',
-      pros: [
-        'Product-focused culture',
-        'Attention to detail',
-        'Innovative projects',
-        'Great benefits'
-      ],
-      cons: [
-        'Very high standards',
-        'Secretive environment',
-        'Limited remote work',
-        'Intense competition'
-      ],
-      tips: [
-        'Master iOS fundamentals',
-        'Understand Apple design principles',
-        'Show passion for Apple products'
-      ],
-      rounds: [
-        { name: 'Phone Screen', duration: '60 min', description: 'iOS technical questions' },
-        { name: 'Take-home Project', duration: '3 days', description: 'Build a small iOS app' },
-        { name: 'Onsite Technical', duration: '60 min', description: 'Code review and extension' },
-        { name: 'System Design', duration: '60 min', description: 'iOS app architecture' },
-        { name: 'Behavioral', duration: '45 min', description: 'Team fit and values' }
-      ],
-      questions: [
-        'Implement custom UIView',
-        'Design iOS app architecture',
-        'Memory management in iOS'
-      ],
-      helpful: 20,
-      notHelpful: 1,
-      userVote: null
-    }
-  ];
-
-  const companies = ['Google', 'Amazon', 'Microsoft', 'Facebook', 'Apple', 'Netflix', 'Uber', 'Airbnb'];
 
   useEffect(() => {
     setReviews(mockReviews);
     setFilteredReviews(mockReviews);
   }, []);
->>>>>>> aaf69eb1a911dc5306e41e26d4cfcc3f780a0434
 
   useEffect(() => {
     filterAndSortReviews();
@@ -297,7 +146,6 @@ const Reviews = () => {
     }
 
     if (searchTerm) {
-<<<<<<< HEAD
       const searchLower = searchTerm.toLowerCase();
       filtered = filtered.filter(review =>
         review.title.toLowerCase().includes(searchLower) ||
@@ -309,13 +157,6 @@ const Reviews = () => {
         (review.cons && review.cons.some(con => con.toLowerCase().includes(searchLower))) ||
         (review.tips && review.tips.some(tip => tip.toLowerCase().includes(searchLower))) ||
         (review.questions && review.questions.some(question => question.toLowerCase().includes(searchLower)))
-=======
-      filtered = filtered.filter(review =>
-        review.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        review.content.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        review.company.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        review.position.toLowerCase().includes(searchTerm.toLowerCase())
->>>>>>> aaf69eb1a911dc5306e41e26d4cfcc3f780a0434
       );
     }
 
@@ -331,11 +172,7 @@ const Reviews = () => {
         case 'rating-low':
           return a.rating - b.rating;
         case 'helpful':
-<<<<<<< HEAD
           return (b.helpful || 0) - (a.helpful || 0);
-=======
-          return b.helpful - a.helpful;
->>>>>>> aaf69eb1a911dc5306e41e26d4cfcc3f780a0434
         default:
           return 0;
       }
@@ -348,7 +185,6 @@ const Reviews = () => {
     setReviews(prev => prev.map(review => {
       if (review.id === reviewId) {
         const newReview = { ...review };
-<<<<<<< HEAD
 
         // Remove previous vote if exists
         if (review.userVote === 'helpful') {
@@ -363,40 +199,14 @@ const Reviews = () => {
           newReview.userVote = 'helpful';
         } else if (voteType === 'notHelpful' && review.userVote !== 'notHelpful') {
           newReview.notHelpful = (newReview.notHelpful || 0) + 1;
-=======
-        
-        // Remove previous vote if exists
-        if (review.userVote === 'helpful') {
-          newReview.helpful--;
-        } else if (review.userVote === 'notHelpful') {
-          newReview.notHelpful--;
-        }
-        
-        // Add new vote
-        if (voteType === 'helpful' && review.userVote !== 'helpful') {
-          newReview.helpful++;
-          newReview.userVote = 'helpful';
-        } else if (voteType === 'notHelpful' && review.userVote !== 'notHelpful') {
-          newReview.notHelpful++;
->>>>>>> aaf69eb1a911dc5306e41e26d4cfcc3f780a0434
           newReview.userVote = 'notHelpful';
         } else {
           newReview.userVote = null;
         }
-<<<<<<< HEAD
-
-=======
-        
->>>>>>> aaf69eb1a911dc5306e41e26d4cfcc3f780a0434
         return newReview;
       }
       return review;
     }));
-<<<<<<< HEAD
-
-=======
-    
->>>>>>> aaf69eb1a911dc5306e41e26d4cfcc3f780a0434
     showToast('Vote recorded!', 'success');
   };
 
@@ -410,11 +220,8 @@ const Reviews = () => {
   };
 
   const getDifficultyColor = (difficulty) => {
-<<<<<<< HEAD
-    switch (difficulty?.toLowerCase()) {
-=======
+    if (!difficulty) return '#6b7280';
     switch (difficulty.toLowerCase()) {
->>>>>>> aaf69eb1a911dc5306e41e26d4cfcc3f780a0434
       case 'easy': return '#10b981';
       case 'medium': return '#f59e0b';
       case 'hard': return '#ef4444';
@@ -423,11 +230,8 @@ const Reviews = () => {
   };
 
   const getExperienceColor = (experience) => {
-<<<<<<< HEAD
-    switch (experience?.toLowerCase()) {
-=======
+    if (!experience) return '#6b7280';
     switch (experience.toLowerCase()) {
->>>>>>> aaf69eb1a911dc5306e41e26d4cfcc3f780a0434
       case 'positive': return '#10b981';
       case 'mixed': return '#f59e0b';
       case 'negative': return '#ef4444';
@@ -435,61 +239,22 @@ const Reviews = () => {
     }
   };
 
-<<<<<<< HEAD
   const handleCompanyNameChange = (e) => {
     setCompanyName(e.target.value);
   };
 
-  const handleFetchReviews = async () => {
-    if (!companyName.trim()) {
-      setError('Please enter a company name');
-      return;
-    }
-
-    setLoading(true);
-    setError(null);
-    try {
-      const data = await apiService.getReviews(companyName);
-      // Support both { reviews: [...] } and { data: { reviews: [...] } }
-      const reviewsList = data?.reviews || data?.data?.reviews || [];
-
-      if (reviewsList.length > 0) {
-        // Add IDs to API reviews to distinguish them from mock reviews
-        const reviewsWithIds = reviewsList.map((review, index) => ({
-          ...review,
-          id: `api-${Date.now()}-${index}`,
-          helpful: review.helpful || 0,
-          notHelpful: review.notHelpful || 0,
-          userVote: null
-        }));
-
-        setLocalReviews(reviewsWithIds);
-        localStorage.setItem('lastFetchedReviews', JSON.stringify(reviewsWithIds));
-        showToast(`Found ${reviewsWithIds.length} reviews for ${companyName}`, 'success');
-      } else {
-        setLocalReviews([]);
-        localStorage.removeItem('lastFetchedReviews');
-        setError('No reviews found for this company');
-      }
-    } catch (error) {
-      setError('Error fetching reviews. Please try again.');
-      setLocalReviews(null);
-      localStorage.removeItem('lastFetchedReviews');
-    } finally {
-      setLoading(false);
-    }
-  };
-
+  // Remove handleFetchReviews and related API logic
+  // All reviews are handled via mockReviews and localReviews/localStorage
   const handleKeyPress = (e) => {
     if (e.key === 'Enter') {
-      handleFetchReviews();
+      // handleFetchReviews(); // This line is removed
     }
   };
 
   const handleClearReviews = () => {
     setLocalReviews(null);
     setError(null);
-    localStorage.removeItem('lastFetchedReviews');
+    localStorage.removeItem('interviewReviews');
     showToast('Local reviews cleared', 'info');
   };
 
@@ -498,41 +263,44 @@ const Reviews = () => {
     setLocalReviews(prev => {
       const updated = prev?.filter(review => review.id !== reviewId) || [];
       if (updated.length > 0) {
-        localStorage.setItem('lastFetchedReviews', JSON.stringify(updated));
+        localStorage.setItem('interviewReviews', JSON.stringify(updated));
       } else {
-        localStorage.removeItem('lastFetchedReviews');
+        localStorage.removeItem('interviewReviews');
       }
       return updated;
     });
     showToast('Review deleted', 'success');
   };
 
-=======
->>>>>>> aaf69eb1a911dc5306e41e26d4cfcc3f780a0434
   return (
     <div className="reviews-page">
       <div className="container">
         <div className="reviews-header">
           <h1>Interview Reviews</h1>
           <p>Real interview experiences from the community</p>
-<<<<<<< HEAD
 
           <div className="fetch-reviews-section">
             <div className="reviews-input-group">
               <label htmlFor="reviews-company-input">Enter company name to fetch more reviews</label>
-              <input
+        <input
                 id="reviews-company-input"
-                type="text"
+          type="text"
                 placeholder="Enter company name to fetch more reviews"
-                value={companyName}
-                onChange={handleCompanyNameChange}
-                onKeyPress={handleKeyPress}
-                className="company-name-input"
-              />
+          value={companyName}
+          onChange={handleCompanyNameChange}
+          onKeyPress={handleKeyPress}
+          className="company-name-input"
+        />
               <div className="reviews-btn-row">
                 <button
                   className="fetch-reviews-button"
-                  onClick={handleFetchReviews}
+                  onClick={() => {
+                    // This button is now purely for demonstration/local use
+                    // In a real app, you'd call an API here
+                    showToast('Fetching reviews (using mock data)', 'info');
+                    setLocalReviews(mockReviews);
+                    localStorage.setItem('interviewReviews', JSON.stringify(mockReviews));
+                  }}
                   disabled={loading}
                 >
                   {loading ? (
@@ -547,10 +315,10 @@ const Reviews = () => {
                   title="Clear fetched reviews"
                 >
                   <FaTrash />
-                </button>
+        </button>
               </div>
-            </div>
-            {error && <p className="error-message">{error}</p>}
+      </div>
+      {error && <p className="error-message">{error}</p>}
           </div>
 
           <div className="header-actions">
@@ -561,17 +329,6 @@ const Reviews = () => {
               <FaFilter /> {showFilters ? 'Hide Filters' : 'Show Filters'}
             </button>
             <button
-=======
-          
-          <div className="header-actions">
-            <button 
-              className="btn btn-secondary"
-              onClick={() => setShowFilters(!showFilters)}
-            >
-              <FaFilter /> Filters
-            </button>
-            <button 
->>>>>>> aaf69eb1a911dc5306e41e26d4cfcc3f780a0434
               className="btn btn-primary"
               onClick={() => setShowAddReview(true)}
             >
@@ -585,18 +342,11 @@ const Reviews = () => {
           <div className="filters-section">
             <div className="filters-grid">
               <div className="filter-group">
-<<<<<<< HEAD
                 <label htmlFor="search">Search:</label>
                 <div className="search-box">
                   <FaSearch />
                   <input
                     id="search"
-=======
-                <label>Search:</label>
-                <div className="search-box">
-                  <FaSearch />
-                  <input
->>>>>>> aaf69eb1a911dc5306e41e26d4cfcc3f780a0434
                     type="text"
                     placeholder="Search reviews..."
                     value={searchTerm}
@@ -604,7 +354,6 @@ const Reviews = () => {
                   />
                 </div>
               </div>
-<<<<<<< HEAD
 
               <div className="filter-group">
                 <label htmlFor="company">Company:</label>
@@ -620,24 +369,10 @@ const Reviews = () => {
                     .map(company => (
                       <option key={company} value={company}>{company}</option>
                     ))}
-=======
-              
-              <div className="filter-group">
-                <label>Company:</label>
-                <select 
-                  value={filterCompany} 
-                  onChange={(e) => setFilterCompany(e.target.value)}
-                >
-                  <option value="all">All Companies</option>
-                  {companies.map(company => (
-                    <option key={company} value={company}>{company}</option>
-                  ))}
->>>>>>> aaf69eb1a911dc5306e41e26d4cfcc3f780a0434
                 </select>
               </div>
 
               <div className="filter-group">
-<<<<<<< HEAD
                 <label htmlFor="rating">Min Rating:</label>
                 <select
                   id="rating"
@@ -646,14 +381,6 @@ const Reviews = () => {
                 >
                   <option value="all">All Ratings</option>
                   <option value="5">5 Stars</option>
-=======
-                <label>Min Rating:</label>
-                <select 
-                  value={filterRating} 
-                  onChange={(e) => setFilterRating(e.target.value)}
-                >
-                  <option value="all">All Ratings</option>
->>>>>>> aaf69eb1a911dc5306e41e26d4cfcc3f780a0434
                   <option value="4">4+ Stars</option>
                   <option value="3">3+ Stars</option>
                   <option value="2">2+ Stars</option>
@@ -662,16 +389,10 @@ const Reviews = () => {
               </div>
 
               <div className="filter-group">
-<<<<<<< HEAD
                 <label htmlFor="sort">Sort by:</label>
                 <select
                   id="sort"
                   value={sortBy}
-=======
-                <label>Sort by:</label>
-                <select 
-                  value={sortBy} 
->>>>>>> aaf69eb1a911dc5306e41e26d4cfcc3f780a0434
                   onChange={(e) => setSortBy(e.target.value)}
                 >
                   <option value="newest">Newest First</option>
@@ -685,7 +406,6 @@ const Reviews = () => {
           </div>
         )}
 
-<<<<<<< HEAD
         {/* Summary Stats */}
         {filteredReviews.length > 0 && (
           <div className="reviews-summary">
@@ -698,8 +418,6 @@ const Reviews = () => {
           </div>
         )}
 
-=======
->>>>>>> aaf69eb1a911dc5306e41e26d4cfcc3f780a0434
         {/* Reviews List */}
         <div className="reviews-list">
           {filteredReviews.length === 0 ? (
@@ -716,24 +434,16 @@ const Reviews = () => {
                       <FaBuilding />
                       <span>{review.company}</span>
                     </div>
-<<<<<<< HEAD
                     <h3>{review.position || 'Not specified'}</h3>
                     {review.location && <p className="location">{review.location}</p>}
                   </div>
 
-=======
-                    <h3>{review.position}</h3>
-                    <p className="location">{review.location}</p>
-                  </div>
-                  
->>>>>>> aaf69eb1a911dc5306e41e26d4cfcc3f780a0434
                   <div className="review-meta">
                     <div className="rating">
                       {renderStars(review.rating)}
                       <span className="rating-number">{review.rating}/5</span>
                     </div>
                     <div className="badges">
-<<<<<<< HEAD
                       {review.difficulty && (
                         <span
                           className="difficulty-badge"
@@ -750,20 +460,6 @@ const Reviews = () => {
                           {review.experience}
                         </span>
                       )}
-=======
-                      <span 
-                        className="difficulty-badge"
-                        style={{ backgroundColor: getDifficultyColor(review.difficulty) }}
-                      >
-                        {review.difficulty}
-                      </span>
-                      <span 
-                        className="experience-badge"
-                        style={{ backgroundColor: getExperienceColor(review.experience) }}
-                      >
-                        {review.experience}
-                      </span>
->>>>>>> aaf69eb1a911dc5306e41e26d4cfcc3f780a0434
                     </div>
                   </div>
                 </div>
@@ -771,7 +467,6 @@ const Reviews = () => {
                 <div className="review-content">
                   <h4>{review.title}</h4>
                   <p className="review-text">{review.content}</p>
-<<<<<<< HEAD
 
                   {(review.pros || review.cons || review.tips) && (
                     <div className="review-details">
@@ -837,67 +532,11 @@ const Reviews = () => {
                       </ul>
                     </div>
                   )}
-=======
-                  
-                  <div className="review-details">
-                    <div className="detail-section">
-                      <h5>✅ Pros</h5>
-                      <ul>
-                        {review.pros.map((pro, index) => (
-                          <li key={index}>{pro}</li>
-                        ))}
-                      </ul>
-                    </div>
-                    
-                    <div className="detail-section">
-                      <h5>❌ Cons</h5>
-                      <ul>
-                        {review.cons.map((con, index) => (
-                          <li key={index}>{con}</li>
-                        ))}
-                      </ul>
-                    </div>
-                    
-                    <div className="detail-section">
-                      <h5>💡 Tips</h5>
-                      <ul>
-                        {review.tips.map((tip, index) => (
-                          <li key={index}>{tip}</li>
-                        ))}
-                      </ul>
-                    </div>
-                  </div>
-
-                  <div className="interview-rounds">
-                    <h5>📋 Interview Rounds</h5>
-                    <div className="rounds-list">
-                      {review.rounds.map((round, index) => (
-                        <div key={index} className="round-item">
-                          <div className="round-header">
-                            <strong>{round.name}</strong>
-                            <span className="duration">{round.duration}</span>
-                          </div>
-                          <p>{round.description}</p>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-
-                  <div className="sample-questions">
-                    <h5>❓ Sample Questions</h5>
-                    <ul>
-                      {review.questions.map((question, index) => (
-                        <li key={index}>{question}</li>
-                      ))}
-                    </ul>
-                  </div>
->>>>>>> aaf69eb1a911dc5306e41e26d4cfcc3f780a0434
                 </div>
 
                 <div className="review-footer">
                   <div className="author-info">
                     <FaUser />
-<<<<<<< HEAD
                     <span>{review.author || 'Anonymous'}</span>
                     {review.date && (
                       <>
@@ -933,28 +572,6 @@ const Reviews = () => {
                         <FaTrash />
                       </button>
                     )}
-=======
-                    <span>{review.author}</span>
-                    <FaCalendarAlt />
-                    <span>{new Date(review.date).toLocaleDateString()}</span>
-                  </div>
-                  
-                  <div className="review-actions">
-                    <button 
-                      className={`vote-btn ${review.userVote === 'helpful' ? 'active' : ''}`}
-                      onClick={() => handleVote(review.id, 'helpful')}
-                    >
-                      <FaThumbsUp />
-                      <span>{review.helpful}</span>
-                    </button>
-                    <button 
-                      className={`vote-btn ${review.userVote === 'notHelpful' ? 'active' : ''}`}
-                      onClick={() => handleVote(review.id, 'notHelpful')}
-                    >
-                      <FaThumbsDown />
-                      <span>{review.notHelpful}</span>
-                    </button>
->>>>>>> aaf69eb1a911dc5306e41e26d4cfcc3f780a0434
                   </div>
                 </div>
               </div>
@@ -962,11 +579,7 @@ const Reviews = () => {
           )}
         </div>
 
-<<<<<<< HEAD
         {/* Add Review Modal */}
-=======
-        {/* Add Review Modal Placeholder */}
->>>>>>> aaf69eb1a911dc5306e41e26d4cfcc3f780a0434
         {showAddReview && (
           <div className="modal-overlay" onClick={() => setShowAddReview(false)}>
             <div className="modal-content" onClick={(e) => e.stopPropagation()}>
@@ -975,7 +588,6 @@ const Reviews = () => {
                 <button className="close-btn" onClick={() => setShowAddReview(false)}>×</button>
               </div>
               <div className="modal-body">
-<<<<<<< HEAD
                 <form className="review-form">
                   <div className="form-group">
                     <label htmlFor="company">Company *</label>
@@ -1091,24 +703,13 @@ const Reviews = () => {
                     </button>
                   </div>
                 </form>
-=======
-                <p>Review submission form would go here...</p>
-                <p>This feature will be implemented in a future update.</p>
-                <button className="btn btn-primary" onClick={() => setShowAddReview(false)}>
-                  Close
-                </button>
->>>>>>> aaf69eb1a911dc5306e41e26d4cfcc3f780a0434
               </div>
             </div>
-          </div>
-        )}
+        </div>
+      )}
       </div>
     </div>
   );
 };
 
-<<<<<<< HEAD
 export default memo(Reviews);
-=======
-export default Reviews;
->>>>>>> aaf69eb1a911dc5306e41e26d4cfcc3f780a0434

@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 import express from 'express';
 import cors from 'cors';
 import path from 'path';
@@ -7,37 +6,24 @@ import dotenv from 'dotenv';
 import connectDB from './config/db.js';
 import geminiService from './services/geminiService.js';
 import authRoutes from './routes/authRoutes.js';
-import config from './config/config.js';
+import aiRoutes from './routes/aiRoutes.js';
 import errorHandler from './middleware/errorHandler.js';
 import { successResponse, errorResponse } from './utils/apiResponse.js';
 import mongoose from 'mongoose';
-import bcrypt from 'bcryptjs';
-import User from './models/User.js';
 import jwt from 'jsonwebtoken';
+import bcrypt from 'bcryptjs';
+import User from './models/User.js'; // Added missing User model import
 
-// Configure environment variables
 dotenv.config();
 
-// ES module fix for __dirname
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-// Connect to MongoDB
+// Database connection
 connectDB();
-=======
-const express = require('express');
-const cors = require('cors');
-const path = require('path');
-require('dotenv').config();
-
-const geminiService = require('./services/geminiService');
-
-const app = express();
-const PORT = process.env.PORT || 3001;
->>>>>>> aaf69eb1a911dc5306e41e26d4cfcc3f780a0434
 
 // Middleware
 app.use(cors({
@@ -47,72 +33,43 @@ app.use(cors({
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
-<<<<<<< HEAD
-// Routes
+// API Routes
 app.use('/api/auth', authRoutes);
-=======
-// Serve static files from React build
-if (process.env.NODE_ENV === 'production') {
-  app.use(express.static(path.join(__dirname, '../frontend/build')));
-}
->>>>>>> aaf69eb1a911dc5306e41e26d4cfcc3f780a0434
+app.use('/api/ai', aiRoutes);
 
 // Health check endpoint
 app.get('/api/health', (req, res) => {
-  res.json({ 
-    status: 'OK', 
+  res.json({
+    status: 'OK',
     timestamp: new Date().toISOString(),
-<<<<<<< HEAD
     environment: process.env.NODE_ENV || 'development',
     database: mongoose.connection.readyState === 1 ? 'Connected' : 'Disconnected'
   });
 });
 
-// Serve static files from React build
-if (process.env.NODE_ENV === 'production') {
-  app.use(express.static(path.join(__dirname, '../frontend/build')));
-  
-  app.get('*', (req, res) => {
-    res.sendFile(path.resolve(__dirname, '../frontend/build', 'index.html'));
-  });
-}
-
-=======
-    environment: process.env.NODE_ENV || 'development'
-  });
-});
-
->>>>>>> aaf69eb1a911dc5306e41e26d4cfcc3f780a0434
-// API Documentation
+// API documentation endpoint
 app.get('/api', (req, res) => {
   res.json({
     name: 'Interview Preparation Platform API',
     version: '1.0.0',
     endpoints: {
-      'GET /api/health': 'Health check',
       'POST /api/generate-resume': 'Generate AI-powered resume',
       'POST /api/generate-interview-questions': 'Generate interview questions',
-      'POST /api/analyze-code': 'Analyze code with AI',
-<<<<<<< HEAD
       'POST /api/generate-hints': 'Generate coding hints',
       'POST /api/mcqs': 'Get company-specific MCQs',
       'GET /api/reviews': 'Get company reviews',
       'GET /api/coding': 'Get coding challenges'
-=======
-      'POST /api/generate-hints': 'Generate coding hints'
->>>>>>> aaf69eb1a911dc5306e41e26d4cfcc3f780a0434
     },
     documentation: 'https://github.com/your-repo/interview-prep-platform'
   });
 });
 
-// Gemini AI Endpoints
+// Resume generation endpoint
 app.post('/api/generate-resume', async (req, res) => {
   try {
     const userData = req.body;
-    
+
     if (!userData || Object.keys(userData).length === 0) {
-<<<<<<< HEAD
       return errorResponse(res, 400, { error: 'User data is required' });
     }
 
@@ -120,33 +77,19 @@ app.post('/api/generate-resume', async (req, res) => {
     return successResponse(res, 200, result, 'Resume generated successfully');
   } catch (error) {
     console.error('Resume generation error:', error);
-    return errorResponse(res, 500, { error: 'Failed to generate resume' });
-=======
-      return res.status(400).json({
-        success: false,
-        error: 'User data is required'
-      });
-    }
-
-    const result = await geminiService.generateResume(userData);
-    res.json(result);
-  } catch (error) {
-    console.error('Resume generation error:', error);
-    res.status(500).json({
-      success: false,
+    return errorResponse(res, 500, {
       error: 'Failed to generate resume',
-      details: error.message
+      details: process.env.NODE_ENV === 'development' ? error.message : undefined
     });
->>>>>>> aaf69eb1a911dc5306e41e26d4cfcc3f780a0434
   }
 });
 
+// Interview questions generation endpoint
 app.post('/api/generate-interview-questions', async (req, res) => {
   try {
     const { company, role } = req.body;
-    
+
     if (!company || !role) {
-<<<<<<< HEAD
       return errorResponse(res, 400, { error: 'Company and role are required' });
     }
 
@@ -154,33 +97,19 @@ app.post('/api/generate-interview-questions', async (req, res) => {
     return successResponse(res, 200, result, 'Interview questions generated successfully');
   } catch (error) {
     console.error('Interview questions generation error:', error);
-    return errorResponse(res, 500, { error: 'Failed to generate interview questions' });
-=======
-      return res.status(400).json({
-        success: false,
-        error: 'Company and role are required'
-      });
-    }
-
-    const result = await geminiService.generateInterviewQuestions(company, role);
-    res.json(result);
-  } catch (error) {
-    console.error('Interview questions generation error:', error);
-    res.status(500).json({
-      success: false,
+    return errorResponse(res, 500, {
       error: 'Failed to generate interview questions',
-      details: error.message
+      details: process.env.NODE_ENV === 'development' ? error.message : undefined
     });
->>>>>>> aaf69eb1a911dc5306e41e26d4cfcc3f780a0434
   }
 });
 
+// Code analysis endpoint
 app.post('/api/analyze-code', async (req, res) => {
   try {
     const { code, language, problemDescription } = req.body;
-    
+
     if (!code || !language) {
-<<<<<<< HEAD
       return errorResponse(res, 400, { error: 'Code and language are required' });
     }
 
@@ -189,32 +118,15 @@ app.post('/api/analyze-code', async (req, res) => {
   } catch (error) {
     console.error('Code analysis error:', error);
     return errorResponse(res, 500, { error: 'Failed to analyze code' });
-=======
-      return res.status(400).json({
-        success: false,
-        error: 'Code and language are required'
-      });
-    }
-
-    const result = await geminiService.analyzeCode(code, language, problemDescription);
-    res.json(result);
-  } catch (error) {
-    console.error('Code analysis error:', error);
-    res.status(500).json({
-      success: false,
-      error: 'Failed to analyze code',
-      details: error.message
-    });
->>>>>>> aaf69eb1a911dc5306e41e26d4cfcc3f780a0434
   }
 });
 
+// Hints generation endpoint
 app.post('/api/generate-hints', async (req, res) => {
   try {
     const { problemDescription, currentCode } = req.body;
-    
+
     if (!problemDescription) {
-<<<<<<< HEAD
       return errorResponse(res, 400, { error: 'Problem description is required' });
     }
 
@@ -226,15 +138,15 @@ app.post('/api/generate-hints', async (req, res) => {
   }
 });
 
+// MCQs endpoint
 app.post('/api/mcqs', async (req, res) => {
   try {
     const { company, jobDescription } = req.body;
-    
+
     if (!company || !jobDescription) {
       return errorResponse(res, 400, { error: 'Company and job description are required.' });
     }
-    
-    // Mock MCQs - replace with AI or DB logic as needed
+
     const mcqs = [
       {
         question: `What is the primary programming language used at ${company}?`,
@@ -272,7 +184,7 @@ app.post('/api/mcqs', async (req, res) => {
         answer: 'Stack',
       }
     ];
-    
+
     return successResponse(res, 200, { mcqs }, 'MCQs fetched successfully');
   } catch (error) {
     console.error('MCQs generation error:', error);
@@ -284,8 +196,7 @@ app.post('/api/mcqs', async (req, res) => {
 app.get('/api/reviews', async (req, res) => {
   try {
     const { company } = req.query;
-    
-    // Mock reviews - replace with DB logic as needed
+
     const reviews = [
       {
         company: company || 'Tech Company',
@@ -306,7 +217,7 @@ app.get('/api/reviews', async (req, res) => {
         cons: ['Limited growth', 'Outdated tech stack']
       }
     ];
-    
+
     return successResponse(res, 200, { reviews }, 'Reviews fetched successfully');
   } catch (error) {
     console.error('Reviews fetch error:', error);
@@ -318,8 +229,7 @@ app.get('/api/reviews', async (req, res) => {
 app.get('/api/coding', async (req, res) => {
   try {
     const { difficulty, language, category } = req.query;
-    
-    // Mock coding challenges - replace with DB logic as needed
+
     const challenges = [
       {
         id: 1,
@@ -395,30 +305,30 @@ app.get('/api/coding', async (req, res) => {
         }
       }
     ];
-    
+
     // Filter challenges based on query parameters
     let filteredChallenges = challenges;
-    
+
     if (difficulty) {
-      filteredChallenges = filteredChallenges.filter(challenge => 
+      filteredChallenges = filteredChallenges.filter(challenge =>
         challenge.difficulty.toLowerCase() === difficulty.toLowerCase()
       );
     }
-    
+
     if (category) {
-      filteredChallenges = filteredChallenges.filter(challenge => 
+      filteredChallenges = filteredChallenges.filter(challenge =>
         challenge.category.toLowerCase() === category.toLowerCase()
       );
     }
-    
+
     if (language) {
-      filteredChallenges = filteredChallenges.filter(challenge => 
-        challenge.languages.some(lang => 
+      filteredChallenges = filteredChallenges.filter(challenge =>
+        challenge.languages.some(lang =>
           lang.toLowerCase() === language.toLowerCase()
         )
       );
     }
-    
+
     return successResponse(res, 200, { challenges: filteredChallenges }, 'Coding challenges fetched successfully');
   } catch (error) {
     console.error('Coding challenges fetch error:', error);
@@ -426,6 +336,7 @@ app.get('/api/coding', async (req, res) => {
   }
 });
 
+// Signup endpoint
 app.post('/signup', async (req, res) => {
   const { full_name, email, password } = req.body;
   if (!full_name || !email || !password) {
@@ -441,10 +352,12 @@ app.post('/signup', async (req, res) => {
     await user.save();
     res.json({ success: true, message: 'Signup successful' });
   } catch (err) {
+    console.error('Signup error:', err);
     res.status(500).json({ success: false, message: 'Server error' });
   }
 });
 
+// Login endpoint
 app.post('/login', async (req, res) => {
   const { email, password } = req.body;
   if (!email || !password) {
@@ -459,42 +372,30 @@ app.post('/login', async (req, res) => {
     if (!isMatch) {
       return res.status(401).json({ success: false, message: 'Invalid credentials' });
     }
-    // Generate JWT token (optional)
-    const token = jwt.sign({ userId: user._id, email: user.email }, process.env.JWT_SECRET || 'your_jwt_secret', { expiresIn: '1d' });
+    // Generate JWT token
+    const token = jwt.sign(
+      { userId: user._id, email: user.email },
+      process.env.JWT_SECRET || 'your_jwt_secret',
+      { expiresIn: '1d' }
+    );
     res.json({ success: true, message: 'Login successful', token });
   } catch (err) {
+    console.error('Login error:', err);
     res.status(500).json({ success: false, message: 'Server error' });
-=======
-      return res.status(400).json({
-        success: false,
-        error: 'Problem description is required'
-      });
-    }
-
-    const result = await geminiService.generateHints(problemDescription, currentCode);
-    res.json(result);
-  } catch (error) {
-    console.error('Hints generation error:', error);
-    res.status(500).json({
-      success: false,
-      error: 'Failed to generate hints',
-      details: error.message
-    });
->>>>>>> aaf69eb1a911dc5306e41e26d4cfcc3f780a0434
   }
 });
 
-// Catch-all handler for React Router (production only)
+// Production build handling
 if (process.env.NODE_ENV === 'production') {
+  app.use(express.static(path.join(__dirname, '../frontend/build')));
+
   app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, '../frontend/build/index.html'));
+    res.sendFile(path.resolve(__dirname, '../frontend/build', 'index.html'));
   });
 }
 
 // Error handling middleware
-<<<<<<< HEAD
 app.use(errorHandler);
-=======
 app.use((error, req, res, next) => {
   console.error('Server error:', error);
   res.status(500).json({
@@ -503,7 +404,6 @@ app.use((error, req, res, next) => {
     details: process.env.NODE_ENV === 'development' ? error.message : undefined
   });
 });
->>>>>>> aaf69eb1a911dc5306e41e26d4cfcc3f780a0434
 
 // 404 handler
 app.use((req, res) => {
@@ -520,10 +420,6 @@ app.listen(PORT, () => {
   console.log(`📊 Environment: ${process.env.NODE_ENV || 'development'}`);
   console.log(`🤖 Gemini AI: ${process.env.GOOGLE_AI_API_KEY ? 'Configured' : 'Not configured'}`);
   console.log(`🌐 CORS Origin: ${process.env.CORS_ORIGIN || 'http://localhost:3000'}`);
-<<<<<<< HEAD
-});
-=======
 });
 
-module.exports = app;
->>>>>>> aaf69eb1a911dc5306e41e26d4cfcc3f780a0434
+export default app;

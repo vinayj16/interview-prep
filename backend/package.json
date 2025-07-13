@@ -2,10 +2,7 @@
   "name": "interview-preparation-backend",
   "version": "1.0.0",
   "description": "Backend API for Interview Preparation Platform",
-<<<<<<< HEAD
   "type": "module",
-=======
->>>>>>> aaf69eb1a911dc5306e41e26d4cfcc3f780a0434
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
@@ -14,7 +11,6 @@
   },
   "dependencies": {
     "@google/generative-ai": "^0.2.1",
-<<<<<<< HEAD
     "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
     "dotenv": "^16.6.1",
@@ -22,12 +18,8 @@
     "express-async-handler": "^1.2.0",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.16.1",
-    "mysql2": "^3.14.1"
-=======
-    "cors": "^2.8.5",
-    "dotenv": "^16.6.1",
-    "express": "^4.21.2"
->>>>>>> aaf69eb1a911dc5306e41e26d4cfcc3f780a0434
+    "mysql2": "^3.14.1",
+    "react-scripts": "^5.0.1"
   },
   "devDependencies": {
     "nodemon": "^3.0.1"

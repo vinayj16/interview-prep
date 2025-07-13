@@ -1,10 +1,10 @@
-<<<<<<< HEAD
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
-import { FaCheck, FaTimes, FaLightbulb, FaFilter, FaSearch, FaClock, FaTrophy, FaBookmark, FaRegBookmark, FaBuilding, FaTrash } from 'react-icons/fa';
+import { FaCheck, FaTimes, FaLightbulb, FaFilter, FaSearch, FaClock, FaTrophy, FaBookmark, FaRegBookmark, FaBuilding, FaTrash, FaPlay } from 'react-icons/fa';
 import { useToast } from './Toast/Toast';
 import { useApp } from '../context/AppContext';
 import confetti from 'canvas-confetti';
-import apiService from '../services/apiService';
+// Remove apiService import
+// import apiService from '../services/apiService';
 import './MCQs.css';
 
 // Company-specific MCQ data
@@ -407,16 +407,6 @@ const getBookmarkedMCQs = () => {
   const key = getBookmarksKey();
   return JSON.parse(localStorage.getItem(key) || '[]');
 };
-
-=======
-import React, { useState, useEffect } from 'react';
-import { FaCheck, FaTimes, FaLightbulb, FaFilter, FaSearch, FaClock, FaTrophy } from 'react-icons/fa';
-import { useToast } from './Toast/Toast';
-import { useApp } from '../context/AppContext';
-import confetti from 'canvas-confetti';
-import './MCQs.css';
-
->>>>>>> aaf69eb1a911dc5306e41e26d4cfcc3f780a0434
 const MCQs = () => {
   const { showToast } = useToast();
   const { state, actions } = useApp();
@@ -428,7 +418,6 @@ const MCQs = () => {
   const [isActive, setIsActive] = useState(false);
   const [filterCompany, setFilterCompany] = useState('all');
   const [filterTopic, setFilterTopic] = useState('all');
-<<<<<<< HEAD
   const [filterDifficulty, setFilterDifficulty] = useState('all');
   const [showFilters, setShowFilters] = useState(false);
   const [quizStarted, setQuizStarted] = useState(false);
@@ -439,7 +428,8 @@ const MCQs = () => {
     try {
       const saved = localStorage.getItem('lastFetchedMCQs');
       return saved ? JSON.parse(saved) : [];
-    } catch {
+    } catch (e) {
+      console.error('Error loading MCQs from localStorage:', e);
       return [];
     }
   });
@@ -468,211 +458,143 @@ const MCQs = () => {
   }, [mcqs]);
 
   const companies = useMemo(() => {
-    const allCompanies = new Set(allQuestions.map(q => q.company));
-    return ['all', ...Array.from(allCompanies).sort()];
+    const allCompanies = new Set();
+    allQuestions.forEach(q => {
+      if (q.company && typeof q.company === 'string') {
+        allCompanies.add(q.company);
+      }
+    });
+    return ['all', ...Array.from(allCompanies).filter(Boolean).sort()];
   }, [allQuestions]);
 
   const topics = useMemo(() => {
-    const allTopics = new Set(allQuestions.map(q => q.topic || q.category));
-    return ['all', ...Array.from(allTopics).sort()];
+    const allTopics = new Set();
+    allQuestions.forEach(q => {
+      const topic = q.topic || q.category;
+      if (topic && typeof topic === 'string') {
+        allTopics.add(topic);
+      }
+    });
+    return ['all', ...Array.from(allTopics).filter(Boolean).sort()];
   }, [allQuestions]);
 
   const difficulties = ['all', 'Easy', 'Medium', 'Hard'];
-=======
-  const [showFilters, setShowFilters] = useState(false);
-  const [quizStarted, setQuizStarted] = useState(false);
-  const [userAnswers, setUserAnswers] = useState([]);
+  
+  const filterQuestions = useCallback(() => {
+    let filtered = [...allQuestions];
 
-  // Mock MCQ data
-  const [allQuestions] = useState([
-    {
-      id: 1,
-      question: "What is the time complexity of binary search?",
-      options: ["O(n)", "O(log n)", "O(n²)", "O(1)"],
-      correct: 1,
-      explanation: "Binary search divides the search space in half with each comparison, resulting in O(log n) time complexity.",
-      company: "Google",
-      topic: "Algorithms",
-      difficulty: "Medium"
-    },
-    {
-      id: 2,
-      question: "Which data structure uses LIFO (Last In, First Out) principle?",
-      options: ["Queue", "Stack", "Array", "Linked List"],
-      correct: 1,
-      explanation: "Stack follows LIFO principle where the last element added is the first one to be removed.",
-      company: "Amazon",
-      topic: "Data Structures",
-      difficulty: "Easy"
-    },
-    {
-      id: 3,
-      question: "What is the space complexity of merge sort?",
-      options: ["O(1)", "O(log n)", "O(n)", "O(n²)"],
-      correct: 2,
-      explanation: "Merge sort requires O(n) additional space for the temporary arrays used during merging.",
-      company: "Microsoft",
-      topic: "Algorithms",
-      difficulty: "Medium"
-    },
-    {
-      id: 4,
-      question: "In JavaScript, what does 'this' keyword refer to?",
-      options: ["The global object", "The current function", "The calling object", "Undefined"],
-      correct: 2,
-      explanation: "In JavaScript, 'this' refers to the object that is calling the function.",
-      company: "Facebook",
-      topic: "JavaScript",
-      difficulty: "Medium"
-    },
-    {
-      id: 5,
-      question: "What is the worst-case time complexity of quicksort?",
-      options: ["O(n log n)", "O(n²)", "O(log n)", "O(n)"],
-      correct: 1,
-      explanation: "Quicksort has O(n²) worst-case time complexity when the pivot is always the smallest or largest element.",
-      company: "Apple",
-      topic: "Algorithms",
-      difficulty: "Hard"
-    },
-    {
-      id: 6,
-      question: "Which HTTP method is idempotent?",
-      options: ["POST", "PUT", "PATCH", "All of the above"],
-      correct: 1,
-      explanation: "PUT is idempotent, meaning multiple identical requests should have the same effect as a single request.",
-      company: "Netflix",
-      topic: "Web Development",
-      difficulty: "Medium"
-    },
-    {
-      id: 7,
-      question: "What is the purpose of a hash table?",
-      options: ["Sorting data", "Fast data retrieval", "Memory management", "Error handling"],
-      correct: 1,
-      explanation: "Hash tables provide fast data retrieval with average O(1) time complexity for search, insert, and delete operations.",
-      company: "Google",
-      topic: "Data Structures",
-      difficulty: "Easy"
-    },
-    {
-      id: 8,
-      question: "In React, what is the purpose of useEffect hook?",
-      options: ["State management", "Side effects", "Event handling", "Rendering"],
-      correct: 1,
-      explanation: "useEffect hook is used to perform side effects in functional components, such as data fetching, subscriptions, or DOM manipulation.",
-      company: "Facebook",
-      topic: "React",
-      difficulty: "Medium"
+    if (filterCompany && filterCompany !== 'all') {
+      filtered = filtered.filter(q => {
+        const company = q?.company || '';
+        return typeof company === 'string' && 
+               company.toLowerCase() === filterCompany.toLowerCase();
+      });
     }
-  ]);
 
-  const companies = ["Google", "Amazon", "Microsoft", "Facebook", "Apple", "Netflix"];
-  const topics = ["Algorithms", "Data Structures", "JavaScript", "Web Development", "React", "System Design"];
->>>>>>> aaf69eb1a911dc5306e41e26d4cfcc3f780a0434
+    if (filterTopic && filterTopic !== 'all') {
+      filtered = filtered.filter(q => {
+        const topic = q?.topic || q?.category || '';
+        return typeof topic === 'string' && 
+               topic.toLowerCase() === filterTopic.toLowerCase();
+      });
+    }
 
-  const [questions, setQuestions] = useState([]);
+    if (filterDifficulty && filterDifficulty !== 'all') {
+      filtered = filtered.filter(q => {
+        const difficulty = q?.difficulty || '';
+        return typeof difficulty === 'string' && 
+               difficulty.toLowerCase() === filterDifficulty.toLowerCase();
+      });
+    }
+
+    return filtered;
+  }, [allQuestions, filterCompany, filterTopic, filterDifficulty]);
+
+  // Initialize questions state with filtered questions
+  const [questions, setQuestions] = useState(() => {
+    try {
+      return filterQuestions();
+    } catch (error) {
+      console.error('Error initializing questions:', error);
+      return [];
+    }
+  });
+
+  // Update questions when filters change
+  useEffect(() => {
+    try {
+      const filtered = filterQuestions();
+      setQuestions(filtered);
+    } catch (error) {
+      console.error('Error filtering questions:', error);
+      showToast('Error loading questions. Please try again.', 'error');
+    }
+  }, [filterCompany, filterTopic, filterDifficulty, filterQuestions]);
 
   useEffect(() => {
-<<<<<<< HEAD
     localStorage.setItem('mcqProgress', JSON.stringify(progress));
   }, [progress]);
-
-  useEffect(() => {
-    filterQuestions();
-  }, [filterCompany, filterTopic, filterDifficulty, allQuestions]);
-=======
-    filterQuestions();
-  }, [filterCompany, filterTopic, allQuestions]);
->>>>>>> aaf69eb1a911dc5306e41e26d4cfcc3f780a0434
 
   useEffect(() => {
     let interval = null;
     if (isActive && timeLeft > 0) {
       interval = setInterval(() => {
-        setTimeLeft(timeLeft => timeLeft - 1);
+        setTimeLeft(timeLeft - 1);
       }, 1000);
     } else if (timeLeft === 0) {
-      handleTimeUp();
+      handleSubmitAnswer();
     }
     return () => clearInterval(interval);
   }, [isActive, timeLeft]);
 
-  const filterQuestions = () => {
-    let filtered = allQuestions;
-<<<<<<< HEAD
-
-    if (filterCompany !== 'all') {
-      filtered = filtered.filter(q => q.company === filterCompany);
-    }
-
-    if (filterTopic !== 'all') {
-      filtered = filtered.filter(q => q.topic === filterTopic || q.category === filterTopic);
-    }
-
-    if (filterDifficulty !== 'all') {
-      filtered = filtered.filter(q => q.difficulty === filterDifficulty);
-    }
-
-    setQuestions(filtered);
-  };
-
   const fetchMCQs = async () => {
     if (!company.trim()) {
-      setError('Please enter a company name');
+      showToast('Please enter a company name', 'error');
       return;
     }
 
     setLoading(true);
     setError(null);
+
     try {
-      const data = await apiService.getMCQs(company, jobDescription);
-      // Support both { mcqs: [...] } and { data: { mcqs: [...] } }
-      const mcqList = data?.mcqs || data?.data?.mcqs || [];
+      // Check if we have cached data for this company
+      const cachedData = localStorage.getItem(`mcqs_${company.toLowerCase()}`);
+      if (cachedData) {
+        const parsedData = JSON.parse(cachedData);
+        setMcqs(parsedData);
+        localStorage.setItem('lastFetchedMCQs', JSON.stringify(parsedData));
+        setLoading(false);
+        showToast('Loaded cached questions', 'success');
+        return;
+      }
 
-      if (mcqList.length > 0) {
-        // Add IDs to API reviews to distinguish them from mock reviews
-        const mcqsWithIds = mcqList.map((mcq, index) => {
-          // Try to parse the MCQ string into question, options, and answer
-          const parts = mcq.split(/\n|\r/).filter(Boolean);
-          const question = parts.find(line => /^Q\d+./.test(line)) || parts[0];
-          const options = parts.filter(line => /^[A-D]\)/.test(line));
-          const answer = parts.find(line => /^Answer:/.test(line));
-
-          return {
-            id: `api-${Date.now()}-${index}`,
-            question: question,
-            options: options,
-            correct: options.findIndex(opt => opt.trim().startsWith(answer?.replace('Answer:', '').trim() || '')),
-            explanation: 'This question was fetched from an external API',
-            company: company,
-            topic: 'General',
-            difficulty: 'Medium'
-          };
-        });
-
-        setMcqs(mcqsWithIds);
-        localStorage.setItem('lastFetchedMCQs', JSON.stringify(mcqsWithIds));
-        showToast(`Found ${mcqsWithIds.length} MCQs for ${company}`, 'success');
+      // Use local mock data
+      const companyKey = company.toLowerCase();
+      if (companyMCQData[companyKey]) {
+        const questions = companyMCQData[companyKey].questions;
+        setMcqs(questions);
+        localStorage.setItem(`mcqs_${companyKey}`, JSON.stringify(questions));
+        localStorage.setItem('lastFetchedMCQs', JSON.stringify(questions));
+        showToast('Questions loaded from local data', 'success');
       } else {
         setMcqs([]);
-        setError('No MCQs found for this company/job description.');
-        localStorage.removeItem('lastFetchedMCQs');
+        showToast('No local questions found for this company', 'info');
       }
     } catch (error) {
-      setError('Error fetching MCQs. Please try again.');
-      setMcqs([]);
-      localStorage.removeItem('lastFetchedMCQs');
+      console.error('Error loading MCQs:', error);
+      setError('Failed to load questions. Please try again later.');
+      showToast('Error loading questions', 'error');
     } finally {
       setLoading(false);
     }
   };
 
   const handleClear = () => {
+    setCompany('');
+    setJobDescription('');
     setMcqs([]);
-    setError(null);
     localStorage.removeItem('lastFetchedMCQs');
-    showToast('Fetched MCQs cleared', 'info');
+    setError(null);
   };
 
   const handleSubmit = (e) => {
@@ -680,43 +602,22 @@ const MCQs = () => {
     fetchMCQs();
   };
 
-=======
-    
-    if (filterCompany !== 'all') {
-      filtered = filtered.filter(q => q.company === filterCompany);
-    }
-    
-    if (filterTopic !== 'all') {
-      filtered = filtered.filter(q => q.topic === filterTopic);
-    }
-    
-    setQuestions(filtered);
-  };
-
->>>>>>> aaf69eb1a911dc5306e41e26d4cfcc3f780a0434
   const startQuiz = () => {
     if (questions.length === 0) {
-      showToast('No questions available with current filters', 'warning');
+      showToast('No questions available. Please adjust your filters.', 'warning');
       return;
     }
-<<<<<<< HEAD
-
-=======
-    
->>>>>>> aaf69eb1a911dc5306e41e26d4cfcc3f780a0434
     setQuizStarted(true);
+    setIsActive(true);
     setCurrentQuestion(0);
     setScore(0);
-    setUserAnswers([]);
-    setSelectedAnswer(null);
     setShowResult(false);
+    setSelectedAnswer(null);
+    setUserAnswers(Array(questions.length).fill(null));
     setTimeLeft(30);
-    setIsActive(true);
-    showToast('Quiz started! Good luck!', 'info');
   };
 
   const handleAnswerSelect = (answerIndex) => {
-    if (showResult) return;
     setSelectedAnswer(answerIndex);
   };
 
@@ -733,18 +634,14 @@ const MCQs = () => {
       correct: questions[currentQuestion].correct,
       isCorrect
     }];
-<<<<<<< HEAD
 
-=======
     
->>>>>>> aaf69eb1a911dc5306e41e26d4cfcc3f780a0434
     setUserAnswers(newUserAnswers);
     setShowResult(true);
     setIsActive(false);
 
     if (isCorrect) {
       setScore(score + 1);
-<<<<<<< HEAD
       setProgress(prev => ({
         ...prev,
         completed: prev.completed + 1,
@@ -756,10 +653,6 @@ const MCQs = () => {
         ...prev,
         completed: prev.completed + 1
       }));
-=======
-      showToast('Correct! 🎉', 'success');
-    } else {
->>>>>>> aaf69eb1a911dc5306e41e26d4cfcc3f780a0434
       showToast('Incorrect. Check the explanation.', 'error');
     }
   };
@@ -794,21 +687,15 @@ const MCQs = () => {
   const handleQuizComplete = () => {
     setQuizStarted(false);
     const percentage = (score / questions.length) * 100;
-<<<<<<< HEAD
 
-=======
     
->>>>>>> aaf69eb1a911dc5306e41e26d4cfcc3f780a0434
     // Update stats
     actions.updateStats({
       mcqsCompleted: state.stats.mcqsCompleted + questions.length,
       totalPoints: state.stats.totalPoints + (score * 5)
     });
-<<<<<<< HEAD
 
-=======
     
->>>>>>> aaf69eb1a911dc5306e41e26d4cfcc3f780a0434
     if (percentage >= 80) {
       confetti({
         particleCount: 100,
@@ -834,7 +721,6 @@ const MCQs = () => {
     setIsActive(false);
   };
 
-<<<<<<< HEAD
   const toggleBookmark = useCallback((questionId) => {
     setBookmarkedQuestions(prev => {
       let updated;
@@ -859,10 +745,8 @@ const MCQs = () => {
     return bookmarkedQuestions.includes(questionId);
   };
 
-=======
->>>>>>> aaf69eb1a911dc5306e41e26d4cfcc3f780a0434
   if (!quizStarted) {
-    return (
+  return (
       <div className="mcqs-page">
         <div className="container">
           <div className="mcqs-header">
@@ -870,30 +754,32 @@ const MCQs = () => {
             <p>Test your knowledge with company-specific MCQs</p>
           </div>
 
-<<<<<<< HEAD
           {/* Fetch MCQs Section */}
           <div className="mcq-fetch-section">
-            <form onSubmit={handleSubmit} className="mcq-fetch-form">
+      <form onSubmit={handleSubmit} className="mcq-fetch-form">
               <div className="mcq-input-group">
                 <label htmlFor="company-input">Company name (e.g. Google)</label>
-                <input
-                  type="text"
-                  placeholder="Company name (e.g. Google)"
-                  value={company}
-                  onChange={e => setCompany(e.target.value)}
-                  className="company-input"
-                />
+        <input
+          type="text"
+          placeholder="Company name (e.g. Google)"
+          value={company}
+          onChange={e => setCompany(e.target.value)}
+          className="company-input"
+          id="company-input"
+          aria-describedby="mcq-search-desc"
+          autoComplete="organization"
+        />
                 <label htmlFor="jobdesc-input">Paste job description here...</label>
-                <textarea
-                  placeholder="Paste job description here..."
-                  value={jobDescription}
-                  onChange={e => setJobDescription(e.target.value)}
-                  className="jobdesc-input"
-                  rows={3}
-                />
+        <textarea
+          placeholder="Paste job description here..."
+          value={jobDescription}
+          onChange={e => setJobDescription(e.target.value)}
+          className="jobdesc-input"
+          rows={3}
+        />
               </div>
               <div className="mcq-btn-row">
-                <button type="submit" className="fetch-mcqs-btn" disabled={loading}>
+        <button type="submit" className="fetch-mcqs-btn" disabled={loading}>
                   {loading ? (
                     <>
                       <span className="spinner"></span> Fetching...
@@ -902,21 +788,31 @@ const MCQs = () => {
                 </button>
                 <button type="button" className="clear-mcqs-btn" onClick={handleClear}>
                   <FaTrash /> Clear
-                </button>
+        </button>
               </div>
-            </form>
-            {error && <p className="error-message">{error}</p>}
+      </form>
+            {error && <p className="error-message" aria-live="polite">{error}</p>}
           </div>
 
           {/* Filters */}
           <div className="quiz-setup">
             <div className="filters-section">
-              <button
-                className="filter-toggle btn btn-secondary"
-                onClick={() => setShowFilters(!showFilters)}
-              >
-                <FaFilter /> {showFilters ? 'Hide Filters' : 'Show Filters'}
-              </button>
+              <div className="filters-header">
+                <button
+                  className="filter-toggle btn btn-secondary"
+                  onClick={() => setShowFilters(!showFilters)}
+                >
+                  <FaFilter /> {showFilters ? 'Hide Filters' : 'Show Filters'}
+                </button>
+                
+                <button 
+                  className="start-quiz-btn"
+                  onClick={startQuiz}
+                  disabled={questions.length === 0}
+                >
+                  <FaPlay /> Start Quiz ({questions.length} questions)
+                </button>
+              </div>
 
               {showFilters && (
                 <div className="filters">
@@ -926,49 +822,29 @@ const MCQs = () => {
                       id="company-filter"
                       value={filterCompany}
                       onChange={(e) => setFilterCompany(e.target.value)}
-                    >
-                      {companies.map(company => (
-                        <option key={company} value={company}>
-                          {company === 'all' ? 'All Companies' : company}
-                        </option>
-=======
-          {/* Filters */}
-          <div className="quiz-setup">
-            <div className="filters-section">
-              <button 
-                className="filter-toggle btn btn-secondary"
-                onClick={() => setShowFilters(!showFilters)}
-              >
-                <FaFilter /> Filters
-              </button>
-              
-              {showFilters && (
-                <div className="filters">
-                  <div className="filter-group">
-                    <label>Company:</label>
-                    <select 
-                      value={filterCompany} 
-                      onChange={(e) => setFilterCompany(e.target.value)}
+                      className="form-select"
                     >
                       <option value="all">All Companies</option>
-                      {companies.map(company => (
-                        <option key={company} value={company}>{company}</option>
->>>>>>> aaf69eb1a911dc5306e41e26d4cfcc3f780a0434
+                      {companies.filter(c => c !== 'all').map(company => (
+                        <option key={company} value={company}>
+                          {company}
+                        </option>
                       ))}
                     </select>
                   </div>
-
+                  
                   <div className="filter-group">
-<<<<<<< HEAD
                     <label htmlFor="topic-filter">Topic:</label>
                     <select
                       id="topic-filter"
                       value={filterTopic}
                       onChange={(e) => setFilterTopic(e.target.value)}
+                      className="form-select"
                     >
-                      {topics.map(topic => (
+                      <option value="all">All Topics</option>
+                      {topics.filter(t => t !== 'all').map(topic => (
                         <option key={topic} value={topic}>
-                          {topic === 'all' ? 'All Topics' : topic}
+                          {topic}
                         </option>
                       ))}
                     </select>
@@ -980,21 +856,13 @@ const MCQs = () => {
                       id="difficulty-filter"
                       value={filterDifficulty}
                       onChange={(e) => setFilterDifficulty(e.target.value)}
+                      className="form-select"
                     >
-                      {difficulties.map(difficulty => (
+                      <option value="all">All Difficulties</option>
+                      {difficulties.filter(d => d !== 'all').map(difficulty => (
                         <option key={difficulty} value={difficulty}>
-                          {difficulty === 'all' ? 'All Difficulties' : difficulty}
+                          {difficulty}
                         </option>
-=======
-                    <label>Topic:</label>
-                    <select 
-                      value={filterTopic} 
-                      onChange={(e) => setFilterTopic(e.target.value)}
-                    >
-                      <option value="all">All Topics</option>
-                      {topics.map(topic => (
-                        <option key={topic} value={topic}>{topic}</option>
->>>>>>> aaf69eb1a911dc5306e41e26d4cfcc3f780a0434
                       ))}
                     </select>
                   </div>
@@ -1013,18 +881,6 @@ const MCQs = () => {
                 </ul>
               </div>
             </div>
-
-<<<<<<< HEAD
-            <button
-=======
-            <button 
->>>>>>> aaf69eb1a911dc5306e41e26d4cfcc3f780a0434
-              className="btn btn-primary btn-lg start-quiz-btn"
-              onClick={startQuiz}
-              disabled={questions.length === 0}
-            >
-              Start Quiz ({questions.length} questions)
-            </button>
           </div>
 
           {/* Question Preview */}
@@ -1032,54 +888,23 @@ const MCQs = () => {
             <div className="question-preview">
               <h3>Sample Questions:</h3>
               <div className="preview-list">
-<<<<<<< HEAD
-                {questions.slice(0, 3).map((question) => (
-                  <div key={question.id} className="preview-item">
-                    <div className="preview-header">
-                      <div className="question-meta">
-                        <span className="company">{question.company}</span>
-                        <span className="topic">{question.topic || question.category}</span>
-                        <span className={`difficulty ${question.difficulty?.toLowerCase() || 'medium'}`}>
-                          {question.difficulty || 'Medium'}
-                        </span>
-                      </div>
-                      <button
-                        className="bookmark-btn"
-                        onClick={() => toggleBookmark(question.id)}
-                        title={isBookmarked(question.id) ? 'Remove bookmark' : 'Bookmark question'}
-                      >
-                        {isBookmarked(question.id) ? <FaBookmark /> : <FaRegBookmark />}
-                      </button>
-                    </div>
-                    <p className="preview-question">{question.question}</p>
-                    {showHints[question.id] && question.hint && (
-                      <div className="hint">
-                        <FaLightbulb /> {question.hint}
-                      </div>
-                    )}
-                    {question.hint && (
-                      <button
-                        className="hint-toggle"
-                        onClick={() => toggleHint(question.id)}
-                      >
-                        {showHints[question.id] ? 'Hide Hint' : 'Show Hint'}
-                      </button>
-                    )}
-=======
                 {questions.slice(0, 3).map((question, index) => (
                   <div key={question.id} className="preview-item">
                     <div className="preview-header">
                       <span className="question-number">Q{index + 1}</span>
                       <div className="question-meta">
-                        <span className="company">{question.company}</span>
-                        <span className="topic">{question.topic}</span>
-                        <span className={`difficulty ${question.difficulty.toLowerCase()}`}>
-                          {question.difficulty}
-                        </span>
+                        {question?.company && <span className="company">{question.company}</span>}
+                        {(question?.topic || question?.category) && (
+                          <span className="topic">{question.topic || question.category}</span>
+                        )}
+                        {question?.difficulty && (
+                          <span className={`difficulty ${question.difficulty.toLowerCase()}`}>
+                            {question.difficulty}
+                          </span>
+                        )}
                       </div>
                     </div>
                     <p className="preview-question">{question.question}</p>
->>>>>>> aaf69eb1a911dc5306e41e26d4cfcc3f780a0434
                   </div>
                 ))}
               </div>
@@ -1100,21 +925,13 @@ const MCQs = () => {
           <div className="quiz-progress">
             <span>Question {currentQuestion + 1} of {questions.length}</span>
             <div className="progress-bar">
-<<<<<<< HEAD
-              <div
-=======
               <div 
->>>>>>> aaf69eb1a911dc5306e41e26d4cfcc3f780a0434
                 className="progress-fill"
                 style={{ width: `${((currentQuestion + 1) / questions.length) * 100}%` }}
               />
             </div>
           </div>
-<<<<<<< HEAD
 
-=======
-          
->>>>>>> aaf69eb1a911dc5306e41e26d4cfcc3f780a0434
           <div className="quiz-stats">
             <div className="stat">
               <FaClock />
@@ -1124,7 +941,6 @@ const MCQs = () => {
               <FaTrophy />
               <span>{score}/{questions.length}</span>
             </div>
-<<<<<<< HEAD
             <button
               className="bookmark-btn"
               onClick={() => toggleBookmark(currentQ.id)}
@@ -1132,8 +948,6 @@ const MCQs = () => {
             >
               {isBookmarked(currentQ.id) ? <FaBookmark /> : <FaRegBookmark />}
             </button>
-=======
->>>>>>> aaf69eb1a911dc5306e41e26d4cfcc3f780a0434
           </div>
         </div>
 
@@ -1141,16 +955,12 @@ const MCQs = () => {
         <div className="question-card">
           <div className="question-header">
             <div className="question-meta">
-              <span className="company">{currentQ.company}</span>
-<<<<<<< HEAD
-              <span className="topic">{currentQ.topic || currentQ.category}</span>
-              <span className={`difficulty ${currentQ.difficulty?.toLowerCase() || 'medium'}`}>
-                {currentQ.difficulty || 'Medium'}
-=======
-              <span className="topic">{currentQ.topic}</span>
-              <span className={`difficulty ${currentQ.difficulty.toLowerCase()}`}>
-                {currentQ.difficulty}
->>>>>>> aaf69eb1a911dc5306e41e26d4cfcc3f780a0434
+              {currentQ?.company && <span className="company">{currentQ.company}</span>}
+              {(currentQ?.topic || currentQ?.category) && (
+                <span className="topic">{currentQ.topic || currentQ.category}</span>
+              )}
+              <span className={`difficulty ${(currentQ?.difficulty || 'medium').toLowerCase()}`}>
+                {currentQ?.difficulty || 'Medium'}
               </span>
             </div>
           </div>
@@ -1165,11 +975,8 @@ const MCQs = () => {
                 key={index}
                 className={`option ${selectedAnswer === index ? 'selected' : ''} ${
                   showResult ? (
-<<<<<<< HEAD
                     index === currentQ.correct ? 'correct' :
-=======
                     index === currentQ.correct ? 'correct' : 
->>>>>>> aaf69eb1a911dc5306e41e26d4cfcc3f780a0434
                     selectedAnswer === index ? 'incorrect' : ''
                   ) : ''
                 }`}
@@ -1179,21 +986,14 @@ const MCQs = () => {
                 <span className="option-letter">{String.fromCharCode(65 + index)}</span>
                 <span className="option-text">{option}</span>
                 {showResult && index === currentQ.correct && <FaCheck className="result-icon" />}
-<<<<<<< HEAD
-                {showResult && selectedAnswer === index && index !== currentQ.correct &&
-=======
-                {showResult && selectedAnswer === index && index !== currentQ.correct && 
->>>>>>> aaf69eb1a911dc5306e41e26d4cfcc3f780a0434
-                  <FaTimes className="result-icon" />}
+                {showResult && selectedAnswer === index && index !== currentQ.correct && (
+                  <FaTimes className="result-icon" />
+                )}
               </button>
             ))}
           </div>
 
-<<<<<<< HEAD
           {showResult && currentQ.explanation && (
-=======
-          {showResult && (
->>>>>>> aaf69eb1a911dc5306e41e26d4cfcc3f780a0434
             <div className="explanation">
               <div className="explanation-header">
                 <FaLightbulb />
@@ -1203,7 +1003,6 @@ const MCQs = () => {
             </div>
           )}
 
-<<<<<<< HEAD
           {showHints[currentQ.id] && currentQ.hint && (
             <div className="hint">
               <FaLightbulb /> {currentQ.hint}
@@ -1221,12 +1020,7 @@ const MCQs = () => {
 
           <div className="question-actions">
             {!showResult ? (
-              <button
-=======
-          <div className="question-actions">
-            {!showResult ? (
               <button 
->>>>>>> aaf69eb1a911dc5306e41e26d4cfcc3f780a0434
                 className="btn btn-primary"
                 onClick={handleSubmitAnswer}
                 disabled={selectedAnswer === null}
@@ -1256,8 +1050,4 @@ const MCQs = () => {
   );
 };
 
-<<<<<<< HEAD
 export default MCQs;
-=======
-export default MCQs;
->>>>>>> aaf69eb1a911dc5306e41e26d4cfcc3f780a0434

@@ -35,16 +35,24 @@ class ApiService {
 
   // Auth methods
   async login(email, password) {
-    return this.request('/auth/login', {
+    return this.request('/api/auth/login', {
       method: 'POST',
-      body: JSON.stringify({ email, password }),
+      body: JSON.stringify({ 
+        email, 
+        password 
+      }),
     });
   }
 
-  async register(username, email, password) {
-    return this.request('/auth/register', {
+  async register(name, email, password) {
+    return this.request('/api/auth/register', {
       method: 'POST',
-      body: JSON.stringify({ username, email, password }),
+      body: JSON.stringify({ 
+        name,
+        email, 
+        password,
+        full_name: name // Some backends might expect full_name
+      }),
     });
   }
 

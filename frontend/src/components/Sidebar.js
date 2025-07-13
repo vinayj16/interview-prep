@@ -1,7 +1,7 @@
 import React, { memo, useEffect, useState, forwardRef } from 'react';
 import { Link as RouterLink, useLocation, useNavigate } from 'react-router-dom';
-import { useTheme, styled, alpha } from '@mui/material/styles';
-import {
+import { styled, alpha } from '@mui/material/styles';
+import { 
   FaTachometerAlt, FaFileAlt, FaCode, FaQuestionCircle,
   FaStar, FaRoad, FaLaptopCode, FaUser, FaSignOutAlt,
   FaBars, FaTimes, FaHome, FaBook, FaChalkboardTeacher,
@@ -27,6 +27,7 @@ import {
   useMediaQuery
 } from '@mui/material';
 import { useApp } from '../context/AppContext';
+import { useTheme as useThemeContext } from '../context/ThemeContext';
 
 // Styled components
 const ListItemButtonLink = forwardRef(({ to, selected, ...props }, ref) => (
@@ -48,6 +49,10 @@ const StyledDrawer = styled(Drawer, {
   boxSizing: 'border-box',
   '& .MuiDrawer-paper': {
     width: drawerWidth,
+    backgroundColor: 'var(--sidebar-bg)',
+    color: 'var(--sidebar-text)',
+    borderRight: '1px solid var(--sidebar-border)',
+    transition: 'background-color 0.3s ease, border-color 0.3s ease',
     boxSizing: 'border-box',
     overflowX: 'hidden',
     ...(isMobile ? {
@@ -57,10 +62,7 @@ const StyledDrawer = styled(Drawer, {
       height: '100vh',
       zIndex: theme.zIndex.drawer + 2,
       transform: isClosing ? 'translateX(-100%)' : 'translateX(0)',
-      transition: theme.transitions.create('transform', {
-        easing: theme.transitions.easing.sharp,
-        duration: theme.transitions.duration.enteringScreen,
-      }),
+      transition: 'width 0.3s ease, transform 0.3s ease',
       '&.MuiDrawer-paperAnchorLeft': {
         borderRight: 'none',
       },
@@ -70,10 +72,7 @@ const StyledDrawer = styled(Drawer, {
       borderRight: 'none',
       backgroundColor: theme.palette.background.paper,
       boxShadow: theme.shadows[3],
-      transition: theme.transitions.create('width', {
-        easing: theme.transitions.easing.sharp,
-        duration: theme.transitions.duration.enteringScreen,
-      }),
+      transition: 'width 0.3s ease, transform 0.3s ease',
     }),
   },
   '& .MuiBackdrop-root': {
@@ -83,15 +82,16 @@ const StyledDrawer = styled(Drawer, {
 }));
 
 // Main Sidebar component
-const Sidebar = memo(({ isOpen, onClose, width = 280 }) => {
+const Sidebar = memo(({ isOpen, onClose, isMobile: isMobileProp = false }) => {
+  const { theme, toggleTheme } = useThemeContext();
   const location = useLocation();
   const navigate = useNavigate();
-  const theme = useTheme();
   const { state, actions } = useApp();
-  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const [isCollapsed, setIsCollapsed] = useState(false);
-  const [isDarkMode, setIsDarkMode] = useState(theme.palette.mode === 'dark');
-
+  const isMobile = useMediaQuery('(max-width: 600px)');
+  const isDarkMode = theme === 'dark';
+  const width = 240; // or your preferred sidebar width in pixels
+  
   // Navigation items for the sidebar
   const navItems = [
     { path: '/', icon: <FaHome />, label: 'Home', show: true },
@@ -102,23 +102,6 @@ const Sidebar = memo(({ isOpen, onClose, width = 280 }) => {
     { path: '/roadmap', icon: <FaRoad />, label: 'Learning Path', show: true },
     { path: '/reviews', icon: <FaStar />, label: 'Interview Reviews', show: true },
     { path: '/face-to-face', icon: <FaLaptopCode />, label: 'Mock Interview', show: true },
-    { path: '/study-plan', icon: <FaClipboardList />, label: 'Study Plan', show: true },
-    { path: '/discussions', icon: <FaComments />, label: 'Discussions', show: true },
-    { path: '/projects', icon: <FaProjectDiagram />, label: 'Projects', show: true },
-  ];
-
-  // Admin items (only shown for admin users)
-  const adminItems = [
-    { path: '/admin/dashboard', icon: <FaTachometerAlt />, label: 'Admin Dashboard', show: state.user?.role === 'admin' },
-    { path: '/admin/users', icon: <FaUser />, label: 'User Management', show: state.user?.role === 'admin' },
-    { path: '/admin/content', icon: <FaBook />, label: 'Content Management', show: state.user?.role === 'admin' },
-  ];
-
-  // Settings items
-  const settingsItems = [
-    { path: '/settings/profile', icon: <FaUser />, label: 'Profile', show: true },
-    { path: '/settings/account', icon: <FaCog />, label: 'Account', show: true },
-    { path: '/settings/appearance', icon: isDarkMode ? <FaMoon /> : <FaSun />, label: 'Appearance', show: true },
   ];
 
   // Close sidebar when route changes (only on mobile)
@@ -127,13 +110,6 @@ const Sidebar = memo(({ isOpen, onClose, width = 280 }) => {
       onClose();
     }
   }, [location.pathname, isMobile, isOpen, onClose]);
-
-  // Toggle dark mode
-  const handleDarkModeToggle = () => {
-    const newMode = !isDarkMode ? 'dark' : 'light';
-    setIsDarkMode(!isDarkMode);
-    actions.setTheme(newMode);
-  };
 
   // Handle logout
   const handleLogout = () => {
@@ -149,16 +125,14 @@ const Sidebar = memo(({ isOpen, onClose, width = 280 }) => {
 
   // Filter out items that shouldn't be shown
   const filteredNavItems = navItems.filter(item => item.show !== false);
-  const filteredAdminItems = adminItems.filter(item => item.show !== false);
-  const filteredSettingsItems = settingsItems.filter(item => item.show !== false);
 
-  // Check if any admin items should be shown
-  const showAdminSection = filteredAdminItems.length > 0;
+  // Check if any nav items should be shown
+  const showNavSection = filteredNavItems.length > 0;
 
   const drawerContent = (
     <>
       {/* Header */}
-      <Box
+      <Box 
         sx={{
           display: 'flex',
           flexDirection: 'column',
@@ -166,7 +140,7 @@ const Sidebar = memo(({ isOpen, onClose, width = 280 }) => {
           justifyContent: 'center',
           padding: '16px',
           minHeight: '64px',
-          background: theme.palette.mode === 'dark'
+          background: theme === 'dark'
             ? 'linear-gradient(135deg, #1a237e 0%, #2a3a8f 100%)'
             : 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
           color: 'white',
@@ -185,7 +159,7 @@ const Sidebar = memo(({ isOpen, onClose, width = 280 }) => {
                 }}
               >
                 InterviewPrep
-              </Typography>
+            </Typography>
               <Typography
                 variant="caption"
                 sx={{
@@ -194,33 +168,50 @@ const Sidebar = memo(({ isOpen, onClose, width = 280 }) => {
                 }}
               >
                 Your Interview Success Partner
-              </Typography>
-            </Box>
+            </Typography>
+          </Box>
             <Box sx={{ display: 'flex', justifyContent: 'center', mb: 1 }}>
-              <Avatar
-                alt={state.user?.name || 'User'}
-                src={state.user?.avatar || '/static/images/avatar/1.jpg'}
-                sx={{ width: 48, height: 48, border: `2px solid ${theme.palette.primary.main}` }}
-              />
-            </Box>
+  {state.user?.name ? (
+    <Box sx={{
+      width: 48,
+      height: 48,
+      borderRadius: '50%',
+      background: '#e0e7ef',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      fontWeight: 700,
+      fontSize: '1.2rem',
+      color: '#3b82f6',
+      border: '2px solid var(--primary-color)'
+    }}>
+      {state.user.name.split(' ').map(n => n[0]).join('').toUpperCase().substring(0,2)}
+    </Box>
+  ) : (
+    <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="24" cy="24" r="24" fill="#e0e7ef" />
+      <path d="M24 26c-4.418 0-8 2.239-8 5v3h16v-3c0-2.761-3.582-5-8-5zm0-2a5 5 0 100-10 5 5 0 000 10z" fill="#3b82f6" />
+    </svg>
+  )}
+        </Box>
           </>
         )}
 
-        <IconButton
+          <IconButton 
           onClick={toggleCollapse}
-          sx={{
+            sx={{
             position: 'absolute',
             right: 8,
             top: 8,
             color: 'white',
-            backgroundColor: alpha(theme.palette.primary.main, 0.2),
-            '&:hover': {
-              backgroundColor: alpha(theme.palette.primary.main, 0.3),
-            },
-          }}
-        >
+            backgroundColor: isCollapsed ? 'rgba(59,130,246,0.2)' : 'rgba(59,130,246,0.3)',
+              '&:hover': {
+              backgroundColor: isCollapsed ? 'rgba(59,130,246,0.3)' : 'rgba(59,130,246,0.4)',
+              },
+            }}
+          >
           {isCollapsed ? <FaChevronRight /> : <FaChevronLeft />}
-        </IconButton>
+          </IconButton>
       </Box>
 
       {/* Navigation Items */}
@@ -228,7 +219,7 @@ const Sidebar = memo(({ isOpen, onClose, width = 280 }) => {
         {filteredNavItems.map((item) => {
           const isSelected = location.pathname === item.path;
           return (
-            <ListItem
+            <ListItem 
               key={item.path}
               disablePadding
               sx={{
@@ -241,7 +232,7 @@ const Sidebar = memo(({ isOpen, onClose, width = 280 }) => {
                 },
               }}
             >
-              <Tooltip
+              <Tooltip 
                 title={isCollapsed ? item.label : ''}
                 placement="right"
                 TransitionComponent={Zoom}
@@ -271,25 +262,25 @@ const Sidebar = memo(({ isOpen, onClose, width = 280 }) => {
                     },
                   }}
                 >
-                  <ListItemIcon
-                    sx={{
+                  <ListItemIcon 
+                    sx={{ 
                       minWidth: 'auto',
                       mr: isCollapsed ? 0 : 2,
                       justifyContent: 'center',
-                      color: isSelected ? 'primary.main' : 'text.secondary',
+                      color: isSelected ? 'var(--primary-color)' : 'var(--text-secondary)',
                     }}
                   >
                     {item.icon}
                   </ListItemIcon>
                   {!isCollapsed && (
-                    <ListItemText
-                      primary={item.label}
+                  <ListItemText 
+                    primary={item.label} 
                       sx={{
                         opacity: isCollapsed ? 0 : 1,
                         transition: 'opacity 0.2s',
                         '& .MuiListItemText-primary': {
                           fontWeight: isSelected ? 600 : 400,
-                          color: isSelected ? 'primary.main' : 'text.primary',
+                          color: isSelected ? 'var(--primary-color)' : 'var(--text-primary)',
                         },
                       }}
                     />
@@ -301,199 +292,9 @@ const Sidebar = memo(({ isOpen, onClose, width = 280 }) => {
         })}
       </List>
 
-      {/* Admin Section (if applicable) */}
-      {showAdminSection && (
-        <>
-          <Divider sx={{ my: 1 }} />
-          <Typography
-            variant="caption"
-            sx={{
-              px: 2,
-              py: 1,
-              color: 'text.secondary',
-              display: isCollapsed ? 'none' : 'block',
-              textAlign: 'center',
-              textTransform: 'uppercase',
-              fontWeight: 700,
-              letterSpacing: '0.05em'
-            }}
-          >
-            Admin
-          </Typography>
-          <List sx={{ pt: 0, px: isCollapsed ? 0 : 1 }}>
-            {filteredAdminItems.map((item) => {
-              const isSelected = location.pathname === item.path;
-              return (
-                <ListItem
-                  key={item.path}
-                  disablePadding
-                  sx={{
-                    display: 'block',
-                    '& .Mui-selected': {
-                      backgroundColor: 'action.selected',
-                      borderLeft: '4px solid',
-                      borderLeftColor: 'primary.main',
-                      paddingLeft: '12px',
-                    },
-                  }}
-                >
-                  <Tooltip
-                    title={isCollapsed ? item.label : ''}
-                    placement="right"
-                    TransitionComponent={Zoom}
-                    arrow
-                  >
-                    <ListItemButtonLink
-                      to={item.path}
-                      selected={isSelected}
-                      onClick={onClose}
-                      sx={{
-                        minHeight: 48,
-                        justifyContent: isCollapsed ? 'center' : 'flex-start',
-                        px: isCollapsed ? 0 : 2.5,
-                        borderRadius: 1,
-                        mx: 1,
-                        my: 0.5,
-                        transition: 'all 0.2s',
-                        '&:hover': {
-                          backgroundColor: 'action.hover',
-                          ...(isCollapsed ? {} : { transform: 'translateX(4px)' }),
-                        },
-                        '&.Mui-selected': {
-                          backgroundColor: 'action.selected',
-                          '&:hover': {
-                            backgroundColor: 'action.selected',
-                          },
-                        },
-                      }}
-                    >
-                      <ListItemIcon
-                        sx={{
-                          minWidth: 'auto',
-                          mr: isCollapsed ? 0 : 2,
-                          justifyContent: 'center',
-                          color: isSelected ? 'primary.main' : 'text.secondary',
-                        }}
-                      >
-                        {item.icon}
-                      </ListItemIcon>
-                      {!isCollapsed && (
-                        <ListItemText
-                          primary={item.label}
-                          sx={{
-                            opacity: isCollapsed ? 0 : 1,
-                            transition: 'opacity 0.2s',
-                            '& .MuiListItemText-primary': {
-                              fontWeight: isSelected ? 600 : 400,
-                              color: isSelected ? 'primary.main' : 'text.primary',
-                            },
-                          }}
-                        />
-                      )}
-                    </ListItemButtonLink>
-                  </Tooltip>
-                </ListItem>
-              );
-            })}
-          </List>
-        </>
-      )}
-
       {/* Settings Section */}
       <Divider sx={{ my: 1 }} />
       <List sx={{ pt: 0, px: isCollapsed ? 0 : 1, mt: 'auto' }}>
-        {filteredSettingsItems.map((item) => {
-          const isSelected = location.pathname === item.path;
-          return (
-            <ListItem
-              key={item.path}
-              disablePadding
-              sx={{
-                display: 'block',
-                '& .Mui-selected': {
-                  backgroundColor: 'action.selected',
-                  borderLeft: '4px solid',
-                  borderLeftColor: 'primary.main',
-                  paddingLeft: '12px',
-                },
-              }}
-            >
-              <Tooltip
-                title={isCollapsed ? item.label : ''}
-                placement="right"
-                TransitionComponent={Zoom}
-                arrow
-              >
-                <ListItemButtonLink
-                  to={item.path}
-                  selected={isSelected}
-                  onClick={onClose}
-                  sx={{
-                    minHeight: 48,
-                    justifyContent: isCollapsed ? 'center' : 'flex-start',
-                    px: isCollapsed ? 0 : 2.5,
-                    borderRadius: 1,
-                    mx: 1,
-                    my: 0.5,
-                    transition: 'all 0.2s',
-                    '&:hover': {
-                      backgroundColor: 'action.hover',
-                      ...(isCollapsed ? {} : { transform: 'translateX(4px)' }),
-                    },
-                    '&.Mui-selected': {
-                      backgroundColor: 'action.selected',
-                      '&:hover': {
-                        backgroundColor: 'action.selected',
-                      },
-                    },
-                  }}
-                >
-                  <ListItemIcon
-                    sx={{
-                      minWidth: 'auto',
-                      mr: isCollapsed ? 0 : 2,
-                      justifyContent: 'center',
-                      color: isSelected ? 'primary.main' : 'text.secondary',
-                    }}
-                  >
-                    {item.label === 'Appearance' ? (
-                      <Switch
-                        checked={isDarkMode}
-                        onChange={handleDarkModeToggle}
-                        color="primary"
-                        size="small"
-                        sx={{
-                          '& .MuiSwitch-switchBase': {
-                            color: isDarkMode ? '#fff' : '#333',
-                          },
-                          '& .MuiSwitch-track': {
-                            backgroundColor: isDarkMode ? alpha('#fff', 0.3) : alpha('#333', 0.3),
-                          },
-                        }}
-                      />
-                    ) : (
-                      item.icon
-                    )}
-                  </ListItemIcon>
-                  {!isCollapsed && (
-                    <ListItemText
-                      primary={item.label}
-                      sx={{
-                        opacity: isCollapsed ? 0 : 1,
-                        transition: 'opacity 0.2s',
-                        '& .MuiListItemText-primary': {
-                          fontWeight: isSelected ? 600 : 400,
-                          color: isSelected ? 'primary.main' : 'text.primary',
-                        },
-                      }}
-                    />
-                  )}
-                </ListItemButtonLink>
-              </Tooltip>
-            </ListItem>
-          );
-        })}
-
         {/* Logout Button */}
         <ListItem disablePadding sx={{ display: 'block' }}>
           <Tooltip
@@ -542,7 +343,7 @@ const Sidebar = memo(({ isOpen, onClose, width = 280 }) => {
               )}
             </ListItemButton>
           </Tooltip>
-        </ListItem>
+          </ListItem>
       </List>
     </>
   );
@@ -564,10 +365,7 @@ const Sidebar = memo(({ isOpen, onClose, width = 280 }) => {
           boxSizing: 'border-box',
           width: isCollapsed ? 72 : width,
           borderRight: 'none',
-          transition: theme.transitions.create(['width', 'transform'], {
-            easing: theme.transitions.easing.sharp,
-            duration: theme.transitions.duration.enteringScreen,
-          }),
+          transition: 'width 0.3s ease, transform 0.3s ease',
         },
       }}
     >
@@ -576,4 +374,4 @@ const Sidebar = memo(({ isOpen, onClose, width = 280 }) => {
   );
 });
 
-export default Sidebar;
+export default memo(Sidebar);

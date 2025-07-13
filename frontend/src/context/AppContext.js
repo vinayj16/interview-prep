@@ -6,6 +6,7 @@ const AppContext = createContext();
 const initialState = {
   user: null,
   isAuthenticated: false,
+  isLoadingAuth: true, // NEW: loading state for initial auth check
   theme: 'light',
   stats: {
     problemsSolved: 0,
@@ -26,6 +27,12 @@ const appReducer = (state, action) => {
         ...state,
         user: action.payload,
         isAuthenticated: !!action.payload,
+        isLoadingAuth: false,
+      };
+    case 'SET_AUTH_LOADING':
+      return {
+        ...state,
+        isLoadingAuth: action.payload,
       };
     case 'SET_THEME':
       return {
@@ -74,6 +81,7 @@ export const AppProvider = ({ children }) => {
 
   // Load initial data from localStorage
   useEffect(() => {
+    dispatch({ type: 'SET_AUTH_LOADING', payload: true });
     const savedUser = localStorage.getItem('user');
     const savedTheme = localStorage.getItem('theme');
     const savedStats = localStorage.getItem('userStats');
@@ -82,6 +90,8 @@ export const AppProvider = ({ children }) => {
 
     if (savedUser) {
       dispatch({ type: 'SET_USER', payload: JSON.parse(savedUser) });
+    } else {
+      dispatch({ type: 'SET_USER', payload: null });
     }
 
     if (savedTheme) {
@@ -105,6 +115,8 @@ export const AppProvider = ({ children }) => {
         dispatch({ type: 'COMPLETE_TOPIC', payload: topic });
       });
     }
+    // Mark auth loading as done (if not set by SET_USER)
+    dispatch({ type: 'SET_AUTH_LOADING', payload: false });
   }, []);
 
   // Check backend connection
@@ -115,7 +127,6 @@ export const AppProvider = ({ children }) => {
         dispatch({ type: 'SET_BACKEND_CONNECTION', payload: true });
       } catch (error) {
         dispatch({ type: 'SET_BACKEND_CONNECTION', payload: false });
-        console.warn('Backend not available, using offline mode');
       }
     };
 
@@ -164,6 +175,22 @@ export const AppProvider = ({ children }) => {
     localStorage.setItem('completedTopics', JSON.stringify([...state.completedTopics]));
   }, [state.completedTopics]);
 
+  // Centralized login/logout/register actions
+  const login = (user) => {
+    localStorage.setItem('user', JSON.stringify(user));
+    dispatch({ type: 'SET_USER', payload: user });
+  };
+
+  const logout = () => {
+    localStorage.removeItem('user');
+    dispatch({ type: 'SET_USER', payload: null });
+  };
+
+  const register = (user) => {
+    localStorage.setItem('user', JSON.stringify(user));
+    dispatch({ type: 'SET_USER', payload: user });
+  };
+
   const value = {
     state,
     dispatch,
@@ -174,6 +201,9 @@ export const AppProvider = ({ children }) => {
       addBookmark: (id) => dispatch({ type: 'ADD_BOOKMARK', payload: id }),
       removeBookmark: (id) => dispatch({ type: 'REMOVE_BOOKMARK', payload: id }),
       completeTopic: (id) => dispatch({ type: 'COMPLETE_TOPIC', payload: id }),
+      login,
+      logout,
+      register,
     },
   };
 

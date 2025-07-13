@@ -1,24 +1,30 @@
 .about-container {
   padding: 4rem 0;
   min-height: 100vh;
-  transition: background-color 0.3s ease, color 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  width: 100%;
+  box-sizing: border-box;
+  transition: all 0.3s ease;
+  background: var(--bg-color);
+  color: var(--text-color);
+}
+
+[data-theme="light"] .about-container {
   background: linear-gradient(135deg, #f0f4ff 60%, #e0f7fa 100%);
 }
 
-.about-container.light {
-  background-color: #f9f9f9;
-  color: #333;
-}
-
-.about-container.dark {
-  background-color: #121212;
-  color: #e0e0e0;
+[data-theme="dark"] .about-container {
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
 }
 
 .container {
   max-width: 1200px;
   margin: 0 auto;
   padding: 0 1.5rem;
+  width: 100%;
 }
 
 .section-title {
@@ -27,20 +33,14 @@
   margin-bottom: 3rem;
   position: relative;
   padding-bottom: 1rem;
-  color: #2563eb;
+  color: var(--primary-color);
   letter-spacing: 1px;
-  background: linear-gradient(90deg, #2563eb 30%, #10b981 100%);
+  background: linear-gradient(90deg, var(--primary-color) 30%, var(--secondary-color) 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-}
-
-.light .section-title {
-  color: #2c3e50;
-}
-
-.dark .section-title {
-  color: #e0e0e0;
+  margin-top: 0;
+  font-weight: 700;
 }
 
 .section-title::after {
@@ -60,17 +60,23 @@
   flex-wrap: wrap;
   gap: 3rem;
   margin-bottom: 4rem;
+  justify-content: center;
+  align-items: flex-start;
 }
 
 .about-text {
   flex: 1;
   min-width: 300px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
 .about-text h2 {
   font-size: 2rem;
   color: #2c3e50;
   margin-bottom: 1.5rem;
+  font-weight: 600;
 }
 
 .about-text p {
@@ -82,7 +88,7 @@
 
 .about-features {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
   gap: 1.5rem;
   margin-top: 2rem;
 }
@@ -96,6 +102,7 @@
   border: 1px solid #e0f2f1;
   position: relative;
   overflow: hidden;
+  text-align: center;
 }
 
 .light .feature {
@@ -124,6 +131,8 @@
   display: flex;
   align-items: center;
   gap: 8px;
+  justify-content: center;
+  font-weight: 600;
 }
 
 .about-stats {
@@ -132,6 +141,7 @@
   flex-wrap: wrap;
   gap: 1.5rem;
   margin-top: 3rem;
+  width: 100%;
 }
 
 .stat {
@@ -144,6 +154,8 @@
   min-width: 150px;
   transition: background 0.3s, box-shadow 0.3s;
   position: relative;
+  flex: 1 1 150px;
+  max-width: 220px;
 }
 
 .light .stat {
@@ -176,6 +188,7 @@
   text-align: center;
   margin-bottom: 2.5rem;
   color: #2c3e50;
+  font-weight: 700;
 }
 
 .features-grid {
@@ -194,12 +207,14 @@
   text-align: center;
   margin-bottom: 2.5rem;
   color: #2c3e50;
+  font-weight: 700;
 }
 
 .team-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
   gap: 2rem;
+  justify-items: center;
 }
 
 .team-member {
@@ -210,6 +225,9 @@
   transition: transform 0.3s, box-shadow 0.3s;
   background: #fff;
   border: 1px solid #e0e7ef;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .light .team-member {
@@ -243,12 +261,14 @@
 .team-member h3 {
   color: #2c3e50;
   margin-bottom: 0.5rem;
+  font-weight: 600;
 }
 
 .testimonials-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   gap: 1.5rem;
+  justify-items: center;
 }
 
 .testimonial-card {
@@ -258,15 +278,18 @@
   box-shadow: 0 2px 8px rgba(16, 185, 129, 0.08);
   border: 1px solid #e0f2f1;
   transition: transform 0.3s, box-shadow 0.3s;
+  text-align: center;
+  max-width: 400px;
 }
 
 .light .testimonial-card {
   background: #fff;
 }
 
-.dark .testimonial-card {
-  background: #1e1e1e;
+[data-theme="dark"] .testimonial-card {
+  background: var(--card-bg);
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+  border: 1px solid var(--border-color);
 }
 
 .dark .testimonial-card cite {
@@ -298,18 +321,43 @@
 }
 
 /* Responsive adjustments */
-@media (max-width: 768px) {
+@media (max-width: 992px) {
   .about-content {
     flex-direction: column;
+    align-items: center;
   }
-  
   .about-stats {
     flex-direction: column;
     align-items: center;
   }
-  
   .stat {
     width: 100%;
     max-width: 250px;
+  }
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding: 0 0.5rem;
+  }
+  .about-content {
+    gap: 2rem;
+  }
+  .features-section,
+  .team-section,
+  .testimonials-section {
+    margin: 2rem 0;
+  }
+}
+
+@media (max-width: 480px) {
+  .section-title {
+    font-size: 2rem;
+  }
+  .about-container {
+    padding: 2rem 0.5rem;
+  }
+  .container {
+    padding: 0 0.25rem;
   }
 }

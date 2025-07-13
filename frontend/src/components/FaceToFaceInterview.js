@@ -157,7 +157,7 @@ const FaceToFaceInterview = memo(() => {
           facingMode: 'user'
         }
       });
-
+      
       if (videoRef.current) {
         videoRef.current.srcObject = stream;
         setCameraActive(true);
@@ -224,7 +224,7 @@ const FaceToFaceInterview = memo(() => {
           responseQuality: Math.floor(Math.random() * 30) + 70
         }
       };
-
+      
       setFeedback(mockAnalysis);
       setShowFeedback(true);
 
@@ -335,14 +335,14 @@ const FaceToFaceInterview = memo(() => {
   // End the interview
   const endInterview = () => {
     // Stop recording
-    if (mediaRecorderRef.current && mediaRecorderRef.current.state !== 'inactive') {
-      mediaRecorderRef.current.stop();
-    }
+      if (mediaRecorderRef.current && mediaRecorderRef.current.state !== 'inactive') {
+        mediaRecorderRef.current.stop();
+      }
 
     // Stop timer
-    if (timerRef.current) {
-      clearInterval(timerRef.current);
-    }
+      if (timerRef.current) {
+        clearInterval(timerRef.current);
+      }
 
     // Stop camera and microphone
     if (videoRef.current && videoRef.current.srcObject) {
@@ -365,7 +365,7 @@ const FaceToFaceInterview = memo(() => {
     if (timerRef.current) {
       clearInterval(timerRef.current);
     }
-
+    
     // Reset all states
     setIsInterviewStarted(false);
     setCurrentQuestionIndex(0);
@@ -409,7 +409,7 @@ const FaceToFaceInterview = memo(() => {
   };
 
   if (!isInterviewStarted) {
-    return (
+  return (
       <div className="face-to-face-interview">
         <div className="interview-header">
           <h1>Face-to-Face Interview Practice</h1>
@@ -421,10 +421,10 @@ const FaceToFaceInterview = memo(() => {
             <h2>How It Works</h2>
             <ol>
               <li>Click "Start Interview" to begin</li>
-              <li>Answer each question within the time limit</li>
-              <li>Maintain good eye contact with the camera</li>
-              <li>Speak clearly and confidently</li>
-              <li>Review your performance at the end</li>
+            <li>Answer each question within the time limit</li>
+            <li>Maintain good eye contact with the camera</li>
+            <li>Speak clearly and confidently</li>
+            <li>Review your performance at the end</li>
             </ol>
           </div>
 
@@ -436,7 +436,7 @@ const FaceToFaceInterview = memo(() => {
               <li>Structure your answers clearly</li>
               <li>Use the STAR method for behavioral questions</li>
               <li>Practice good posture and body language</li>
-            </ul>
+          </ul>
           </div>
         </div>
 
@@ -557,9 +557,9 @@ const FaceToFaceInterview = memo(() => {
             <div className="video-feed">
               <video
                 ref={videoRef}
-                autoPlay
-                playsInline
-                muted
+                autoPlay 
+                playsInline 
+                muted 
                 className="interview-video"
               />
               {!cameraActive && (
@@ -598,7 +598,7 @@ const FaceToFaceInterview = memo(() => {
           <div className="feedback-metrics">
             <h3>Performance Metrics</h3>
             <div className="metrics-grid">
-              {Object.entries(feedback.metrics).map(([key, value]) => (
+            {Object.entries(feedback.metrics).map(([key, value]) => (
                 <div key={key} className="metric-item">
                   <div className="metric-label">
                     {key.split(/(?=[A-Z])/).join(' ')}

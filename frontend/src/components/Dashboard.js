@@ -1,23 +1,53 @@
 import React, { useState, useEffect } from 'react';
-<<<<<<< HEAD
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
+import { 
+  FaCode, FaQuestionCircle, FaFileAlt, FaRoad, 
+  FaStar, FaFire, FaTrophy, FaCalendarAlt, 
+  FaChartLine, FaUsers 
+} from 'react-icons/fa';
+import confetti from 'canvas-confetti';
+import { useToast } from './Toast/Toast';
+import { useApp } from '../context/AppContext';
 import ApiService from '../services/api';
 import './Dashboard.css';
 
 const Dashboard = ({ setIsAuthenticated }) => {
-  const [dashboardData, setDashboardData] = useState(null);
-  const [userProfile, setUserProfile] = useState(null);
+  const { showToast } = useToast();
+  const { state, actions } = useApp();
+  const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
-  const navigate = useNavigate();
+  const [userProfile, setUserProfile] = useState(null);
+  const [dashboardData, setDashboardData] = useState(null);
+  
+  const [dailyChallenge, setDailyChallenge] = useState({
+      title: "Two Sum",
+      difficulty: "Easy",
+      completed: false,
+      description: "Find two numbers in an array that add up to a target sum."
+  });
+
+  const [recentActivity, setRecentActivity] = useState([
+    { type: 'coding', title: 'Array Rotation', time: '2 hours ago', status: 'completed' },
+    { type: 'mcq', title: 'JavaScript Fundamentals', time: '1 day ago', status: 'completed' },
+    { type: 'resume', title: 'Resume Updated', time: '2 days ago', status: 'completed' }
+  ]);
 
   useEffect(() => {
     fetchDashboardData();
     fetchUserProfile();
+
+    // Check if it's a new day for daily challenge
+    const lastChallengeDate = localStorage.getItem('lastChallengeDate');
+    const today = new Date().toDateString();
+    
+    if (lastChallengeDate !== today) {
+      setDailyChallenge(prev => ({ ...prev, completed: false }));
+    }
   }, []);
 
   const fetchDashboardData = async () => {
-    try {
+      try {
       const data = await ApiService.getDashboardData();
       setDashboardData(data);
     } catch (error) {
@@ -33,10 +63,10 @@ const Dashboard = ({ setIsAuthenticated }) => {
     } catch (error) {
       setError('Failed to load user profile');
       console.error('User profile error:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
+      } finally {
+        setLoading(false);
+      }
+    };
 
   const handleLogout = async () => {
     try {
@@ -51,97 +81,6 @@ const Dashboard = ({ setIsAuthenticated }) => {
       navigate('/login');
     }
   };
-
-  if (loading) {
-    return (
-      <div className="dashboard-container">
-        <div className="loading">Loading dashboard...</div>
-      </div>
-    );
-  }
-
-  return (
-    <div className="dashboard-container">
-      <header className="dashboard-header">
-        <h1>Dashboard</h1>
-        <div className="user-info">
-          {userProfile && (
-            <span>Welcome, {userProfile.username}!</span>
-          )}
-          <button onClick={handleLogout} className="logout-btn">
-            Logout
-          </button>
-        </div>
-      </header>
-
-      {error && <div className="error-message">{error}</div>}
-
-      <main className="dashboard-content">
-        <div className="dashboard-grid">
-          {/* User Profile Section */}
-          {userProfile && (
-            <div className="dashboard-card">
-              <h3>Profile Information</h3>
-              <p><strong>Username:</strong> {userProfile.username}</p>
-              <p><strong>Email:</strong> {userProfile.email}</p>
-              <p><strong>Member since:</strong> {new Date(userProfile.created_at).toLocaleDateString()}</p>
-            </div>
-          )}
-
-          {/* Dashboard Data Section */}
-          {dashboardData && (
-            <div className="dashboard-card">
-              <h3>Dashboard Statistics</h3>
-              {Object.entries(dashboardData).map(([key, value]) => (
-                <p key={key}>
-                  <strong>{key.replace(/_/g, ' ').toUpperCase()}:</strong> {value}
-                </p>
-              ))}
-            </div>
-          )}
-
-          {/* Additional sections can be added here */}
-          <div className="dashboard-card">
-            <h3>Quick Actions</h3>
-            <button className="action-btn" onClick={() => window.location.reload()}>
-              Refresh Data
-            </button>
-          </div>
-        </div>
-      </main>
-=======
-import { Link } from 'react-router-dom';
-import { FaCode, FaQuestionCircle, FaFileAlt, FaRoad, FaStar, FaFire, FaTrophy, FaCalendarAlt, FaChartLine, FaUsers } from 'react-icons/fa';
-import confetti from 'canvas-confetti';
-import { useToast } from './Toast/Toast';
-import { useApp } from '../context/AppContext';
-import './Dashboard.css';
-
-const Dashboard = () => {
-  const { showToast } = useToast();
-  const { state, actions } = useApp();
-  const [dailyChallenge, setDailyChallenge] = useState({
-    title: "Two Sum",
-    difficulty: "Easy",
-    completed: false,
-    description: "Find two numbers in an array that add up to a target sum."
-  });
-
-  const [recentActivity, setRecentActivity] = useState([
-    { type: 'coding', title: 'Array Rotation', time: '2 hours ago', status: 'completed' },
-    { type: 'mcq', title: 'JavaScript Fundamentals', time: '1 day ago', status: 'completed' },
-    { type: 'resume', title: 'Resume Updated', time: '2 days ago', status: 'completed' }
-  ]);
-
-  useEffect(() => {
-    // Check if it's a new day for daily challenge
-    const lastChallengeDate = localStorage.getItem('lastChallengeDate');
-    const today = new Date().toDateString();
-    
-    if (lastChallengeDate !== today) {
-      setDailyChallenge(prev => ({ ...prev, completed: false }));
-    }
-  }, []);
 
   const handleDailyChallengeComplete = () => {
     if (!dailyChallenge.completed) {
@@ -168,10 +107,10 @@ const Dashboard = () => {
   };
 
   const quickStats = [
-    { label: 'Problems Solved', value: state.stats.problemsSolved, icon: FaCode, color: '#3b82f6' },
-    { label: 'MCQs Completed', value: state.stats.mcqsCompleted, icon: FaQuestionCircle, color: '#10b981' },
-    { label: 'Current Streak', value: state.stats.currentStreak, icon: FaFire, color: '#f59e0b' },
-    { label: 'Total Points', value: state.stats.totalPoints, icon: FaTrophy, color: '#ef4444' }
+    { label: 'Problems Solved', value: state.stats?.problemsSolved || 0, icon: FaCode, color: '#3b82f6' },
+    { label: 'MCQs Completed', value: state.stats?.mcqsCompleted || 0, icon: FaQuestionCircle, color: '#10b981' },
+    { label: 'Current Streak', value: state.stats?.currentStreak || 0, icon: FaFire, color: '#f59e0b' },
+    { label: 'Total Points', value: state.stats?.totalPoints || 0, icon: FaTrophy, color: '#ef4444' }
   ];
 
   const quickActions = [
@@ -181,16 +120,31 @@ const Dashboard = () => {
     { title: 'Study Roadmap', description: 'Follow learning path', link: '/roadmap', icon: FaRoad, color: '#f59e0b' }
   ];
 
+  if (loading) {
+    return (
+      <div className="dashboard-container">
+        <div className="loading">Loading dashboard...</div>
+      </div>
+    );
+  }
+
   return (
     <div className="dashboard">
       <div className="container">
-        {/* Welcome Section */}
-        <div className="welcome-section">
-          <h1>Welcome back{state.user?.name ? `, ${state.user.name}` : ''}! 👋</h1>
-          <p>Ready to ace your next interview? Let's continue your preparation journey.</p>
-        </div>
+        {/* Header Section */}
+        <header className="dashboard-header">
+          <div className="welcome-section">
+            <h1>Welcome back{userProfile?.username ? `, ${userProfile.username}` : ''}! 👋</h1>
+            <p>Ready to ace your next interview? Let's continue your preparation journey.</p>
+          </div>
+          <div className="user-actions">
+            <button onClick={handleLogout} className="logout-btn">
+              Logout
+            </button>
+          </div>
+        </header>
 
-        {/* Daily Challenge */}
+      {/* Daily Challenge */}
         <div className="daily-challenge card">
           <div className="challenge-header">
             <div className="challenge-info">
@@ -222,11 +176,11 @@ const Dashboard = () => {
           </div>
         </div>
 
-        {/* Quick Stats */}
+      {/* Quick Stats */}
         <div className="quick-stats">
           <h2>Your Progress</h2>
           <div className="stats-grid">
-            {quickStats.map((stat, index) => (
+          {quickStats.map((stat, index) => (
               <div key={index} className="stat-card card">
                 <div className="stat-icon" style={{ color: stat.color }}>
                   <stat.icon />
@@ -236,33 +190,37 @@ const Dashboard = () => {
                   <p>{stat.label}</p>
                 </div>
               </div>
-            ))}
+          ))}
           </div>
         </div>
 
-        {/* Quick Actions */}
+      {/* Quick Actions */}
         <div className="quick-actions">
           <h2>Quick Actions</h2>
           <div className="actions-grid">
-            {quickActions.map((action, index) => (
-              <Link key={index} to={action.link} className="action-card card">
-                <div className="action-icon" style={{ color: action.color }}>
-                  <action.icon />
-                </div>
-                <div className="action-info">
-                  <h3>{action.title}</h3>
-                  <p>{action.description}</p>
-                </div>
-              </Link>
-            ))}
+          {quickActions.map((action, index) => (
+  action.link ? (
+    <Link key={index} to={action.link} className="action-card card">
+      <div className="action-icon" style={{ color: action.color }}>
+        <action.icon />
+      </div>
+      <div className="action-info">
+        <h3>{action.title}</h3>
+        <p>{action.description}</p>
+      </div>
+    </Link>
+  ) : (
+    console.warn('Dashboard quick action missing link:', action), null
+  )
+          ))}
           </div>
         </div>
 
-        {/* Recent Activity */}
+      {/* Recent Activity */}
         <div className="recent-activity">
           <h2><FaChartLine /> Recent Activity</h2>
           <div className="activity-list">
-            {recentActivity.map((activity, index) => (
+          {recentActivity.map((activity, index) => (
               <div key={index} className="activity-item card">
                 <div className="activity-icon">
                   {activity.type === 'coding' && <FaCode />}
@@ -277,11 +235,11 @@ const Dashboard = () => {
                   {activity.status === 'completed' && <FaTrophy />}
                 </div>
               </div>
-            ))}
+          ))}
           </div>
         </div>
 
-        {/* Study Streak */}
+      {/* Study Streak */}
         <div className="study-streak card">
           <div className="streak-content">
             <div className="streak-icon">
@@ -294,7 +252,7 @@ const Dashboard = () => {
             <div className="streak-visual">
               {[...Array(7)].map((_, i) => (
                 <div 
-                  key={i} 
+                  key={i}
                   className={`streak-day ${i < state.stats.currentStreak ? 'active' : ''}`}
                 />
               ))}
@@ -302,7 +260,7 @@ const Dashboard = () => {
           </div>
         </div>
 
-        {/* Community Section */}
+      {/* Community Section */}
         <div className="community-section">
           <h2><FaUsers /> Community Highlights</h2>
           <div className="community-grid">
@@ -347,7 +305,6 @@ const Dashboard = () => {
           </div>
         </div>
       </div>
->>>>>>> aaf69eb1a911dc5306e41e26d4cfcc3f780a0434
     </div>
   );
 };

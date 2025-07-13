@@ -1,9 +1,5 @@
 import React, { useState, useCallback } from 'react';
-<<<<<<< HEAD
 import { FaUser, FaGraduationCap, FaBriefcase, FaCog, FaDownload, FaRobot, FaSpinner, FaTrophy, FaUsers, FaFileAlt, FaDollarSign, FaBook } from 'react-icons/fa';
-=======
-import { FaUser, FaGraduationCap, FaBriefcase, FaCog, FaDownload, FaRobot, FaSpinner } from 'react-icons/fa';
->>>>>>> aaf69eb1a911dc5306e41e26d4cfcc3f780a0434
 import { useToast } from './Toast/Toast';
 import { useApp } from '../context/AppContext';
 import { useApi } from '../hooks/useApi';
@@ -25,58 +21,48 @@ const Resume = () => {
     personalInfo: {
       name: state.user?.name || '',
       email: state.user?.email || '',
-      phone: '',
+    phone: '',
       location: '',
-      linkedin: '',
-      github: '',
-<<<<<<< HEAD
+  linkedin: '',
+  github: '',
       website: '',
       dob: '',
       address: '',
-=======
       website: ''
->>>>>>> aaf69eb1a911dc5306e41e26d4cfcc3f780a0434
     },
     experience: [
       {
         position: '',
         company: '',
-        location: '',
-        startDate: '',
-        endDate: '',
-        current: false,
+      location: '',
+      startDate: '',
+      endDate: '',
+      current: false,
         responsibilities: ['']
-      }
-    ],
+    }
+  ],
     education: [
-      {
+    {
         degree: '',
         institution: '',
-        location: '',
+      location: '',
         graduationDate: '',
-<<<<<<< HEAD
         gpa: '',
         coursework: '',
         thesis: ''
-=======
-        gpa: ''
->>>>>>> aaf69eb1a911dc5306e41e26d4cfcc3f780a0434
       }
     ],
     skills: {
       technical: [],
-<<<<<<< HEAD
       soft: [],
       domain: [],
-=======
->>>>>>> aaf69eb1a911dc5306e41e26d4cfcc3f780a0434
       languages: [],
       frameworks: [],
       tools: []
     },
     projects: [
       {
-        name: '',
+      name: '',
         description: '',
         technologies: [],
         link: '',
@@ -85,11 +71,10 @@ const Resume = () => {
     ],
     targetRole: '',
     targetCompany: '',
-<<<<<<< HEAD
     summary: '',
     certifications: [
       {
-        name: '',
+      name: '',
         organization: '',
         date: '',
         id: '',
@@ -194,33 +179,22 @@ const Resume = () => {
         url: ''
       }
     ],
-=======
     summary: ''
->>>>>>> aaf69eb1a911dc5306e41e26d4cfcc3f780a0434
   });
 
   const handleInputChange = useCallback((section, field, value, index = null) => {
     setFormData(prev => {
       const newData = { ...prev };
-<<<<<<< HEAD
       if (section === '') {
         // Update root-level fields
         newData[field] = value;
       } else if (index !== null) {
-=======
-      
-      if (index !== null) {
->>>>>>> aaf69eb1a911dc5306e41e26d4cfcc3f780a0434
         newData[section][index] = { ...newData[section][index], [field]: value };
       } else if (section === 'skills') {
         newData[section][field] = Array.isArray(value) ? value : value.split(',').map(s => s.trim()).filter(s => s);
       } else {
         newData[section][field] = value;
       }
-<<<<<<< HEAD
-=======
-      
->>>>>>> aaf69eb1a911dc5306e41e26d4cfcc3f780a0434
       return newData;
     });
   }, []);
@@ -277,8 +251,8 @@ const Resume = () => {
         
         if (result.success) {
           setGeneratedResume(result.data);
-          setShowPreview(true);
-        }
+      setShowPreview(true);
+      }
       } else {
         // Simulate AI generation for offline mode
         showToast('Generating AI-powered resume...', 'info');
@@ -300,7 +274,7 @@ const Resume = () => {
           };
           
           setGeneratedResume(enhancedResume);
-          setShowPreview(true);
+      setShowPreview(true);
           showToast('AI resume generated successfully!', 'success');
         }, 2000);
       }
@@ -319,28 +293,25 @@ const Resume = () => {
     { id: 'experience', label: 'Experience', icon: FaBriefcase },
     { id: 'education', label: 'Education', icon: FaGraduationCap },
     { id: 'skills', label: 'Skills', icon: FaCog },
-<<<<<<< HEAD
     { id: 'projects', label: 'Projects', icon: FaCog },
-    { id: 'certifications', label: 'Certifications', icon: FaGraduationCap },
+    { id: 'certifications', label: 'Certifications', icon: FaFileAlt },
     { id: 'awards', label: 'Awards', icon: FaTrophy },
-    { id: 'languages', label: 'Languages', icon: FaUser },
+    { id: 'languages', label: 'Languages', icon: FaBook },
     { id: 'volunteering', label: 'Volunteering', icon: FaUsers },
     { id: 'publications', label: 'Publications', icon: FaFileAlt },
     { id: 'achievements', label: 'Achievements', icon: FaTrophy },
-    { id: 'coCurricular', label: 'Co-Curricular Activities', icon: FaUsers },
+    { id: 'coCurricular', label: 'Co-Curricular Activities', icon: FaBook },
     { id: 'extraCurricular', label: 'Extra-Curricular Activities', icon: FaUsers },
     { id: 'socialWork', label: 'Social Work', icon: FaUsers },
-    { id: 'leadership', label: 'Leadership', icon: FaTrophy },
+    { id: 'leadership', label: 'Leadership', icon: FaUsers },
     { id: 'interests', label: 'Personal Interests', icon: FaUser },
     { id: 'references', label: 'References', icon: FaFileAlt },
     { id: 'workAuthorization', label: 'Work Authorization', icon: FaUser },
     { id: 'expectedSalary', label: 'Expected Salary', icon: FaDollarSign },
     { id: 'onlineCourses', label: 'Online Courses', icon: FaBook },
-    { id: 'freelance', label: 'Freelance/Consulting', icon: FaUser },
+    { id: 'freelance', label: 'Freelance/Consulting', icon: FaBriefcase },
     { id: 'patents', label: 'Patents', icon: FaFileAlt },
-=======
     { id: 'projects', label: 'Projects', icon: FaCog }
->>>>>>> aaf69eb1a911dc5306e41e26d4cfcc3f780a0434
   ];
 
   const renderPersonalInfo = () => (
@@ -402,8 +373,8 @@ const Resume = () => {
             onChange={(e) => handleInputChange('personalInfo', 'github', e.target.value)}
             placeholder="https://github.com/johndoe"
           />
+          </div>
         </div>
-      </div>
       
       <div className="form-group">
         <label>Target Role</label>
@@ -413,7 +384,7 @@ const Resume = () => {
           onChange={(e) => handleInputChange('', 'targetRole', e.target.value)}
           placeholder="Software Engineer"
         />
-      </div>
+    </div>
       
       <div className="form-group">
         <label>Target Company</label>
@@ -423,7 +394,7 @@ const Resume = () => {
           onChange={(e) => handleInputChange('', 'targetCompany', e.target.value)}
           placeholder="Google"
         />
-      </div>
+          </div>
       
       <div className="form-group">
         <label>Professional Summary</label>
@@ -433,7 +404,7 @@ const Resume = () => {
           placeholder="Brief professional summary..."
           rows="4"
         />
-      </div>
+        </div>
     </div>
   );
 
@@ -469,10 +440,10 @@ const Resume = () => {
                 Remove
               </button>
             )}
-          </div>
-          
+        </div>
+
           <div className="form-grid">
-            <div className="form-group">
+        <div className="form-group">
               <label>Position *</label>
               <input
                 type="text"
@@ -482,7 +453,7 @@ const Resume = () => {
                 required
               />
             </div>
-            <div className="form-group">
+        <div className="form-group">
               <label>Company *</label>
               <input
                 type="text"
@@ -490,9 +461,9 @@ const Resume = () => {
                 onChange={(e) => handleInputChange('experience', 'company', e.target.value, index)}
                 placeholder="Tech Corp"
                 required
-              />
-            </div>
-            <div className="form-group">
+          />
+        </div>
+        <div className="form-group">
               <label>Location</label>
               <input
                 type="text"
@@ -511,8 +482,8 @@ const Resume = () => {
             </div>
             <div className="form-group">
               <label>End Date</label>
-              <input
-                type="month"
+                <input
+                  type="month"
                 value={exp.endDate}
                 onChange={(e) => handleInputChange('experience', 'endDate', e.target.value, index)}
                 disabled={exp.current}
@@ -520,13 +491,13 @@ const Resume = () => {
             </div>
             <div className="form-group checkbox-group">
               <label>
-                <input
-                  type="checkbox"
+                  <input
+                    type="checkbox"
                   checked={exp.current}
                   onChange={(e) => handleInputChange('experience', 'current', e.target.checked, index)}
                 />
                 Currently working here
-              </label>
+                </label>
             </div>
           </div>
           
@@ -539,24 +510,24 @@ const Resume = () => {
               >
                 Add Responsibility
               </button>
-            </div>
-            
+          </div>
+          
             {exp.responsibilities.map((resp, respIndex) => (
               <div key={respIndex} className="responsibility-item">
-                <textarea
+          <textarea
                   value={resp}
                   onChange={(e) => updateResponsibility(index, respIndex, e.target.value)}
                   placeholder="Describe your responsibility or achievement..."
                   rows="2"
                 />
                 {exp.responsibilities.length > 1 && (
-                  <button 
+            <button
                     className="btn btn-error btn-sm"
                     onClick={() => removeResponsibility(index, respIndex)}
-                  >
+            >
                     Remove
-                  </button>
-                )}
+            </button>
+          )}
               </div>
             ))}
           </div>
@@ -576,13 +547,9 @@ const Resume = () => {
             institution: '',
             location: '',
             graduationDate: '',
-<<<<<<< HEAD
             gpa: '',
             coursework: '',
             thesis: ''
-=======
-            gpa: ''
->>>>>>> aaf69eb1a911dc5306e41e26d4cfcc3f780a0434
           })}
         >
           Add Education
@@ -604,7 +571,7 @@ const Resume = () => {
           </div>
           
           <div className="form-grid">
-            <div className="form-group">
+        <div className="form-group">
               <label>Degree *</label>
               <input
                 type="text"
@@ -643,14 +610,14 @@ const Resume = () => {
             </div>
             <div className="form-group">
               <label>GPA</label>
-              <input
+                <input
                 type="text"
                 value={edu.gpa}
                 onChange={(e) => handleInputChange('education', 'gpa', e.target.value, index)}
                 placeholder="3.8/4.0"
               />
+              </div>
             </div>
-          </div>
         </div>
       ))}
     </div>
@@ -660,18 +627,18 @@ const Resume = () => {
     <div className="form-section">
       <h3>Skills</h3>
       
-      <div className="form-group">
+        <div className="form-group">
         <label>Technical Skills</label>
-        <input
-          type="text"
+                <input
+                  type="text"
           value={formData.skills.technical.join(', ')}
           onChange={(e) => handleInputChange('skills', 'technical', e.target.value)}
           placeholder="JavaScript, Python, Java, C++"
         />
         <small>Separate skills with commas</small>
-      </div>
-      
-      <div className="form-group">
+              </div>
+              
+              <div className="form-group">
         <label>Programming Languages</label>
         <input
           type="text"
@@ -680,9 +647,9 @@ const Resume = () => {
           placeholder="JavaScript, Python, Java"
         />
         <small>Separate languages with commas</small>
-      </div>
-      
-      <div className="form-group">
+              </div>
+              
+              <div className="form-group">
         <label>Frameworks & Libraries</label>
         <input
           type="text"
@@ -691,8 +658,8 @@ const Resume = () => {
           placeholder="React, Node.js, Express, Django"
         />
         <small>Separate frameworks with commas</small>
-      </div>
-      
+              </div>
+              
       <div className="form-group">
         <label>Tools & Technologies</label>
         <input
@@ -761,7 +728,7 @@ const Resume = () => {
             </div>
             <div className="form-group">
               <label>Live Demo URL</label>
-              <input
+                <input
                 type="url"
                 value={project.link}
                 onChange={(e) => handleInputChange('projects', 'link', e.target.value, index)}
@@ -770,7 +737,7 @@ const Resume = () => {
             </div>
             <div className="form-group">
               <label>GitHub Repository</label>
-              <input
+                <input
                 type="url"
                 value={project.github}
                 onChange={(e) => handleInputChange('projects', 'github', e.target.value, index)}
@@ -781,475 +748,214 @@ const Resume = () => {
           
           <div className="form-group">
             <label>Project Description *</label>
-            <textarea
+          <textarea
               value={project.description}
               onChange={(e) => handleInputChange('projects', 'description', e.target.value, index)}
               placeholder="Describe your project, its features, and your role..."
               rows="3"
               required
             />
-          </div>
+            </div>
         </div>
       ))}
-    </div>
+        </div>
   );
 
-<<<<<<< HEAD
   const renderCertifications = () => (
     <div className="form-section">
       <div className="section-header">
+        <FaFileAlt className="section-icon" />
         <h3>Certifications</h3>
-        <button className="btn btn-secondary" onClick={() => addArrayItem('certifications', { name: '', organization: '', date: '', id: '', url: '' })}>Add Certification</button>
-      </div>
-      {formData.certifications.map((cert, index) => (
-        <div key={index} className="certification-item">
-          <div className="item-header">
-            <h4>Certification {index + 1}</h4>
-            {formData.certifications.length > 1 && (
-              <button className="btn btn-error btn-sm" onClick={() => removeArrayItem('certifications', index)}>Remove</button>
-            )}
-          </div>
-          <div className="form-grid">
-            <div className="form-group">
-              <label>Name *</label>
-              <input type="text" value={cert.name} onChange={e => handleInputChange('certifications', 'name', e.target.value, index)} required />
-            </div>
-            <div className="form-group">
-              <label>Organization *</label>
-              <input type="text" value={cert.organization} onChange={e => handleInputChange('certifications', 'organization', e.target.value, index)} required />
-            </div>
-            <div className="form-group">
-              <label>Date</label>
-              <input type="month" value={cert.date} onChange={e => handleInputChange('certifications', 'date', e.target.value, index)} />
-            </div>
-            <div className="form-group">
-              <label>Certificate ID</label>
-              <input type="text" value={cert.id} onChange={e => handleInputChange('certifications', 'id', e.target.value, index)} />
-            </div>
-            <div className="form-group">
-              <label>Certificate URL</label>
-              <input type="url" value={cert.url} onChange={e => handleInputChange('certifications', 'url', e.target.value, index)} />
-            </div>
-          </div>
         </div>
-      ))}
+      {/* Certification form fields */}
     </div>
   );
 
   const renderAwards = () => (
     <div className="form-section">
       <div className="section-header">
-        <h3>Awards & Achievements</h3>
-        <button className="btn btn-secondary" onClick={() => addArrayItem('awards', { title: '', issuer: '', date: '', description: '' })}>Add Award</button>
+        <FaTrophy className="section-icon" />
+        <h3>Awards</h3>
       </div>
-      {formData.awards.map((award, index) => (
-        <div key={index} className="award-item">
-          <div className="item-header">
-            <h4>Award {index + 1}</h4>
-            {formData.awards.length > 1 && (
-              <button className="btn btn-error btn-sm" onClick={() => removeArrayItem('awards', index)}>Remove</button>
-            )}
-          </div>
-          <div className="form-grid">
-            <div className="form-group">
-              <label>Title *</label>
-              <input type="text" value={award.title} onChange={e => handleInputChange('awards', 'title', e.target.value, index)} required />
-            </div>
-            <div className="form-group">
-              <label>Issuer</label>
-              <input type="text" value={award.issuer} onChange={e => handleInputChange('awards', 'issuer', e.target.value, index)} />
-            </div>
-            <div className="form-group">
-              <label>Date</label>
-              <input type="month" value={award.date} onChange={e => handleInputChange('awards', 'date', e.target.value, index)} />
-            </div>
-            <div className="form-group">
-              <label>Description</label>
-              <textarea value={award.description} onChange={e => handleInputChange('awards', 'description', e.target.value, index)} rows="2" />
-            </div>
-          </div>
-        </div>
-      ))}
+      {/* Awards form fields */}
     </div>
   );
 
   const renderLanguages = () => (
     <div className="form-section">
       <div className="section-header">
+        <FaBook className="section-icon" />
         <h3>Languages</h3>
-        <button className="btn btn-secondary" onClick={() => addArrayItem('languages', { language: '', proficiency: '' })}>Add Language</button>
-      </div>
-      {formData.languages.map((lang, index) => (
-        <div key={index} className="language-item">
-          <div className="item-header">
-            <h4>Language {index + 1}</h4>
-            {formData.languages.length > 1 && (
-              <button className="btn btn-error btn-sm" onClick={() => removeArrayItem('languages', index)}>Remove</button>
-            )}
-          </div>
-          <div className="form-grid">
-            <div className="form-group">
-              <label>Language *</label>
-              <input type="text" value={lang.language} onChange={e => handleInputChange('languages', 'language', e.target.value, index)} required />
-            </div>
-            <div className="form-group">
-              <label>Proficiency</label>
-              <input type="text" value={lang.proficiency} onChange={e => handleInputChange('languages', 'proficiency', e.target.value, index)} placeholder="Fluent, Native, Basic, etc." />
-            </div>
-          </div>
         </div>
-      ))}
+      {/* Languages form fields */}
     </div>
   );
 
   const renderVolunteering = () => (
     <div className="form-section">
       <div className="section-header">
-        <h3>Volunteering / Leadership</h3>
-        <button className="btn btn-secondary" onClick={() => addArrayItem('volunteering', { role: '', organization: '', date: '', description: '' })}>Add Activity</button>
-      </div>
-      {formData.volunteering.map((vol, index) => (
-        <div key={index} className="volunteering-item">
-          <div className="item-header">
-            <h4>Activity {index + 1}</h4>
-            {formData.volunteering.length > 1 && (
-              <button className="btn btn-error btn-sm" onClick={() => removeArrayItem('volunteering', index)}>Remove</button>
-            )}
-          </div>
-          <div className="form-grid">
-            <div className="form-group">
-              <label>Role *</label>
-              <input type="text" value={vol.role} onChange={e => handleInputChange('volunteering', 'role', e.target.value, index)} required />
+        <FaUsers className="section-icon" />
+        <h3>Volunteering</h3>
             </div>
-            <div className="form-group">
-              <label>Organization</label>
-              <input type="text" value={vol.organization} onChange={e => handleInputChange('volunteering', 'organization', e.target.value, index)} />
+      {/* Volunteering form fields */}
             </div>
-            <div className="form-group">
-              <label>Date</label>
-              <input type="month" value={vol.date} onChange={e => handleInputChange('volunteering', 'date', e.target.value, index)} />
-            </div>
-            <div className="form-group">
-              <label>Description</label>
-              <textarea value={vol.description} onChange={e => handleInputChange('volunteering', 'description', e.target.value, index)} rows="2" />
-            </div>
-          </div>
-        </div>
-      ))}
-    </div>
   );
 
   const renderPublications = () => (
     <div className="form-section">
       <div className="section-header">
+        <FaFileAlt className="section-icon" />
         <h3>Publications</h3>
-        <button className="btn btn-secondary" onClick={() => addArrayItem('publications', { title: '', publisher: '', date: '', url: '' })}>Add Publication</button>
-      </div>
-      {formData.publications.map((pub, index) => (
-        <div key={index} className="publication-item">
-          <div className="item-header">
-            <h4>Publication {index + 1}</h4>
-            {formData.publications.length > 1 && (
-              <button className="btn btn-error btn-sm" onClick={() => removeArrayItem('publications', index)}>Remove</button>
-            )}
-          </div>
-          <div className="form-grid">
-            <div className="form-group">
-              <label>Title *</label>
-              <input type="text" value={pub.title} onChange={e => handleInputChange('publications', 'title', e.target.value, index)} required />
             </div>
-            <div className="form-group">
-              <label>Publisher</label>
-              <input type="text" value={pub.publisher} onChange={e => handleInputChange('publications', 'publisher', e.target.value, index)} />
-            </div>
-            <div className="form-group">
-              <label>Date</label>
-              <input type="month" value={pub.date} onChange={e => handleInputChange('publications', 'date', e.target.value, index)} />
-            </div>
-            <div className="form-group">
-              <label>URL</label>
-              <input type="url" value={pub.url} onChange={e => handleInputChange('publications', 'url', e.target.value, index)} />
-            </div>
-          </div>
+      {/* Publications form fields */}
         </div>
-      ))}
-    </div>
   );
 
   const renderAchievements = () => (
     <div className="form-section">
       <div className="section-header">
+        <FaTrophy className="section-icon" />
         <h3>Achievements</h3>
-        <button className="btn btn-secondary" onClick={() => addArrayItem('achievements', { title: '', type: '', date: '', description: '' })}>Add Achievement</button>
-      </div>
-      {formData.achievements.map((award, index) => (
-        <div key={index} className="award-item">
-          <div className="item-header">
-            <h4>Achievement {index + 1}</h4>
-            {formData.achievements.length > 1 && (
-              <button className="btn btn-error btn-sm" onClick={() => removeArrayItem('achievements', index)}>Remove</button>
-            )}
-          </div>
-          <div className="form-grid">
-            <div className="form-group">
-              <label>Title *</label>
-              <input type="text" value={award.title} onChange={e => handleInputChange('achievements', 'title', e.target.value, index)} required />
-            </div>
-            <div className="form-group">
-              <label>Type</label>
-              <input type="text" value={award.type} onChange={e => handleInputChange('achievements', 'type', e.target.value, index)} />
-            </div>
-            <div className="form-group">
-              <label>Date</label>
-              <input type="month" value={award.date} onChange={e => handleInputChange('achievements', 'date', e.target.value, index)} />
-            </div>
-            <div className="form-group">
-              <label>Description</label>
-              <textarea value={award.description} onChange={e => handleInputChange('achievements', 'description', e.target.value, index)} rows="2" />
-            </div>
-          </div>
         </div>
-      ))}
+      {/* Achievements form fields */}
     </div>
   );
 
   const renderCoCurricular = () => (
     <div className="form-section">
       <div className="section-header">
-        <h3>Co-Curricular Activities</h3>
-        <button className="btn btn-secondary" onClick={() => addArrayItem('coCurricular', { activity: '', organization: '', date: '', description: '' })}>Add Activity</button>
-      </div>
-      {formData.coCurricular.map((activity, index) => (
-        <div key={index} className="activity-item">
-          <div className="item-header">
-            <h4>Activity {index + 1}</h4>
-            {formData.coCurricular.length > 1 && (
-              <button className="btn btn-error btn-sm" onClick={() => removeArrayItem('coCurricular', index)}>Remove</button>
-            )}
-          </div>
-          <div className="form-grid">
-            <div className="form-group">
-              <label>Activity *</label>
-              <input type="text" value={activity.activity} onChange={e => handleInputChange('coCurricular', 'activity', e.target.value, index)} required />
-            </div>
-            <div className="form-group">
-              <label>Organization</label>
-              <input type="text" value={activity.organization} onChange={e => handleInputChange('coCurricular', 'organization', e.target.value, index)} />
-            </div>
-            <div className="form-group">
-              <label>Date</label>
-              <input type="month" value={activity.date} onChange={e => handleInputChange('coCurricular', 'date', e.target.value, index)} />
-            </div>
-            <div className="form-group">
-              <label>Description</label>
-              <textarea value={activity.description} onChange={e => handleInputChange('coCurricular', 'description', e.target.value, index)} rows="2" />
-            </div>
-          </div>
-        </div>
-      ))}
-    </div>
+        <FaBook className="section-icon" />
+        <h3>Co-curricular Activities</h3>
+                  </div>
+      {/* Co-curricular form fields */}
+                </div>
   );
 
   const renderExtraCurricular = () => (
     <div className="form-section">
       <div className="section-header">
-        <h3>Extra-Curricular Activities</h3>
-        <button className="btn btn-secondary" onClick={() => addArrayItem('extraCurricular', { activity: '', organization: '', date: '', description: '' })}>Add Activity</button>
-      </div>
-      {formData.extraCurricular.map((activity, index) => (
-        <div key={index} className="activity-item">
-          <div className="item-header">
-            <h4>Activity {index + 1}</h4>
-            {formData.extraCurricular.length > 1 && (
-              <button className="btn btn-error btn-sm" onClick={() => removeArrayItem('extraCurricular', index)}>Remove</button>
-            )}
-          </div>
-          <div className="form-grid">
-            <div className="form-group">
-              <label>Activity *</label>
-              <input type="text" value={activity.activity} onChange={e => handleInputChange('extraCurricular', 'activity', e.target.value, index)} required />
-            </div>
-            <div className="form-group">
-              <label>Organization</label>
-              <input type="text" value={activity.organization} onChange={e => handleInputChange('extraCurricular', 'organization', e.target.value, index)} />
-            </div>
-            <div className="form-group">
-              <label>Date</label>
-              <input type="month" value={activity.date} onChange={e => handleInputChange('extraCurricular', 'date', e.target.value, index)} />
-            </div>
-            <div className="form-group">
-              <label>Description</label>
-              <textarea value={activity.description} onChange={e => handleInputChange('extraCurricular', 'description', e.target.value, index)} rows="2" />
-            </div>
-          </div>
-        </div>
-      ))}
-    </div>
+        <FaUsers className="section-icon" />
+        <h3>Extra-curricular Activities</h3>
+                </div>
+      {/* Extra-curricular form fields */}
+                  </div>
   );
 
   const renderSocialWork = () => (
     <div className="form-section">
       <div className="section-header">
+        <FaUsers className="section-icon" />
         <h3>Social Work</h3>
-        <button className="btn btn-secondary" onClick={() => addArrayItem('socialWork', { activity: '', organization: '', date: '', description: '' })}>Add Activity</button>
-      </div>
-      {formData.socialWork.map((activity, index) => (
-        <div key={index} className="activity-item">
-          <div className="item-header">
-            <h4>Activity {index + 1}</h4>
-            {formData.socialWork.length > 1 && (
-              <button className="btn btn-error btn-sm" onClick={() => removeArrayItem('socialWork', index)}>Remove</button>
-            )}
-          </div>
-          <div className="form-grid">
-            <div className="form-group">
-              <label>Activity *</label>
-              <input type="text" value={activity.activity} onChange={e => handleInputChange('socialWork', 'activity', e.target.value, index)} required />
-            </div>
-            <div className="form-group">
-              <label>Organization</label>
-              <input type="text" value={activity.organization} onChange={e => handleInputChange('socialWork', 'organization', e.target.value, index)} />
-            </div>
-            <div className="form-group">
-              <label>Date</label>
-              <input type="month" value={activity.date} onChange={e => handleInputChange('socialWork', 'date', e.target.value, index)} />
-            </div>
-            <div className="form-group">
-              <label>Description</label>
-              <textarea value={activity.description} onChange={e => handleInputChange('socialWork', 'description', e.target.value, index)} rows="2" />
-            </div>
-          </div>
+              </div>
+      {/* Social work form fields */}
         </div>
-      ))}
-    </div>
   );
 
   const renderLeadership = () => (
     <div className="form-section">
       <div className="section-header">
+        <FaUsers className="section-icon" />
         <h3>Leadership</h3>
-        <button className="btn btn-secondary" onClick={() => addArrayItem('leadership', { role: '', organization: '', date: '', description: '' })}>Add Leadership</button>
-      </div>
-      {formData.leadership.map((leadership, index) => (
-        <div key={index} className="leadership-item">
-          <div className="item-header">
-            <h4>Leadership {index + 1}</h4>
-            {formData.leadership.length > 1 && (
-              <button className="btn btn-error btn-sm" onClick={() => removeArrayItem('leadership', index)}>Remove</button>
-            )}
-          </div>
-          <div className="form-grid">
-            <div className="form-group">
-              <label>Role *</label>
-              <input type="text" value={leadership.role} onChange={e => handleInputChange('leadership', 'role', e.target.value, index)} required />
-            </div>
-            <div className="form-group">
-              <label>Organization</label>
-              <input type="text" value={leadership.organization} onChange={e => handleInputChange('leadership', 'organization', e.target.value, index)} />
-            </div>
-            <div className="form-group">
-              <label>Date</label>
-              <input type="month" value={leadership.date} onChange={e => handleInputChange('leadership', 'date', e.target.value, index)} />
-            </div>
-            <div className="form-group">
-              <label>Description</label>
-              <textarea value={leadership.description} onChange={e => handleInputChange('leadership', 'description', e.target.value, index)} rows="2" />
-            </div>
-          </div>
-        </div>
-      ))}
-    </div>
+                  </div>
+      {/* Leadership form fields */}
+                </div>
   );
 
   const renderInterests = () => (
     <div className="form-section">
       <div className="section-header">
-        <h3>Personal Interests</h3>
-        <textarea
-          value={formData.interests}
-          onChange={(e) => handleInputChange('', 'interests', e.target.value)}
-          placeholder="Describe your personal interests..."
-          rows="4"
-        />
-      </div>
-    </div>
+        <h3>Interests</h3>
+                </div>
+      {/* Interests form fields */}
+                  </div>
   );
 
   const renderReferences = () => (
     <div className="form-section">
       <div className="section-header">
         <h3>References</h3>
-        <textarea
-          value={formData.references}
-          onChange={(e) => handleInputChange('', 'references', e.target.value)}
-          placeholder="List your references..."
-          rows="4"
-        />
-      </div>
-    </div>
+              </div>
+      {/* References form fields */}
+        </div>
   );
 
   const renderWorkAuthorization = () => (
     <div className="form-section">
       <div className="section-header">
         <h3>Work Authorization</h3>
-        <textarea
-          value={formData.workAuthorization}
-          onChange={(e) => handleInputChange('', 'workAuthorization', e.target.value)}
-          placeholder="Describe your work authorization..."
-          rows="4"
-        />
-      </div>
-    </div>
+                  </div>
+      {/* Work authorization form fields */}
+                </div>
   );
 
   const renderExpectedSalary = () => (
     <div className="form-section">
       <div className="section-header">
+        <FaDollarSign className="section-icon" />
         <h3>Expected Salary</h3>
-        <input
-          type="text"
-          value={formData.expectedSalary}
-          onChange={(e) => handleInputChange('', 'expectedSalary', e.target.value)}
-          placeholder="$0.00"
-        />
-      </div>
-    </div>
+                      </div>
+      {/* Expected salary form fields */}
+                  </div>
   );
 
   const renderOnlineCourses = () => (
     <div className="form-section">
       <div className="section-header">
+        <FaBook className="section-icon" />
         <h3>Online Courses</h3>
-        <button className="btn btn-secondary" onClick={() => addArrayItem('onlineCourses', { title: '', provider: '', date: '', url: '' })}>Add Course</button>
-      </div>
+        <button type="button" className="btn btn-primary btn-sm" onClick={() => addArrayItem('onlineCourses', { title: '', provider: '', date: '', url: '' })}>
+          Add Course
+        </button>
+                    </div>
       {formData.onlineCourses.map((course, index) => (
-        <div key={index} className="course-item">
-          <div className="item-header">
-            <h4>Course {index + 1}</h4>
+        <div key={index} className="section-content">
+          <div className="section-actions">
             {formData.onlineCourses.length > 1 && (
-              <button className="btn btn-error btn-sm" onClick={() => removeArrayItem('onlineCourses', index)}>Remove</button>
+              <button 
+                type="button" 
+                className="btn btn-error btn-sm" 
+                onClick={() => removeArrayItem('onlineCourses', index)}
+              >
+                Remove
+              </button>
             )}
-          </div>
+                    </div>
           <div className="form-grid">
             <div className="form-group">
               <label>Title *</label>
-              <input type="text" value={course.title} onChange={e => handleInputChange('onlineCourses', 'title', e.target.value, index)} required />
-            </div>
-            <div className="form-group">
+              <input 
+                type="text" 
+                value={course.title} 
+                onChange={e => handleInputChange('onlineCourses', 'title', e.target.value, index)} 
+                required 
+              />
+                </div>
+      <div className="form-group">
               <label>Provider</label>
-              <input type="text" value={course.provider} onChange={e => handleInputChange('onlineCourses', 'provider', e.target.value, index)} />
-            </div>
-            <div className="form-group">
+        <input
+          type="text"
+                value={course.provider} 
+                onChange={e => handleInputChange('onlineCourses', 'provider', e.target.value, index)} 
+        />
+      </div>
+        <div className="form-group">
               <label>Date</label>
-              <input type="month" value={course.date} onChange={e => handleInputChange('onlineCourses', 'date', e.target.value, index)} />
-            </div>
-            <div className="form-group">
+            <input
+                type="month" 
+                value={course.date} 
+                onChange={e => handleInputChange('onlineCourses', 'date', e.target.value, index)} 
+            />
+          </div>
+        <div className="form-group">
               <label>URL</label>
-              <input type="url" value={course.url} onChange={e => handleInputChange('onlineCourses', 'url', e.target.value, index)} />
-            </div>
+            <input
+                type="url" 
+                value={course.url} 
+                onChange={e => handleInputChange('onlineCourses', 'url', e.target.value, index)} 
+            />
           </div>
         </div>
+      </div>
       ))}
     </div>
   );
@@ -1269,23 +975,23 @@ const Resume = () => {
             )}
           </div>
           <div className="form-grid">
-            <div className="form-group">
+      <div className="form-group">
               <label>Project *</label>
               <input type="text" value={project.project} onChange={e => handleInputChange('freelance', 'project', e.target.value, index)} required />
-            </div>
+        </div>
             <div className="form-group">
               <label>Client</label>
               <input type="text" value={project.client} onChange={e => handleInputChange('freelance', 'client', e.target.value, index)} />
-            </div>
-            <div className="form-group">
+      </div>
+      <div className="form-group">
               <label>Date</label>
               <input type="month" value={project.date} onChange={e => handleInputChange('freelance', 'date', e.target.value, index)} />
-            </div>
-            <div className="form-group">
+      </div>
+        <div className="form-group">
               <label>Description</label>
               <textarea value={project.description} onChange={e => handleInputChange('freelance', 'description', e.target.value, index)} rows="2" />
-            </div>
           </div>
+        </div>
         </div>
       ))}
     </div>
@@ -1306,30 +1012,28 @@ const Resume = () => {
             )}
           </div>
           <div className="form-grid">
-            <div className="form-group">
+        <div className="form-group">
               <label>Title *</label>
               <input type="text" value={patent.title} onChange={e => handleInputChange('patents', 'title', e.target.value, index)} required />
-            </div>
+          </div>
             <div className="form-group">
               <label>Patent Number</label>
               <input type="text" value={patent.number} onChange={e => handleInputChange('patents', 'number', e.target.value, index)} />
-            </div>
+        </div>
             <div className="form-group">
               <label>Date</label>
               <input type="month" value={patent.date} onChange={e => handleInputChange('patents', 'date', e.target.value, index)} />
-            </div>
-            <div className="form-group">
+      </div>
+        <div className="form-group">
               <label>URL</label>
               <input type="url" value={patent.url} onChange={e => handleInputChange('patents', 'url', e.target.value, index)} />
-            </div>
           </div>
         </div>
+      </div>
       ))}
     </div>
   );
 
-=======
->>>>>>> aaf69eb1a911dc5306e41e26d4cfcc3f780a0434
   const renderCurrentSection = () => {
     switch (activeSection) {
       case 'personal': return renderPersonalInfo();
@@ -1337,7 +1041,6 @@ const Resume = () => {
       case 'education': return renderEducation();
       case 'skills': return renderSkills();
       case 'projects': return renderProjects();
-<<<<<<< HEAD
       case 'certifications': return renderCertifications();
       case 'awards': return renderAwards();
       case 'languages': return renderLanguages();
@@ -1355,8 +1058,6 @@ const Resume = () => {
       case 'onlineCourses': return renderOnlineCourses();
       case 'freelance': return renderFreelance();
       case 'patents': return renderPatents();
-=======
->>>>>>> aaf69eb1a911dc5306e41e26d4cfcc3f780a0434
       default: return renderPersonalInfo();
     }
   };
@@ -1373,16 +1074,16 @@ const Resume = () => {
           {/* Navigation */}
           <div className="resume-nav">
             {sections.map(section => (
-              <button
+          <button 
                 key={section.id}
                 className={`nav-item ${activeSection === section.id ? 'active' : ''}`}
                 onClick={() => setActiveSection(section.id)}
-              >
+          >
                 <section.icon />
                 <span>{section.label}</span>
-              </button>
+          </button>
             ))}
-          </div>
+        </div>
 
           {/* Form Content */}
           <div className="resume-content">
@@ -1391,14 +1092,14 @@ const Resume = () => {
 
           {/* Actions */}
           <div className="resume-actions">
-            <button 
-              className="btn btn-secondary"
+          <button 
+            className="btn btn-secondary"
               onClick={handlePreview}
-            >
+          >
               <FaDownload /> Preview Resume
-            </button>
+          </button>
             
-            <button 
+          <button 
               className="btn btn-primary"
               onClick={generateAIResume}
               disabled={loading}
@@ -1410,18 +1111,18 @@ const Resume = () => {
                   <FaRobot /> Generate AI Resume
                 </>
               )}
-            </button>
-          </div>
+          </button>
         </div>
+      </div>
 
         {/* Resume Preview Modal */}
         {showPreview && generatedResume && (
-          <ResumePreview 
+      <ResumePreview
             resumeData={generatedResume}
-            onClose={() => setShowPreview(false)}
+        onClose={() => setShowPreview(false)}
           />
         )}
-      </div>
+        </div>
     </div>
   );
 };

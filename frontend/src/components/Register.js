@@ -1,11 +1,10 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import ApiService from '../services/api';
-import './Auth.css';
 
 const Register = () => {
   const [formData, setFormData] = useState({
-    username: '',
+    name: '',
     email: '',
     password: '',
     confirmPassword: ''
@@ -37,15 +36,18 @@ const Register = () => {
 
     try {
       const response = await ApiService.register(
-        formData.username,
+        formData.name,
         formData.email,
         formData.password
       );
       
-      if (response.message) {
-        // Registration successful, redirect to login
+      if (response.success) {
+        // Redirect to login with success message
         navigate('/login', { 
-          state: { message: 'Registration successful! Please log in.' }
+          state: { 
+            message: 'Registration successful! Please log in.',
+            messageType: 'success'
+          }
         });
       }
     } catch (error) {
@@ -56,72 +58,90 @@ const Register = () => {
   };
 
   return (
-    <div className="auth-container">
-      <div className="auth-form">
-        <h2>Register</h2>
-        {error && <div className="error-message">{error}</div>}
-        
-        <form onSubmit={handleSubmit}>
+    <div className="auth-container" style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'var(--bg-secondary)' }}>
+      <div className="register-card" style={{ maxWidth: 420, width: '100%', background: 'var(--bg-primary)', borderRadius: 16, boxShadow: '0 4px 24px rgba(0,0,0,0.10)', padding: '2.5rem 2rem', margin: '2rem', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+        <h2 style={{ marginBottom: '1.5rem', color: 'var(--primary-color)' }}>Create an Account</h2>
+        {error && <div className="error-message" aria-live="polite">{error}</div>}
+        <form onSubmit={handleSubmit} style={{ width: '100%' }}>
           <div className="form-group">
-            <label htmlFor="username">Username:</label>
+            <label htmlFor="name">Full Name</label>
             <input
               type="text"
-              id="username"
-              name="username"
-              value={formData.username}
+              id="name"
+              name="name"
+              value={formData.name}
               onChange={handleChange}
+              className="form-input"
+              placeholder="Enter your full name"
               required
               disabled={loading}
+              aria-describedby={error ? 'register-error' : undefined}
+              autoComplete="name"
             />
           </div>
-          
           <div className="form-group">
-            <label htmlFor="email">Email:</label>
+            <label htmlFor="email">Email</label>
             <input
               type="email"
               id="email"
               name="email"
               value={formData.email}
               onChange={handleChange}
+              className="form-input"
+              placeholder="Enter your email"
               required
               disabled={loading}
+              aria-describedby={error ? 'register-error' : undefined}
+              autoComplete="email"
             />
           </div>
-          
           <div className="form-group">
-            <label htmlFor="password">Password:</label>
+            <label htmlFor="password">Password</label>
             <input
               type="password"
               id="password"
               name="password"
               value={formData.password}
               onChange={handleChange}
+              className="form-input"
+              placeholder="Create a password"
               required
               disabled={loading}
+              aria-describedby={error ? 'register-error' : undefined}
+              autoComplete="new-password"
             />
           </div>
-          
           <div className="form-group">
-            <label htmlFor="confirmPassword">Confirm Password:</label>
+            <label htmlFor="confirmPassword">Confirm Password</label>
             <input
               type="password"
               id="confirmPassword"
               name="confirmPassword"
               value={formData.confirmPassword}
               onChange={handleChange}
+              className="form-input"
+              placeholder="Confirm your password"
               required
               disabled={loading}
+              aria-describedby={error ? 'register-error' : undefined}
+              autoComplete="new-password"
             />
           </div>
-          
-          <button type="submit" disabled={loading}>
-            {loading ? 'Registering...' : 'Register'}
+          <button 
+            type="submit" 
+            className="btn btn-primary" 
+            disabled={loading}
+            style={{ width: '100%', marginTop: '0.5rem' }}
+          >
+            {loading ? 'Creating Account...' : 'Create Account'}
           </button>
         </form>
-        
-        <p>
-          Already have an account? <Link to="/login">Login here</Link>
-        </p>
+        <div className="auth-footer" style={{ marginTop: '1.5rem', textAlign: 'center', width: '100%' }}>
+          <p>
+            Already have an account?{' '}
+            <Link to="/login" style={{ color: 'var(--primary-color)' }}>Sign in</Link>
+          </p>
+        </div>
       </div>
     </div>
   );

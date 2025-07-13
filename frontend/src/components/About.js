@@ -1,14 +1,13 @@
 import React, { memo } from 'react';
-import { useTheme } from '@mui/material/styles';
+import { useTheme } from '../context/ThemeContext';
 import './About.css';
 
 const About = memo(() => {
-  const theme = useTheme();
-  const isDark = theme.palette.mode === 'dark';
+  const { theme } = useTheme();
+  const isDark = theme === 'dark';
   
   return (
-    <div className={`about-container ${isDark ? 'dark' : 'light'}`} role="main" aria-label="About main content">
-      <div className="container">
+    <div className="container about-page">
         <h1 className="section-title">About Us</h1>
         <div className="about-content">
           <div className="about-text">
@@ -125,7 +124,6 @@ const About = memo(() => {
             <div className="testimonial-card">
               <p>"The resume builder helped me create a professional resume that caught recruiters' attention."</p>
               <cite>- David R., Full Stack Developer</cite>
-            </div>
           </div>
         </div>
       </div>
