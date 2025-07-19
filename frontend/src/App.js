@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import React from 'react';
 import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { useApp } from './context/AppContext';
@@ -5,6 +6,17 @@ import { ResumeProvider } from './contexts/ResumeContext';
 import Layout from './layout/Layout/Layout';
 import LoadingSpinner from './shared/LoadingSpinner/LoadingSpinner';
 import './App.css';
+=======
+import React, { Suspense } from 'react';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { AppProvider } from './context/AppContext';
+import { ThemeProvider } from './context/ThemeContext';
+import { ToastProvider } from './components/Toast/Toast';
+import ErrorBoundary from './components/common/ErrorBoundary';
+import Layout from './components/Layout/Layout';
+import OfflineIndicator from './components/OfflineIndicator/OfflineIndicator';
+import { useApp } from './context/AppContext';
+>>>>>>> 5d8d04ad0f03bb6d7dc77391509ce82b5d34bc8d
 
 // Import components directly for now to avoid lazy loading issues
 import Home from './pages/Home/Home';
@@ -37,8 +49,13 @@ const PageLoading = () => (
   </div>
 );
 
+<<<<<<< HEAD
 // Protected Route component
 const ProtectedRoute = ({ children, requireAuth = true }) => {
+=======
+// Wrapper component for protected routes
+const ProtectedRoute = ({ children }) => {
+>>>>>>> 5d8d04ad0f03bb6d7dc77391509ce82b5d34bc8d
   const { state } = useApp();
   const location = useLocation();
 
@@ -105,6 +122,17 @@ function AppContent() {
     );
   }
 
+<<<<<<< HEAD
+=======
+/* Import Global Styles */
+import './styles/theme.css';
+import './styles/layout.css';
+import './styles/typography.css';
+import './styles/utilities.css';
+
+function App() {
+  console.log('App is rendering');
+>>>>>>> 5d8d04ad0f03bb6d7dc77391509ce82b5d34bc8d
   return (
     <ResumeProvider>
       <Routes>
