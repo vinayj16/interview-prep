@@ -1,5 +1,5 @@
 import { toast } from 'react-toastify';
-import { getAuthToken, clearAuthToken } from '../utils/auth';
+import { getAuthToken, setAuthToken, clearAuthToken } from '../utils/auth';
 import env from '../utils/env';
 
 /**

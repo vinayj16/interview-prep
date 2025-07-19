@@ -1,23 +1,9 @@
 import React, { useState } from 'react';
-import { useTheme } from '@mui/material/styles';
-import {
-  Container,
-  Typography,
-  TextField,
-  Button,
-  Box,
-  Grid,
-  Paper,
-  Snackbar,
-  Alert,
-  useMediaQuery
-} from '@mui/material';
-import { Email, Phone, LocationOn, SupportAgent } from '@mui/icons-material';
 import { FaEnvelope, FaPhone, FaMapMarkerAlt } from 'react-icons/fa';
+import { useTheme } from '../context/ThemeContext';
 
 const Contact = () => {
-  const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  const { theme } = useTheme();
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -26,7 +12,6 @@ const Contact = () => {
   });
   const [formErrors, setFormErrors] = useState({});
   const [loading, setLoading] = useState(false);
-  const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'success' });
 
   const validate = () => {
     const errors = {};
@@ -51,16 +36,14 @@ const Contact = () => {
     try {
       // Simulate API call
       await new Promise(res => setTimeout(res, 1200));
-      setSnackbar({ open: true, message: 'Message sent successfully!', severity: 'success' });
+      alert('Message sent successfully!');
       setFormData({ name: '', email: '', subject: '', message: '' });
     } catch (err) {
-      setSnackbar({ open: true, message: 'Failed to send message. Please try again.', severity: 'error' });
+      alert('Failed to send message. Please try again.');
     } finally {
       setLoading(false);
     }
   };
-
-  const handleCloseSnackbar = () => setSnackbar(s => ({ ...s, open: false }));
 
   return (
     <div className="container contact-page">

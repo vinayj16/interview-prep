@@ -6,6 +6,7 @@ import { ToastProvider } from './components/Toast/Toast';
 import ErrorBoundary from './components/common/ErrorBoundary';
 import Layout from './components/Layout/Layout';
 import OfflineIndicator from './components/OfflineIndicator/OfflineIndicator';
+import { useApp } from './context/AppContext';
 
 /* Import Pages */
 import LoadingSpinner from './components/LoadingSpinner/LoadingSpinner';
@@ -27,12 +28,6 @@ const PageNotFound = React.lazy(() => import('./components/NotFound'));
 const Home = React.lazy(() => import('./components/Home'));
 const Contact = React.lazy(() => import('./components/Contact'));
 
-/* Import Global Styles */
-import './styles/theme.css';
-import './styles/layout.css';
-import './styles/typography.css';
-import './styles/utilities.css';
-
 // Wrapper component for protected routes
 const ProtectedRoute = ({ children }) => {
   const { state } = useApp();
@@ -46,6 +41,12 @@ const ProtectedRoute = ({ children }) => {
   }
   return state.isAuthenticated ? children : <Navigate to="/login" replace />;
 };
+
+/* Import Global Styles */
+import './styles/theme.css';
+import './styles/layout.css';
+import './styles/typography.css';
+import './styles/utilities.css';
 
 function App() {
   console.log('App is rendering');
