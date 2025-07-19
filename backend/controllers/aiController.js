@@ -6,9 +6,7 @@ export const generateAIContent = async (req, res) => {
     const { prompt, type = 'general' } = req.body;
     
     if (!prompt) {
-      return res.status(400).json(
-        errorResponse('Prompt is required', 400)
-      );
+      return errorResponse(res, 400, 'Prompt is required');
     }
 
     let result;
@@ -21,14 +19,10 @@ export const generateAIContent = async (req, res) => {
         result = await generateResume(prompt); // Default to resume generation
     }
 
-    return res.status(200).json(
-      successResponse('AI content generated successfully', { result })
-    );
+    return successResponse(res, 200, { result }, 'AI content generated successfully');
   } catch (error) {
     console.error('AI generation error:', error);
-    return res.status(500).json(
-      errorResponse('Failed to generate AI content', 500, error.message)
-    );
+    return errorResponse(res, 500, error.message, 'Failed to generate AI content');
   }
 };
 
@@ -37,9 +31,7 @@ export const getAISuggestions = async (req, res) => {
     const { context, type = 'general' } = req.body;
     
     if (!context) {
-      return res.status(400).json(
-        errorResponse('Context is required', 400)
-      );
+      return errorResponse(res, 400, 'Context is required');
     }
 
     // Add your AI suggestion logic here
@@ -49,13 +41,9 @@ export const getAISuggestions = async (req, res) => {
       timestamp: new Date().toISOString()
     };
 
-    return res.status(200).json(
-      successResponse('AI suggestions generated successfully', { suggestions })
-    );
+    return successResponse(res, 200, { suggestions }, 'AI suggestions generated successfully');
   } catch (error) {
     console.error('AI suggestions error:', error);
-    return res.status(500).json(
-      errorResponse('Failed to generate AI suggestions', 500, error.message)
-    );
+    return errorResponse(res, 500, error.message, 'Failed to generate AI suggestions');
   }
 };

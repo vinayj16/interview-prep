@@ -15,6 +15,12 @@ class GeminiService {
 
   async generateResume(userData) {
     try {
+      console.log('Generating resume with data:', JSON.stringify(userData, null, 2));
+      
+      if (!userData) {
+        throw new Error('User data is required');
+      }
+
       const prompt = `
         Create a professional ATS-friendly resume based on the following information:
         
@@ -48,7 +54,8 @@ class GeminiService {
           "projects": [{"name": "", "description": "", "technologies": []}],
           "education": [{"degree": "", "institution": "", "year": ""}]
         }
-      `;
+        
+        IMPORTANT: Respond with ONLY the JSON object, no additional text or markdown formatting.`;
 
       const result = await this.model.generateContent(prompt);
       const response = await result.response;
@@ -89,35 +96,47 @@ class GeminiService {
 
   async generateInterviewQuestions(company, role) {
     try {
-      const prompt = `
-        Generate 10 technical interview questions for a ${role} position at ${company}.
+      const prompt = `Generate 10 technical interview questions for a ${role} position at ${company}.
         Include a mix of:
         - Technical coding problems
         - System design questions
         - Behavioral questions
         - Company-specific questions
         
-        Format as JSON array with objects containing: question, type, difficulty, and sample_answer.
-      `;
+        Format the response as a JSON array of objects with the following structure:
+        [
+          {
+            "question": "Question text",
+            "type": "technical|system_design|behavioral|company_specific",
+            "difficulty": "Easy|Medium|Hard",
+            "sample_answer": "Sample answer or approach"
+          }
+        ]`;
 
       const result = await this.model.generateContent(prompt);
       const response = await result.response;
       const text = response.text();
       
-      try {
-        const jsonMatch = text.match(/\[[\s\S]*\]/);
-        if (jsonMatch) {
-          const questions = JSON.parse(jsonMatch[0]);
-          return { success: true, data: questions };
-        }
-      } catch (parseError) {
-        console.error('JSON parsing error:', parseError);
+      // Extract JSON from the response
+      const jsonMatch = text.match(/\[[\s\S]*\]/s);
+      if (!jsonMatch) {
+        console.error('Failed to extract JSON from response, falling back to text parsing');
+        return {
+          success: true,
+          data: this.parseQuestionsFromText(text)
+        };
       }
       
-      return {
-        success: true,
-        data: this.parseQuestionsFromText(text)
-      };
+      try {
+        const questions = JSON.parse(jsonMatch[0]);
+        return { success: true, data: questions };
+      } catch (parseError) {
+        console.error('JSON parsing error:', parseError);
+        return {
+          success: true,
+          data: this.parseQuestionsFromText(text)
+        };
+      }
     } catch (error) {
       console.error('Error generating interview questions:', error);
       throw new Error('Failed to generate interview questions');
@@ -126,23 +145,18 @@ class GeminiService {
 
   async analyzeCode(code, language, problemDescription) {
     try {
-      const prompt = `
-        Analyze the following ${language} code for the problem: "${problemDescription}"
+      const prompt = `Analyze the following ${language} code for the problem: "${problemDescription}". Code: \`\`\`${language}
+${code}
+\`\`\`
         
-        Code:
-        \`\`\`${language}
-        ${code}
-        \`\`\`
+Provide analysis including:
+1. Time complexity
+2. Space complexity
+3. Code quality assessment
+4. Suggestions for improvement
+5. Potential bugs or edge cases
         
-        Provide analysis including:
-        1. Time complexity
-        2. Space complexity
-        3. Code quality assessment
-        4. Suggestions for improvement
-        5. Potential bugs or edge cases
-        
-        Format as JSON with: timeComplexity, spaceComplexity, codeQuality, suggestions, and improvements arrays.
-      `;
+Format as JSON with: timeComplexity, spaceComplexity, codeQuality, suggestions, and improvements arrays.`;
 
       const result = await this.model.generateContent(prompt);
       const response = await result.response;
@@ -176,17 +190,11 @@ class GeminiService {
 
   async generateHints(problemDescription, currentCode) {
     try {
-      const prompt = `
-        Provide helpful hints for solving this problem: "${problemDescription}"
-        
-        Current code attempt:
-        \`\`\`
-        ${currentCode || 'No code provided yet'}
+      const prompt = `Provide helpful hints for solving this problem: "${problemDescription}". Current code attempt: \`\`\`${currentCode || 'No code provided yet'}
         \`\`\`
         
         Provide 3-5 progressive hints that guide toward the solution without giving it away completely.
-        Format as JSON array of hint objects with: level (1-5), hint, and category.
-      `;
+        Format as JSON array of hint objects with: level (1-5), hint, and category.`;
 
       const result = await this.model.generateContent(prompt);
       const response = await result.response;
@@ -212,6 +220,94 @@ class GeminiService {
     }
   }
 
+  async generateMCQs(company, jobDescription) {
+    try {
+      const prompt = `
+        Generate 10 multiple-choice questions (MCQs) for a ${company} interview 
+        based on the following job description:
+        
+        ${jobDescription}
+        
+        For each question, provide:
+        1. The question
+        2. 4 options (a, b, c, d)
+        3. The correct answer
+        
+        Format the response as a JSON array of objects with the following structure:
+        [
+          {
+            "question": "Question text",
+            "options": ["Option A", "Option B", "Option C", "Option D"],
+            "answer": 0
+          }
+        ]`;
+
+      const result = await this.model.generateContent(prompt);
+      const response = await result.response;
+      const text = response.text();
+      
+      // Extract JSON from the response
+      const jsonMatch = text.match(/\[.*\]/s);
+      if (!jsonMatch) {
+        throw new Error('Failed to parse MCQs from response');
+      }
+      
+      return JSON.parse(jsonMatch[0]);
+    } catch (error) {
+      console.error('Error generating MCQs:', error);
+      throw new Error('Failed to generate MCQs');
+    }
+  }
+
+  async getCodingChallenges(company, jobDescription) {
+    try {
+      const prompt = `
+        Generate 5 coding challenges for a ${company} interview 
+        based on the following job description:
+        
+        ${jobDescription}
+        
+        For each challenge, provide:
+        1. Problem title
+        2. Problem description
+        3. Input/Output examples
+        4. Constraints
+        5. Difficulty level (Easy/Medium/Hard)
+        
+        Format the response as a JSON array of objects with the following structure:
+        [
+          {
+            "title": "Challenge Title",
+            "description": "Detailed problem description",
+            "examples": [
+              {
+                "input": "example input",
+                "output": "expected output",
+                "explanation": "brief explanation"
+              }
+            ],
+            "constraints": ["constraint 1", "constraint 2"],
+            "difficulty": "Easy"
+          }
+        ]`;
+
+      const result = await this.model.generateContent(prompt);
+      const response = await result.response;
+      const text = response.text();
+      
+      // Extract JSON from the response
+      const jsonMatch = text.match(/\[.*\]/s);
+      if (!jsonMatch) {
+        throw new Error('Failed to parse coding challenges from response');
+      }
+      
+      return JSON.parse(jsonMatch[0]);
+    } catch (error) {
+      console.error('Error generating coding challenges:', error);
+      throw new Error('Failed to generate coding challenges');
+    }
+  }
+
   // Helper methods for parsing text responses
   extractSummary(text) {
     const summaryMatch = text.match(/summary[:\s]*(.*?)(?:\n\n|\n[A-Z]|$)/i);
@@ -225,7 +321,7 @@ class GeminiService {
     lines.forEach((line, index) => {
       if (line.match(/^\d+\./) || line.includes('?')) {
         questions.push({
-          question: line.replace(/^\d+\.\s*/, ''),
+          question: line.replace(/^\d+\.\s*/, '').trim(),
           type: 'technical',
           difficulty: 'medium',
           sample_answer: 'Consider the problem requirements and constraints.'
@@ -244,7 +340,7 @@ class GeminiService {
       if (line.match(/^\d+\./) || line.toLowerCase().includes('hint')) {
         hints.push({
           level: Math.min(index + 1, 5),
-          hint: line.replace(/^\d+\.\s*/, '').replace(/hint[:\s]*/i, ''),
+          hint: line.replace(/^\d+\.\s*/, '').replace(/hint[:\s]*/i, '').trim(),
           category: 'general'
         });
       }
@@ -255,4 +351,13 @@ class GeminiService {
 }
 
 const geminiService = new GeminiService();
+
+// Export individual methods as named exports
+export const generateResume = geminiService.generateResume.bind(geminiService);
+export const generateInterviewQuestions = geminiService.generateInterviewQuestions.bind(geminiService);
+export const analyzeCode = geminiService.analyzeCode.bind(geminiService);
+export const generateHints = geminiService.generateHints.bind(geminiService);
+export const generateMCQs = geminiService.generateMCQs.bind(geminiService);
+export const getCodingChallenges = geminiService.getCodingChallenges.bind(geminiService);
+
 export default geminiService;

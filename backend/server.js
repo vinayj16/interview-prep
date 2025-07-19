@@ -4,15 +4,12 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import dotenv from 'dotenv';
 import connectDB from './config/db.js';
-import geminiService from './services/geminiService.js';
 import authRoutes from './routes/authRoutes.js';
 import aiRoutes from './routes/aiRoutes.js';
+import interviewRoutes from './routes/interviewRoutes.js';
 import errorHandler from './middleware/errorHandler.js';
-import { successResponse, errorResponse } from './utils/apiResponse.js';
+import { successResponse } from './utils/apiResponse.js';
 import mongoose from 'mongoose';
-import jwt from 'jsonwebtoken';
-import bcrypt from 'bcryptjs';
-import User from './models/User.js'; // Added missing User model import
 
 dotenv.config();
 
@@ -36,6 +33,7 @@ app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 // API Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/ai', aiRoutes);
+app.use('/api/interview', interviewRoutes);
 
 // Health check endpoint
 app.get('/api/health', (req, res) => {
@@ -388,38 +386,45 @@ app.post('/login', async (req, res) => {
 // Production build handling
 if (process.env.NODE_ENV === 'production') {
   app.use(express.static(path.join(__dirname, '../frontend/build')));
-
   app.get('*', (req, res) => {
     res.sendFile(path.resolve(__dirname, '../frontend/build', 'index.html'));
   });
 }
 
-// Error handling middleware
-app.use(errorHandler);
-app.use((error, req, res, next) => {
-  console.error('Server error:', error);
-  res.status(500).json({
-    success: false,
-    error: 'Internal server error',
-    details: process.env.NODE_ENV === 'development' ? error.message : undefined
-  });
+// API documentation endpoint
+app.get('/api-docs', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'api-docs.html'));
 });
 
-// 404 handler
+// 404 handler for undefined routes
 app.use((req, res) => {
   res.status(404).json({
     success: false,
-    error: 'Endpoint not found',
+    message: 'Route not found',
     path: req.path
   });
 });
 
+// Error handling middleware
+app.use(errorHandler);
+
 // Start server
-app.listen(PORT, () => {
-  console.log(`🚀 Server running on port ${PORT}`);
-  console.log(`📊 Environment: ${process.env.NODE_ENV || 'development'}`);
-  console.log(`🤖 Gemini AI: ${process.env.GOOGLE_AI_API_KEY ? 'Configured' : 'Not configured'}`);
-  console.log(`🌐 CORS Origin: ${process.env.CORS_ORIGIN || 'http://localhost:3000'}`);
+const server = app.listen(PORT, () => {
+  console.log(`Server running in ${process.env.NODE_ENV || 'development'} mode on port ${PORT}`);
+  console.log(`API Documentation: http://localhost:${PORT}/api-docs`);
+});
+
+// Handle unhandled promise rejections
+process.on('unhandledRejection', (err) => {
+  console.error('Unhandled Rejection:', err);
+  // Close server & exit process
+  server.close(() => process.exit(1));
+});
+
+// Handle uncaught exceptions
+process.on('uncaughtException', (err) => {
+  console.error('Uncaught Exception:', err);
+  process.exit(1);
 });
 
 export default app;
