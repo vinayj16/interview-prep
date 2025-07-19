@@ -830,6 +830,7 @@ Memory usage: ${Math.floor(Math.random() * 20) + 10}MB`;
                     >
                       {isVoiceCoding ? <FaMicrophone /> : <FaMicrophoneSlash />}
                       {isListening && <span className="listening-indicator">●</span>}
+                      }
                     </button>
                     
                     <button
