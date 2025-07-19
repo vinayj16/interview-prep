@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useReducer, useEffect } from 'react';
-import apiService from '../services/apiService';
+import aiService from '../services/aiService';
+import LoadingSpinner from '../shared/LoadingSpinner/LoadingSpinner';
 
 const AppContext = createContext();
 
@@ -56,10 +57,22 @@ const appReducer = (state, action) => {
         ...state,
         bookmarks: newBookmarks,
       };
-    case 'COMPLETE_TOPIC':
+    case 'MARK_TOPIC_COMPLETED':
       return {
         ...state,
         completedTopics: new Set([...state.completedTopics, action.payload]),
+      };
+    case 'REMOVE_TOPIC_COMPLETED':
+      const newCompletedTopics = new Set(state.completedTopics);
+      newCompletedTopics.delete(action.payload);
+      return {
+        ...state,
+        completedTopics: newCompletedTopics,
+      };
+    case 'UPDATE_PREFERENCES':
+      return {
+        ...state,
+        preferences: { ...state.preferences, ...action.payload },
       };
     case 'SET_ONLINE_STATUS':
       return {
@@ -78,52 +91,150 @@ const appReducer = (state, action) => {
 
 export const AppProvider = ({ children }) => {
   const [state, dispatch] = useReducer(appReducer, initialState);
+  const initialized = React.useRef(false);
+
+  // Login function
+  const login = (userData) => {
+    try {
+      localStorage.setItem('user', JSON.stringify(userData));
+      dispatch({ type: 'SET_USER', payload: userData });
+      return true;
+    } catch (error) {
+      console.error('Login failed:', error);
+      return false;
+    }
+  };
+
+  // Logout function
+  const logout = () => {
+    try {
+      localStorage.removeItem('user');
+      dispatch({ type: 'SET_USER', payload: null });
+      return true;
+    } catch (error) {
+      console.error('Logout failed:', error);
+      return false;
+    }
+  };
 
   // Load initial data from localStorage
   useEffect(() => {
+    // Prevent double initialization in development with StrictMode
+    if (initialized.current) return;
+    initialized.current = true;
+
+    const initializeAuth = async () => {
+      try {
+        // Set loading state
     dispatch({ type: 'SET_AUTH_LOADING', payload: true });
-    const savedUser = localStorage.getItem('user');
-    const savedTheme = localStorage.getItem('theme');
-    const savedStats = localStorage.getItem('userStats');
-    const savedBookmarks = localStorage.getItem('bookmarkedProblems');
-    const savedTopics = localStorage.getItem('completedTopics');
+        
+        // Load all data from localStorage
+        const [
+          savedUser,
+          savedTheme,
+          savedStats,
+          savedBookmarks,
+          savedTopics
+        ] = await Promise.all([
+          localStorage.getItem('user'),
+          localStorage.getItem('theme'),
+          localStorage.getItem('userStats'),
+          localStorage.getItem('bookmarkedProblems'),
+          localStorage.getItem('completedTopics')
+        ]);
 
+        // Process user authentication
+        let user = null;
     if (savedUser) {
-      dispatch({ type: 'SET_USER', payload: JSON.parse(savedUser) });
-    } else {
-      dispatch({ type: 'SET_USER', payload: null });
-    }
+          try {
+            user = JSON.parse(savedUser);
+            // Simple token check - in a real app, validate with backend
+            if (!user || !user.token) {
+              localStorage.removeItem('user');
+              user = null;
+            }
+          } catch (e) {
+            console.error('Error parsing user data:', e);
+            localStorage.removeItem('user');
+            user = null;
+          }
+        }
+        
+        // Set user state
+        dispatch({ 
+          type: 'SET_USER', 
+          payload: user 
+        });
 
+        // Load theme if available
     if (savedTheme) {
+          try {
       dispatch({ type: 'SET_THEME', payload: savedTheme });
+            document.documentElement.setAttribute('data-theme', savedTheme);
+          } catch (e) {
+            console.error('Error setting theme:', e);
+          }
     }
 
+        // Load stats if available
     if (savedStats) {
-      dispatch({ type: 'UPDATE_STATS', payload: JSON.parse(savedStats) });
-    }
+          try {
+            const stats = JSON.parse(savedStats);
+            dispatch({ type: 'UPDATE_STATS', payload: stats });
+          } catch (e) {
+            console.error('Error parsing stats:', e);
+          }
+        }
 
+        // Load bookmarks if available
     if (savedBookmarks) {
+          try {
       const bookmarks = JSON.parse(savedBookmarks);
+            if (Array.isArray(bookmarks)) {
       bookmarks.forEach(bookmark => {
         dispatch({ type: 'ADD_BOOKMARK', payload: bookmark });
       });
+            }
+          } catch (e) {
+            console.error('Error parsing bookmarks:', e);
+          }
     }
 
+        // Load completed topics if available
     if (savedTopics) {
+          try {
       const topics = JSON.parse(savedTopics);
+            if (Array.isArray(topics)) {
       topics.forEach(topic => {
-        dispatch({ type: 'COMPLETE_TOPIC', payload: topic });
+        dispatch({ type: 'MARK_TOPIC_COMPLETED', payload: topic });
       });
     }
-    // Mark auth loading as done (if not set by SET_USER)
+          } catch (e) {
+            console.error('Error parsing completed topics:', e);
+          }
+        }
+      } catch (error) {
+        console.error('Error initializing app:', error);
+      } finally {
+        // Always ensure loading is set to false
     dispatch({ type: 'SET_AUTH_LOADING', payload: false });
-  }, []);
+      }
+    };
+
+    // Initialize auth
+    initializeAuth();
+    
+    // Cleanup function
+    return () => {
+      // Cleanup if needed
+    };
+  }, [dispatch]);
 
   // Check backend connection
   useEffect(() => {
     const checkBackendConnection = async () => {
       try {
-        await apiService.healthCheck();
+        await aiService.healthCheck();
         dispatch({ type: 'SET_BACKEND_CONNECTION', payload: true });
       } catch (error) {
         dispatch({ type: 'SET_BACKEND_CONNECTION', payload: false });
@@ -175,39 +286,82 @@ export const AppProvider = ({ children }) => {
     localStorage.setItem('completedTopics', JSON.stringify([...state.completedTopics]));
   }, [state.completedTopics]);
 
-  // Centralized login/logout/register actions
-  const login = (user) => {
-    localStorage.setItem('user', JSON.stringify(user));
-    dispatch({ type: 'SET_USER', payload: user });
-  };
-
-  const logout = () => {
-    localStorage.removeItem('user');
-    dispatch({ type: 'SET_USER', payload: null });
-  };
-
-  const register = (user) => {
-    localStorage.setItem('user', JSON.stringify(user));
-    dispatch({ type: 'SET_USER', payload: user });
-  };
-
-  const value = {
+  // Context value
+  const contextValue = React.useMemo(() => ({
+    // State
     state,
-    dispatch,
-    actions: {
-      setUser: (user) => dispatch({ type: 'SET_USER', payload: user }),
-      setTheme: (theme) => dispatch({ type: 'SET_THEME', payload: theme }),
-      updateStats: (stats) => dispatch({ type: 'UPDATE_STATS', payload: stats }),
-      addBookmark: (id) => dispatch({ type: 'ADD_BOOKMARK', payload: id }),
-      removeBookmark: (id) => dispatch({ type: 'REMOVE_BOOKMARK', payload: id }),
-      completeTopic: (id) => dispatch({ type: 'COMPLETE_TOPIC', payload: id }),
+    
+    // Auth actions
       login,
       logout,
-      register,
+    
+    // Other actions
+    setTheme: (theme) => {
+      localStorage.setItem('theme', theme);
+      document.documentElement.setAttribute('data-theme', theme);
+      dispatch({ type: 'SET_THEME', payload: theme });
     },
-  };
+    
+    updateStats: (stats) => {
+      const newStats = { ...state.stats, ...stats };
+      localStorage.setItem('userStats', JSON.stringify(newStats));
+      dispatch({ type: 'UPDATE_STATS', payload: stats });
+    },
+    
+    addBookmark: (problemId) => {
+      const newBookmarks = new Set([...state.bookmarks, problemId]);
+      localStorage.setItem('bookmarkedProblems', JSON.stringify([...newBookmarks]));
+      dispatch({ type: 'ADD_BOOKMARK', payload: problemId });
+    },
+    
+    removeBookmark: (problemId) => {
+      const newBookmarks = new Set(state.bookmarks);
+      newBookmarks.delete(problemId);
+      localStorage.setItem('bookmarkedProblems', JSON.stringify([...newBookmarks]));
+      dispatch({ type: 'REMOVE_BOOKMARK', payload: problemId });
+    },
+    
+    markTopicCompleted: (topicId) => {
+      const newTopics = new Set([...state.completedTopics, topicId]);
+      localStorage.setItem('completedTopics', JSON.stringify([...newTopics]));
+      dispatch({ type: 'MARK_TOPIC_COMPLETED', payload: topicId });
+    },
+    
+    removeTopicCompleted: (topicId) => {
+      const newTopics = new Set(state.completedTopics);
+      newTopics.delete(topicId);
+      localStorage.setItem('completedTopics', JSON.stringify([...newTopics]));
+      dispatch({ type: 'REMOVE_TOPIC_COMPLETED', payload: topicId });
+    },
+    
+    updatePreferences: (preferences) => {
+      dispatch({ type: 'UPDATE_PREFERENCES', payload: preferences });
+    },
+    
+    // System actions
+    setOnlineStatus: (isOnline) => dispatch({ type: 'SET_ONLINE_STATUS', payload: isOnline }),
+    setBackendConnection: (isConnected) => dispatch({ type: 'SET_BACKEND_CONNECTION', payload: isConnected })
+  }), [state]);
 
-  return <AppContext.Provider value={value}>{children}</AppContext.Provider>;
+  // Log state changes in development (removed for cleaner output)
+
+  return (
+    <AppContext.Provider value={contextValue}>
+      {!state.isLoadingAuth ? children : (
+        <div style={{
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          height: '100vh',
+          flexDirection: 'column',
+          gap: '1rem'
+        }}>
+          <LoadingSpinner size="lg" />
+          <p>Loading application...</p>
+        </div>
+      )}
+    </AppContext.Provider>
+  );
 };
 
 export const useApp = () => {
@@ -217,3 +371,6 @@ export const useApp = () => {
   }
   return context;
 };
+
+export { AppContext };
+export default AppProvider;

@@ -1,0 +1,129 @@
+.input-field {
+  margin-bottom: 1rem;
+  position: relative;
+  width: 100%;
+}
+
+.input-field.full-width {
+  width: 100%;
+}
+
+.input-label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+  color: var(--text-primary);
+  font-size: 0.875rem;
+}
+
+.required-asterisk {
+  color: var(--error-color);
+  margin-left: 0.25rem;
+}
+
+.input-element {
+  width: 100%;
+  padding: 0.5rem 0.75rem;
+  font-size: 1rem;
+  line-height: 1.5;
+  color: var(--text-primary);
+  background-color: var(--background-color);
+  background-clip: padding-box;
+  border: 1px solid var(--border-color);
+  border-radius: 0.25rem;
+  transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+.input-element:focus {
+  border-color: var(--primary-color);
+  outline: 0;
+  box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+.input-element::placeholder {
+  color: var(--text-secondary);
+  opacity: 0.7;
+}
+
+.input-element:disabled,
+.input-element[readonly] {
+  background-color: var(--background-hover);
+  opacity: 1;
+}
+
+/* Error state */
+.input-field.has-error .input-element {
+  border-color: var(--error-color);
+}
+
+.input-field.has-error .input-element:focus {
+  border-color: var(--error-color);
+  box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25);
+}
+
+.input-error {
+  width: 100%;
+  margin-top: 0.25rem;
+  font-size: 0.75rem;
+  color: var(--error-color);
+  display: block;
+}
+
+/* Sizes */
+.input-sm .input-element {
+  padding: 0.25rem 0.5rem;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  border-radius: 0.2rem;
+}
+
+.input-lg .input-element {
+  padding: 0.5rem 1rem;
+  font-size: 1.25rem;
+  line-height: 1.5;
+  border-radius: 0.3rem;
+}
+
+/* Rounded input */
+.input-rounded .input-element {
+  border-radius: 1.5rem;
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+/* Input with icon */
+.input-with-icon {
+  position: relative;
+}
+
+.input-with-icon .input-element {
+  padding-left: 2.25rem;
+}
+
+.input-with-icon .input-icon {
+  position: absolute;
+  top: 50%;
+  left: 0.75rem;
+  transform: translateY(-50%);
+  color: var(--text-secondary);
+  pointer-events: none;
+}
+
+.input-with-icon .input-clear {
+  position: absolute;
+  top: 50%;
+  right: 0.75rem;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  color: var(--text-secondary);
+  cursor: pointer;
+  padding: 0.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.input-with-icon .input-clear:hover {
+  color: var(--text-primary);
+}

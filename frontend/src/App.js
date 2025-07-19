@@ -1,100 +1,150 @@
-import React, { Suspense } from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import { AppProvider } from './context/AppContext';
-import { ThemeProvider } from './context/ThemeContext';
-import { ToastProvider } from './components/Toast/Toast';
-import ErrorBoundary from './components/common/ErrorBoundary';
-import Layout from './components/Layout/Layout';
-import OfflineIndicator from './components/OfflineIndicator/OfflineIndicator';
+import React from 'react';
+import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
+import { useApp } from './context/AppContext';
+import { ResumeProvider } from './contexts/ResumeContext';
+import Layout from './layout/Layout/Layout';
+import LoadingSpinner from './shared/LoadingSpinner/LoadingSpinner';
+import './App.css';
 
-/* Import Pages */
-import LoadingSpinner from './components/LoadingSpinner/LoadingSpinner';
+// Import components directly for now to avoid lazy loading issues
+import Home from './pages/Home/Home';
+import Login from './pages/Auth/Login';
+import Dashboard from './pages/Dashboard/Dashboard';
+import Coding from './pages/Coding/Coding';
+import MCQs from './pages/MCQs/MCQs';
+import Resume from './pages/Resume/Resume';
+import Roadmap from './pages/Roadmap/Roadmap';
+import FaceToFace from './pages/FaceToFace/FaceToFace';
+import Reviews from './pages/Reviews/Reviews';
+import Profile from './pages/Profile/Profile';
+import Settings from './pages/Settings/Settings';
+import Support from './pages/Support/Support';
+import HelpCenter from './pages/HelpCenter/HelpCenter';
+import Notifications from './pages/Notifications/Notifications';
 
-// Lazy load all main route components
-const Login = React.lazy(() => import('./components/Login'));
-const Register = React.lazy(() => import('./components/Register'));
-const Dashboard = React.lazy(() => import('./components/Dashboard'));
-const Coding = React.lazy(() => import('./components/Coding'));
-const MCQs = React.lazy(() => import('./components/MCQs'));
-const Resume = React.lazy(() => import('./components/Resume'));
-const Roadmap = React.lazy(() => import('./components/Roadmap'));
-const Reviews = React.lazy(() => import('./components/Reviews'));
-const Profile = React.lazy(() => import('./components/Profile'));
-const FaceToFace = React.lazy(() => import('./components/FaceToFace'));
-const Services = React.lazy(() => import('./components/Services'));
-const About = React.lazy(() => import('./components/About'));
-const PageNotFound = React.lazy(() => import('./components/NotFound'));
-const Home = React.lazy(() => import('./components/Home'));
-const Contact = React.lazy(() => import('./components/Contact'));
+// Loading component for Suspense fallback
+const PageLoading = () => (
+  <div style={{ 
+    display: 'flex', 
+    justifyContent: 'center', 
+    alignItems: 'center', 
+    height: '50vh',
+    flexDirection: 'column',
+    gap: '1rem'
+  }}>
+    <LoadingSpinner size="md" />
+    <p>Loading page...</p>
+  </div>
+);
 
-/* Import Global Styles */
-import './styles/theme.css';
-import './styles/layout.css';
-import './styles/typography.css';
-import './styles/utilities.css';
-
-// Wrapper component for protected routes
-const ProtectedRoute = ({ children }) => {
+// Protected Route component
+const ProtectedRoute = ({ children, requireAuth = true }) => {
   const { state } = useApp();
+  const location = useLocation();
+
+  // Show loading state while checking auth
   if (state.isLoadingAuth) {
-      return (
-      <div className="app-loading">
-        <div className="spinner"></div>
+    return (
+      <div style={{ 
+        display: 'flex', 
+        justifyContent: 'center', 
+        alignItems: 'center', 
+        height: '100vh',
+        width: '100%',
+        flexDirection: 'column',
+        gap: '1rem',
+        padding: '2rem',
+        backgroundColor: 'var(--bg-color, #f8f9fa)',
+        color: 'var(--text-color, #333)'
+      }}>
+        <LoadingSpinner size="lg" />
+        <p>Checking authentication status...</p>
+        <small style={{ opacity: 0.7 }}>Current path: {location.pathname}</small>
+      </div>
+    );
+  }
+
+  // If authentication is required but user is not authenticated, redirect to login
+  if (requireAuth && !state.isAuthenticated) {
+    return <Navigate to="/login" state={{ from: location }} replace />;
+  }
+
+  // If authentication is not required but user is authenticated, redirect to home
+  if (!requireAuth && state.isAuthenticated) {
+    return <Navigate to="/dashboard" replace />;
+  }
+  
+  // If we get here, render the protected content
+  // Just return children directly (works with nested routes)
+  return children;
+};
+
+// App content component that uses the context
+function AppContent() {
+  const { state } = useApp();
+  const location = useLocation();
+
+  // Don't show layout for auth pages
+  const isAuthPage = ['/login', '/signup', '/forgot-password'].includes(location.pathname);
+
+  // Show loading state while auth is checking
+  if (state.isLoadingAuth) {
+    return (
+      <div className="app-loading" style={{
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        height: '100vh',
+        flexDirection: 'column',
+        gap: '1rem',
+        backgroundColor: '#f8f9fa'
+      }}>
+        <LoadingSpinner size="lg" />
         <p>Loading application...</p>
       </div>
     );
   }
-  return state.isAuthenticated ? children : <Navigate to="/login" replace />;
-};
 
-function App() {
-  console.log('App is rendering');
   return (
-    <ErrorBoundary>
-      <ThemeProvider>
-        <AppProvider>
-          <ToastProvider>
-            <Router>
-              <div className="app">
-                <OfflineIndicator />
-                <Suspense fallback={<LoadingSpinner size="large" message="Loading page..." />}>
-                  <Routes>
-                    {/* Public Routes */}
-                    <Route path="/login" element={<Login />} />
-                    <Route path="/register" element={<Register />} />
-                    {/* Move About, Services, Contact inside Layout */}
-                    <Route
-                      path="/"
-                      element={
-                        <ProtectedRoute>
-                          <Layout />
-                        </ProtectedRoute>
-                      }
-                    >
-                      <Route index element={<Home />} />
-                      <Route path="dashboard" element={<Dashboard />} />
-                      <Route path="coding" element={<Coding />} />
-                      <Route path="mcqs" element={<MCQs />} />
-                      <Route path="resume" element={<Resume />} />
-                      <Route path="roadmap" element={<Roadmap />} />
-                      <Route path="reviews" element={<Reviews />} />
-                      <Route path="profile" element={<Profile />} />
-                      <Route path="face-to-face" element={<FaceToFace />} />
-                      <Route path="about" element={<About />} />
-                      <Route path="services" element={<Services />} />
-                      <Route path="contact" element={<Contact />} />
-                    </Route>
-                    {/* 404 Route */}
-                    <Route path="*" element={<PageNotFound />} />
-                  </Routes>
-                </Suspense>
-              </div>
-            </Router>
-          </ToastProvider>
-        </AppProvider>
-        </ThemeProvider>
-    </ErrorBoundary>
+    <ResumeProvider>
+      <Routes>
+        {/* Public routes */}
+        <Route path="/login" element={
+          <ProtectedRoute requireAuth={false}>
+            <Login />
+          </ProtectedRoute>
+        } />
+        
+        {/* Protected routes with layout */}
+        <Route element={<ProtectedRoute />}>
+          <Route element={<Layout />}>
+            <Route index element={<Navigate to="/dashboard" replace />} />
+            <Route path="home" element={<Home />} />
+            <Route path="dashboard" element={<Dashboard />} />
+            <Route path="coding" element={<Coding />} />
+            <Route path="mcqs" element={<MCQs />} />
+            {/* Resume Builder Route */}
+            <Route path="resume" element={<Resume />} />
+            <Route path="roadmap" element={<Roadmap />} />
+            <Route path="face-to-face" element={<FaceToFace />} />
+            <Route path="reviews" element={<Reviews />} />
+            <Route path="profile" element={<Profile />} />
+            <Route path="settings" element={<Settings />} />
+            <Route path="support" element={<Support />} />
+            <Route path="help-center" element={<HelpCenter />} />
+            <Route path="notifications" element={<Notifications />} />
+            {/* Catch all route */}
+            <Route path="*" element={<Navigate to="/dashboard" replace />} />
+          </Route>
+        </Route>
+      </Routes>
+    </ResumeProvider>
   );
+}
+
+// Main App component
+function App() {
+  return <AppContent />;
 }
 
 export default App;

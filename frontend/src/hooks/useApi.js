@@ -1,5 +1,5 @@
 import { useState, useCallback } from 'react';
-import { useToast } from '../components/Toast/Toast';
+import { useToast } from '../shared/Toast/Toast';
 
 export const useApi = () => {
   const [loading, setLoading] = useState(false);

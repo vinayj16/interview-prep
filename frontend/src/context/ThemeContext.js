@@ -21,6 +21,7 @@ export const ThemeProvider = ({ children }) => {
   useEffect(() => {
     // Update document class and data-theme attribute
     document.documentElement.setAttribute('data-theme', theme);
+    document.body.setAttribute('data-theme', theme); // Ensure body also gets the data-theme
     document.documentElement.classList.toggle('dark-mode', theme === 'dark');
     // Save to localStorage
     localStorage.setItem('theme', theme);

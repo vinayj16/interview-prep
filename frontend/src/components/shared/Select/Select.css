@@ -1,0 +1,167 @@
+.select-container {
+  margin-bottom: 1rem;
+  position: relative;
+  width: 100%;
+}
+
+.select-container.full-width {
+  width: 100%;
+}
+
+.select-label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+  color: var(--text-primary);
+  font-size: 0.875rem;
+}
+
+.required-asterisk {
+  color: var(--error-color);
+  margin-left: 0.25rem;
+}
+
+.select-wrapper {
+  position: relative;
+  display: inline-block;
+  width: 100%;
+}
+
+.select-element {
+  display: block;
+  width: 100%;
+  padding: 0.5rem 2.5rem 0.5rem 0.75rem;
+  font-size: 1rem;
+  line-height: 1.5;
+  color: var(--text-primary);
+  background-color: var(--background-color);
+  background-image: none;
+  border: 1px solid var(--border-color);
+  border-radius: 0.25rem;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+.select-element:focus {
+  border-color: var(--primary-color);
+  outline: 0;
+  box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+.select-element:disabled,
+.select-element[readonly] {
+  background-color: var(--background-hover);
+  opacity: 1;
+  cursor: not-allowed;
+}
+
+.select-arrow {
+  position: absolute;
+  top: 50%;
+  right: 0.75rem;
+  transform: translateY(-50%);
+  pointer-events: none;
+  color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Error state */
+.select-container.has-error .select-element {
+  border-color: var(--error-color);
+}
+
+.select-container.has-error .select-element:focus {
+  border-color: var(--error-color);
+  box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25);
+}
+
+.select-error {
+  width: 100%;
+  margin-top: 0.25rem;
+  font-size: 0.75rem;
+  color: var(--error-color);
+  display: block;
+}
+
+/* Sizes */
+.select-sm .select-element {
+  padding: 0.25rem 2rem 0.25rem 0.5rem;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  border-radius: 0.2rem;
+}
+
+.select-lg .select-element {
+  padding: 0.5rem 3rem 0.5rem 1rem;
+  font-size: 1.25rem;
+  line-height: 1.5;
+  border-radius: 0.3rem;
+}
+
+/* Rounded select */
+.select-rounded .select-element {
+  border-radius: 1.5rem;
+  padding-left: 1rem;
+  padding-right: 3rem;
+}
+
+/* Select with icon */
+.select-with-icon {
+  position: relative;
+}
+
+.select-with-icon .select-element {
+  padding-left: 2.25rem;
+}
+
+.select-with-icon .select-icon {
+  position: absolute;
+  top: 50%;
+  left: 0.75rem;
+  transform: translateY(-50%);
+  color: var(--text-secondary);
+  pointer-events: none;
+}
+
+/* Custom styling for options */
+.select-element option {
+  padding: 0.5rem;
+  background-color: var(--background-color);
+  color: var(--text-primary);
+}
+
+/* Hover state for options */
+.select-element option:hover,
+.select-element option:focus,
+.select-element option:checked {
+  background-color: var(--primary-color);
+  color: white;
+}
+
+/* For Firefox */
+@-moz-document url-prefix() {
+  .select-element {
+    text-indent: 0.01px;
+    text-overflow: '';
+    padding-right: 1.75rem;
+  }
+  
+  .select-arrow {
+    display: none;
+  }
+}
+
+/* For IE10+ */
+@media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) {
+  .select-element {
+    padding-right: 1.75rem;
+  }
+  
+  .select-arrow {
+    display: none;
+  }
+}
